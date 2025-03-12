@@ -5,17 +5,9 @@ const bcrypt = require('bcrypt');
 const generateTokens = require('../utils/generateTokens');
 const cookiesConfig = require('../config/cookiesConfig');
 
-/**
- * Контроллер аутентификации (AuthController)
- * Отвечает за обработку всех запросов, связанных с аутентификацией пользователей:
- * регистрация, вход, выход и обновление токенов.
- * Контроллер работает как промежуточный слой между маршрутами и сервисами,
- * обрабатывая HTTP-запросы и формируя ответы.
- */
+
 class AuthController {
-  /**
-   * Обновляет токены доступа и обновления для авторизованного пользователя
-   */
+  
   static async refreshTokens(req, res) {
     try {
       const { user } = res.locals;
@@ -36,16 +28,7 @@ class AuthController {
     }
   }
 
-  /**
-   * Регистрация нового пользователя
-   *
-   * Процесс:
-   * 1. Валидация входных данных
-   * 2. Проверка существования пользователя
-   * 3. Хеширование пароля
-   * 4. Создание пользователя
-   * 5. Генерация токенов доступа
-   */
+  
   static async signUp(req, res) {
     const { email, username, password } = req.body;
 
