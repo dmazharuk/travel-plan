@@ -1,0 +1,65 @@
+/* Основные стили для модального окна */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000; /* Модальное окно будет поверх всего */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(0 0 0 / 50%); /* Тёмный фон */
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 400px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgb(0 0 0 / 10%);
+}
+
+.modalForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.modalInput {
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.modalButton {
+  padding: 10px;
+  color: white;
+  cursor: pointer;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+}
+
+.modalButton:disabled {
+  background-color: #ccc;
+}
+
+.modalText {
+  margin-top: 10px;
+}
+
+.registerLink {
+  color: #007bff;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.registerLink:hover {
+  text-decoration: none;
+}

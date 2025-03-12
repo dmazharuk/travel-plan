@@ -1,40 +1,38 @@
-// // import { signOutThunk } from '@/app/entities/user';
-// // import { CLIENT_ROUTES } from '@/shared/enums/clientRoutes';
-// // import { useAppDispatch, useAppSelector } from '@/shared/hooks/reduxHooks';
-// // import { JSX, useState } from 'react';
-// // import { NavLink, useNavigate } from 'react-router';
+import { signOutThunk } from '@/app/entities/user';
+import { SignInModal } from '@/features/auth/SignInModal/SignInModal';
+import { CLIENT_ROUTES } from '@/shared/enums/clientRoutes';
+import { useAppDispatch, useAppSelector } from '@/shared/hooks/reduxHooks';
+import { JSX, useState } from 'react';
+import { NavLink, useNavigate } from 'react-router';
 
-// export function Header():  {
-// // const navigate = useNavigate()
-// // const user = useAppSelector((state)=>state.user.user)
-// // const dispatch = useAppDispatch()
+export function Header(): JSX.Element {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-// // const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const user = useAppSelector((state) => state.user.user);
 
-// // const openLoginModal = ()=>{
-// //   setIsLoginModalOpen(true)
-// // }
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
+  const onSignOutHandler = async () => {
+    dispatch(signOutThunk());
+    alert('Вы вышли');
+    navigate(CLIENT_ROUTES.MAIN);
+  };
 
-// // const onSignOutHandler = async()=>{
-// //   dispatch(signOutThunk())
-// //   alert('Вы вышли')
-// //   navigate(CLIENT_ROUTES.MAIN)
-
-// // }
-//   return (<div>ЬЬЬЬЬ</div>)
-  
-//   // <nav>
-//   //   <NavLink to={CLIENT_ROUTES.MAIN}>Main</NavLink>
-//   //   {user ? (<button onClick={onSignOutHandler}>Выйти</button>):(<button onClick={openLoginModal}>Войти</button>)}
-//   // </nav>;
-// }
-
-
-
-
-export  function Header() {
   return (
-    <div>Header</div>
-  )
+    <nav>
+      <NavLink to={CLIENT_ROUTES.MAIN}>Main</NavLink>
+      {user ? (
+        <button onClick={onSignOutHandler}>Выйти</button>
+      ) : (
+        <button onClick={openModal}>Войти</button>
+      )}
+
+      {isModalOpen && <SignInModal closeModal={closeModal} />}
+    </nav>
+  );
 }
+
+
