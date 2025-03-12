@@ -1,7 +1,8 @@
+import { SignUpForm } from "@/features/auth/SignUpForm/SignUpForm";
 
 
-export default function SignUpPage() {
+export function SignUpPage() {
   return (
-    <div>SignUpPage</div>
+    <div><SignUpForm/></div>
   )
 }

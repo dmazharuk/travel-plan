@@ -1,4 +1,4 @@
-
+// import { IUserSignInData, IUserSignUpData } from '@/entities/user';
 
 import { IUserSignInData, IUserSignUpData } from "@/app/entities/user";
 
@@ -11,7 +11,7 @@ export default class UserValidator {
     username,
     email,
     password,
-    
+    repeatPassword,
   }: IUserSignUpValidateData) {
     if (
       !username ||
@@ -50,8 +50,12 @@ export default class UserValidator {
       };
     }
 
-    
-    
+    if (repeatPassword !== password) {
+      return {
+        isValid: false,
+        error: "Passwords don't match",
+      };
+    }
 
     return {
       isValid: true,
