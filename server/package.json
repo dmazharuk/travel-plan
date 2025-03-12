@@ -1,0 +1,44 @@
+{
+  "name": "code",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./src/app.js",
+    "dev": "nodemon ./src/app.js --ext js,json,css,jsx",
+    "dbHelp": "npx sequelize --help",
+    "dbCreate": "npx sequelize db:create",
+    "dbDrop": "npx sequelize db:drop",
+    "dbMig": "npx sequelize db:migrate",
+    "dbMigUndo": "npx sequelize db:migrate:undo:all",
+    "dbSeed": "npx sequelize db:seed:all",
+    "dbSeedUndo": "npx sequelize db:seed:undo:all",
+    "dbModGen": "npx sequelize model:generate --name Test --attributes title:string",
+    "dbSeedGen": "npx sequelize seed:generate --name Seed",
+    "dbReset": "npx sequelize db:drop && npx sequelize db:create && npx sequelize db:migrate && npx sequelize db:seed:all"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@eslint/js": "^9.20.0",
+    "eslint": "^9.20.1",
+    "globals": "^15.15.0"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "nodemon": "^3.1.9",
+    "pg": "^8.13.3",
+    "pg-hstore": "^2.3.4",
+    "react-hook-form": "^7.54.2",
+    "sequelize": "^6.37.5",
+    "sequelize-cli": "^6.6.2"
+  }
+}
