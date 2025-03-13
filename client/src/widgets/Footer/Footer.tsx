@@ -1,5 +1,7 @@
+import styles from './Footer.module.css';
 import { JSX } from 'react';
 
-export function Footer(): JSX.Element {
-  return <div>Footer</div>;
+export default function Footer(): JSX.Element {
+  return <div className={styles.container}>Footer</div>;
 }
+

@@ -18,7 +18,7 @@ export function SignUpForm() {
   );
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const globalError = useAppSelector((state) => state.user.error);
+  // const globalError = useAppSelector((state) => state.user.error);
 
   const onChangeHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputs((prev) => ({ ...prev, [event.target.name]: event.target.value }));
@@ -30,9 +30,9 @@ export function SignUpForm() {
     if (!isValid) return alert(error);
 
     try {
-      await dispatch(signUpThunk(inputs));
-      if (globalError) {
-        alert(globalError);
+      const resultAction = await dispatch(signUpThunk(inputs));
+      if (resultAction.payload?.error) {
+        alert('ошибка авторизации');
         return;
       }
       alert('вы вошли в приложение');

@@ -1,5 +1,5 @@
 import { useAppDispatch } from '@/shared/hooks/reduxHooks';
-import { Footer } from '@/widgets/Footer/Footer';
+import Footer from '@/widgets/Footer/Footer';
 import { Header } from '@/widgets/Header/Header';
 import { JSX, useEffect } from 'react';
 import { Outlet } from 'react-router';
