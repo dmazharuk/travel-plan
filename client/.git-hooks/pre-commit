@@ -31,7 +31,7 @@ npx stylelint "**/*.css" --ignore-path .stylelintignore --fix || {
 #     echo "❌ Ошибка сборки проекта"
 #     cd "$CURRENT_DIR"
 #     exit 1
-# c}
+# }
 
 # Возвращаемся в исходную директорию
 
