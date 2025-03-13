@@ -1,0 +1,9 @@
+cd client
+npm i
+npm run build
+if [ $? -ne 0 ]; then
+  echo "Сборка не удалась. Коммит прерван."
+  exit 1
+fi
+
+exit 0
