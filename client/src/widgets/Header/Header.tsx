@@ -4,6 +4,7 @@ import { CLIENT_ROUTES } from '@/shared/enums/clientRoutes';
 import { useAppDispatch, useAppSelector } from '@/shared/hooks/reduxHooks';
 import { JSX, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router';
+import styles from './Header.module.css';
 
 export function Header(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -18,16 +19,20 @@ export function Header(): JSX.Element {
   const onSignOutHandler = async () => {
     dispatch(signOutThunk());
     alert('Вы вышли');
-    navigate(CLIENT_ROUTES.MAIN);
+    navigate(CLIENT_ROUTES.WELCOME_PAGE);
   };
 
   return (
-    <nav>
-      <NavLink to={CLIENT_ROUTES.MAIN}>Main</NavLink>
+    <nav className={styles.container}>
+      <NavLink to={CLIENT_ROUTES.WELCOME_PAGE}>Начало тут</NavLink>
       {user ? (
+        <>
         <button onClick={onSignOutHandler}>Выйти</button>
+        </>
       ) : (
+        <>
         <button onClick={openModal}>Войти</button>
+        </>
       )}
 
       {isModalOpen && <SignInModal closeModal={closeModal} />}
