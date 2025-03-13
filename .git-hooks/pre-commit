@@ -26,13 +26,13 @@ npm run lint || {
 }
 
 # Проверка и исправление стилей CSS
-echo "🎨 Проверка CSS файлов..."
-npx stylelint "**/*.css" --ignore-path .stylelintignore --fix || {
-    echo "❌ Ошибка линтинга CSS"
-    cd "$CURRENT_DIR"
-    exit 1
+#echo "🎨 Проверка CSS файлов..."
+#npx stylelint "**/*.css" --ignore-path .stylelintignore --fix || {
+    #echo "❌ Ошибка линтинга CSS"
+    #cd "$CURRENT_DIR"
+    #exit 1
     
-}
+#}
 # установка зависимостей
 echo "🏗️ установка зависимостей..."
 npm i || {

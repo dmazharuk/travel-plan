@@ -1,5 +1,5 @@
 
-import React, { JSX } from "react";
+import  { JSX } from "react";
 import { motion } from "framer-motion"; // Импортируем motion из framer-motion
 import Parallax from "@/features/parallax/ui/Parallax";
 import styles from "./WelcomePage.module.css";

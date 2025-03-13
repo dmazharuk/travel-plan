@@ -1,21 +1,21 @@
 .container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background-color: #ffffff; /* Белый фон */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Легкая тень для разделения */
   position: sticky;
   top: 0;
   z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background-color: #fff; /* Белый фон */
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%); /* Легкая тень для разделения */
 }
 
 .container a {
-  text-decoration: none;
-  color: #333; /* Основной цвет текста */
-  font-size: 1rem;
-  margin: 0 1rem;
   padding: 0.5rem 1rem;
+  margin: 0 1rem;
+  font-size: 1rem;
+  color: #333; /* Основной цвет текста */
+  text-decoration: none;
   border-radius: 8px;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -31,14 +31,14 @@
 
 button {
   padding: 0.5rem 1rem;
-  background-color: #ff4d4d; /* Красный цвет для кнопки выхода */
   color: white;
+  cursor: pointer;
+  background-color: #ff4d4d; /* Красный цвет для кнопки выхода */
   border: none;
   border-radius: 8px;
-  cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 button:hover {
-  background-color: #cc0000; /* Эффект при наведении */
+  background-color: #c00; /* Эффект при наведении */
 }
