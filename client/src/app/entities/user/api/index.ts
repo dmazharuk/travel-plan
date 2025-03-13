@@ -50,7 +50,7 @@ export const signInThunk = createAsyncThunk<
     return rejectWithValue(err.response!.data);
   }
 });
-
+//
 export const signUpThunk = createAsyncThunk<
   IServerResponse<IAuthResponseData>,
   IUserSignUpData,
