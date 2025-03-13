@@ -10,10 +10,10 @@ export default function Router(): JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path={CLIENT_ROUTES.MAIN} element={<Layout />}>
-          <Route path={CLIENT_ROUTES.MAIN} element={<MainPage />} />
-          <Route path = {CLIENT_ROUTES.SIGN_UP} element = {<SignUpPage/>}/>
+        <Route path={CLIENT_ROUTES.WELCOME_PAGE} element={<Layout />}>
+          {/* <Route path={CLIENT_ROUTES.MAIN} element={<MainPage />} /> */}
           <Route path = {CLIENT_ROUTES.WELCOME_PAGE} element = {<WelcomePage/>}/>
+          <Route path = {CLIENT_ROUTES.SIGN_UP} element = {<SignUpPage/>}/>
           <Route path={CLIENT_ROUTES.NOT_FOUND} element={<NotFoundPage />} />
         </Route>
       </Routes>
