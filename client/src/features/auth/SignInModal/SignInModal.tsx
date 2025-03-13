@@ -88,7 +88,10 @@ export function SignInModal({ closeModal }: SignInModalProps) {
           Не зарегестрированы?
           <span
             className={styles.registerLink}
-            onClick={() => navigate(CLIENT_ROUTES.SIGN_UP)}
+            onClick={() => {
+              closeModal();
+              navigate(CLIENT_ROUTES.SIGN_UP);
+            }}
           >
             зарегистрироваться
           </span>

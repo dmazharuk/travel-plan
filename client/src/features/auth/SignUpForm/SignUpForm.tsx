@@ -13,7 +13,9 @@ const INITIAL_INPUTS_DATA = {
 };
 
 export function SignUpForm() {
-  const [inputs, setInputs] = useState<IUserSignUpData & { repeatPassword: string }>(INITIAL_INPUTS_DATA);
+  const [inputs, setInputs] = useState<IUserSignUpData & { repeatPassword: string }>(
+    INITIAL_INPUTS_DATA,
+  );
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const globalError = useAppSelector((state) => state.user.error);
@@ -71,15 +73,22 @@ export function SignUpForm() {
         onChange={onChangeHandler}
         autoFocus
       />
-       <input
-        type='password'
-        name='repeatPassword'
-        placeholder='повторите ваш пароль'
+      <input
+        type="password"
+        name="repeatPassword"
+        placeholder="повторите ваш пароль"
         onChange={onChangeHandler}
         value={repeatPassword}
         autoFocus
       />
-      <button type="submit">регистрация</button>
+      <button
+        type="submit"
+        onClick={() => {
+          navigate(CLIENT_ROUTES.MAIN);
+        }}
+      >
+        регистрация
+      </button>
     </form>
   );
 }
