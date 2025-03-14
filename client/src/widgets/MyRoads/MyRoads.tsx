@@ -2,6 +2,8 @@ import { getAllRoads, updateRoad } from '@/app/entities/road';
 import { useAppDispatch, useAppSelector } from '@/shared/hooks/reduxHooks';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
+import styles from "./MyRoads.module.css";
+
 
 export function MyRoads() {
   const dispatch = useAppDispatch();
@@ -46,35 +48,35 @@ export function MyRoads() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="p-4 max-w-3xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Мой кабинет</h1>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Мой кабинет</h1>
         <button
           onClick={() => navigate('/create-road')}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
+          className={styles.createButton}
         >
           Создать новый маршрут
         </button>
       </div>
 
       {userRoads.length === 0 ? (
-        <div className="text-center py-8 text-gray-500">
+        <div className={styles.emptyMessage}>
           У вас пока нет созданных маршрутов
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className={styles.roadList}>
           {userRoads.map((road) => (
             <div
               key={road.id}
-              className="border rounded-lg p-4 hover:bg-gray-50 transition-colors cursor-pointer"
+              className={styles.roadItem}
               onClick={() => handleRoadClick(road.id)}
             >
-              <div className="flex justify-between items-center">
+              <div className={styles.roadHeader}>
                 <div>
-                  <h3 className="text-lg font-semibold">
+                  <h3 className={styles.roadTitle}>
                     {road.city}, {road.country}
                   </h3>
-                  <p className="text-sm text-gray-500">
+                  <p className={styles.roadDate}>
                     Создан: {new Date(road.createdAt).toLocaleDateString()}
                   </p>
                 </div>
@@ -84,11 +86,9 @@ export function MyRoads() {
                     e.stopPropagation();
                     handleToggleVisibility(road.id, road.visibility);
                   }}
-                  className={
-                    road.visibility === 'public'
-                      ? 'bg-gray-300 px-3 py-1 rounded'
-                      : 'border border-gray-500 px-3 py-1 rounded'
-                  }
+                  className={`${styles.visibilityButton} ${
+                    road.visibility === 'public' ? styles.public : ''
+                  }`}
                 >
                   {road.visibility === 'public' ? 'Публичный' : 'Приватный'}
                 </button>

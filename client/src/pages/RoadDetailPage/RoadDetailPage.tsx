@@ -1,14 +1,22 @@
-import { deleteRoad, getRoadById, IRoad, updateRoad } from "@/app/entities/road";
+import {
+  deleteRoad,
+  getRoadById,
+  IRoad,
+  updateRoad,
+} from "@/app/entities/road";
 import { CLIENT_ROUTES } from "@/shared/enums/clientRoutes";
 import { useAppDispatch, useAppSelector } from "@/shared/hooks/reduxHooks";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import styles from "./RoadDetailPage.module.css";
 
 export function RoadDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const road = useAppSelector((state) => state.road.roads.find((road) => road.id === Number(id)));
+  const road = useAppSelector((state) =>
+    state.road.roads.find((road) => road.id === Number(id))
+  );
 
   const [editable, setEditable] = useState(false);
   const [formData, setFormData] = useState<Partial<IRoad>>({
@@ -51,7 +59,11 @@ export function RoadDetailPage() {
     }
   }, [road]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -72,69 +84,69 @@ export function RoadDetailPage() {
   if (!road) return <p>Загрузка...</p>;
 
   return (
-    <div className="container mt-4">
-      <h2>Детали маршрута</h2>
-      <div className="mb-3">
-        <label className="form-label">Страна</label>
+    <div className={styles.container}>
+      <h2 className={styles.title}>Детали маршрута</h2>
+      <div className={styles.formGroup}>
+        <label className={styles.formLabel}>Страна</label>
         <input
           type="text"
           name="country"
-          className="form-control"
-          value={formData.country || ''}
+          className={styles.formInput}
+          value={formData.country || ""}
           onChange={handleChange}
           disabled={!editable}
         />
       </div>
-      <div className="mb-3">
-        <label className="form-label">Город</label>
+      <div className={styles.formGroup}>
+        <label className={styles.formLabel}>Город</label>
         <input
           type="text"
           name="city"
-          className="form-control"
-          value={formData.city || ''}
+          className={styles.formInput}
+          value={formData.city || ""}
           onChange={handleChange}
           disabled={!editable}
         />
       </div>
-      <div className="mb-3">
-        <label className="form-label">Транспорт</label>
+      <div className={styles.formGroup}>
+        <label className={styles.formLabel}>Транспорт</label>
         <input
           type="text"
           name="transport"
-          className="form-control"
-          value={formData.transport || ''}
+          className={styles.formInput}
+          value={formData.transport || ""}
           onChange={handleChange}
           disabled={!editable}
         />
       </div>
-      <div className="mb-3">
-        <label className="form-label">Информация о транспорте</label>
+      <div className={styles.formGroup}>
+        <label className={styles.formLabel}>Информация о транспорте</label>
         <input
           type="text"
           name="transportInfo"
-          className="form-control"
-          value={formData.transportInfo || ''}
+          className={styles.formInput}
+          value={formData.transportInfo || ""}
           onChange={handleChange}
           disabled={!editable}
         />
       </div>
-      <div className="mb-3">
-        <label className="form-label">Информация о маршруте</label>
+      <div className={styles.formGroup}>
+        <label className={styles.formLabel}>Информация о маршруте</label>
         <input
           type="text"
           name="routeInfo"
-          className="form-control"
-          value={formData.routeInfo || ''}
+          className={styles.formInput}
+          value={formData.routeInfo || ""}
           onChange={handleChange}
           disabled={!editable}
         />
       </div>
-      <div className="mb-3">
-        <label className="form-label">Приватность</label>
+      <div className={styles.formGroup}>
+        <label className={styles.formLabel}>Приватность</label>
         <select
           name="visibility"
-          className="form-control"
-          value={formData.visibility || ''}
+          className={styles.formSelect}
+          value={formData.visibility || ""}
           onChange={handleChange}
           disabled={!editable}
         >
@@ -143,83 +155,94 @@ export function RoadDetailPage() {
           <option value="public">Публичный</option>
         </select>
       </div>
-      <div className="mb-3">
-        <label className="form-label">Дата начала поездки</label>
+      <div className={styles.formGroup}>
+        <label className={styles.formLabel}>Дата начала поездки</label>
         <input
           type="date"
           name="startDate"
-          className="form-control"
-          value={formData.startDate || ''}
+          className={styles.formInput}
+          value={formData.startDate || ""}
           onChange={handleChange}
           disabled={!editable}
         />
       </div>
-      <div className="mb-3">
-        <label className="form-label">Дата окончания поездки</label>
+      <div className={styles.formGroup}>
+        <label className={styles.formLabel}>Дата окончания поездки</label>
         <input
           type="date"
           name="endDate"
-          className="form-control"
-          value={formData.endDate || ''}
+          className={styles.formInput}
+          value={formData.endDate || ""}
           onChange={handleChange}
           disabled={!editable}
         />
       </div>
-      <div className="mb-3">
-        <label className="form-label">Название отеля</label>
+      <div className={styles.formGroup}>
+        <label className={styles.formLabel}>Название отеля</label>
         <input
           type="text"
           name="hotelName"
-          className="form-control"
-          value={formData.hotelName || ''}
+          className={styles.formInput}
+          value={formData.hotelName || ""}
           onChange={handleChange}
           disabled={!editable}
         />
       </div>
-      <div className="mb-3">
-        <label className="form-label">Дата заезда</label>
+      <div className={styles.formGroup}>
+        <label className={styles.formLabel}>Дата заезда</label>
         <input
           type="date"
           name="checkInDate"
-          className="form-control"
-          value={formData.checkInDate || ''}
+          className={styles.formInput}
+          value={formData.checkInDate || ""}
           onChange={handleChange}
           disabled={!editable}
         />
       </div>
-      <div className="mb-3">
-        <label className="form-label">Дата выезда</label>
+      <div className={styles.formGroup}>
+        <label className={styles.formLabel}>Дата выезда</label>
         <input
           type="date"
           name="checkOutDate"
-          className="form-control"
-          value={formData.checkOutDate || ''}
+          className={styles.formInput}
+          value={formData.checkOutDate || ""}
           onChange={handleChange}
           disabled={!editable}
         />
       </div>
-      <div className="mb-3">
-        <label className="form-label">План посещения мест</label>
+      <div className={styles.formGroup}>
+        <label className={styles.formLabel}>План посещения мест</label>
         <textarea
           name="placesToVisit"
-          className="form-control"
-          value={formData.placesToVisit || ''}
+          className={styles.formTextarea}
+          value={formData.placesToVisit || ""}
           onChange={handleChange}
           disabled={!editable}
         />
       </div>
 
-      <button className="btn btn-primary me-2" onClick={() => setEditable(!editable)}>
-        {editable ? 'Отменить' : 'Изменить маршрут'}
-      </button>
-      {editable && (
-        <button className="btn btn-success me-2" onClick={handleSave}>
-          Сохранить
+      <div className={styles.buttonGroup}>
+        <button
+          className={`${styles.button} ${styles.buttonPrimary}`}
+          onClick={() => setEditable(!editable)}
+        >
+          {editable ? "Отменить" : "Изменить маршрут"}
         </button>
-      )}
-      <button className="btn btn-danger" onClick={handleDelete}>
-        Удалить маршрут
-      </button>
+        {editable && (
+          <button
+            className={`${styles.button} ${styles.buttonSuccess}`}
+            onClick={handleSave}
+          >
+            Сохранить
+          </button>
+        )}
+        <button
+          className={`${styles.button} ${styles.buttonDanger}`}
+          onClick={handleDelete}
+        >
+          Удалить маршрут
+        </button>
+      </div>
     </div>
   );
 }
