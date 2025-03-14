@@ -39,7 +39,7 @@ export function MyRoads() {
   };
 
   const handleRoadClick = (roadId: number) => {
-    navigate(`/road/${roadId}`);
+    navigate(`/cabinet/road/${roadId}`);
   };
 
   if (isLoading) return <div>Loading...</div>;
