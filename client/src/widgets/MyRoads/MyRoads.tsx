@@ -1,4 +1,4 @@
-import { getAllRoads, updateRoad } from '@/app/entities/route';
+import { getAllRoads, updateRoad } from '@/app/entities/road';
 import { useAppDispatch, useAppSelector } from '@/shared/hooks/reduxHooks';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
@@ -18,11 +18,10 @@ export function MyRoads() {
 
   const handleToggleVisibility = (roadId: number, currentVisibility: string) => {
     const newVisibility = currentVisibility === 'public' ? 'private' : 'public';
-  
+
     const roadToUpdate = roads.find((road) => road.id === roadId);
-  
+
     if (roadToUpdate) {
-      
       const updatedRoadData = {
         ...roadToUpdate,
         visibility: newVisibility,
@@ -32,9 +31,10 @@ export function MyRoads() {
         transportInfo: roadToUpdate.transportInfo,
         routeInfo: roadToUpdate.routeInfo,
       };
-  
-     
-      dispatch(updateRoad({ id: roadId, roadData: updatedRoadData }));
+
+      dispatch(updateRoad({ id: roadId, roadData: updatedRoadData })).then(() =>
+        dispatch(getAllRoads()),
+      );
     }
   };
 

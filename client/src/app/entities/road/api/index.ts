@@ -2,7 +2,7 @@ import { axiosInstance } from '@/shared/lib/axiosInstance';
 import { IServerResponse } from '@/shared/types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosError } from 'axios';
-import { IRoad } from '../model';
+import { IRoad, IRoadRowData } from '../model';
 
 enum ROAD_THUNK_TYPES {
   ALL_ROADS = 'ALL_ROADS',
@@ -52,7 +52,7 @@ export const getAllRoads = createAsyncThunk<
 // Создать маршрут
 export const createRoad = createAsyncThunk<
   IServerResponse<IRoad>,
-  IRoad,
+  IRoadRowData,
   { rejectValue: IServerResponse }
 >(ROAD_THUNK_TYPES.CREATE_ROAD, async (roadData, { rejectWithValue }) => {
   try {
@@ -63,6 +63,7 @@ export const createRoad = createAsyncThunk<
     return data;
   } catch (error) {
     const err = error as AxiosError<IServerResponse>;
+    console.error("Ошибка при создании маршрута", err);
     return rejectWithValue(
       err.response
         ? err.response.data
