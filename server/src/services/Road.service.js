@@ -7,10 +7,12 @@ class RoadService {
       include: [
         {
           model: User, // Пользователь, создавший маршрут
+          as:"author",
           attributes: ['id', 'username', 'email'],
         },
         {
           model: User, // Список спутников
+          as:"companions",
           through: { attributes: [] }, // Исключаем промежуточную таблицу
           attributes: ['id', 'username', 'email'],
         },
@@ -24,10 +26,12 @@ class RoadService {
       include: [
         {
           model: User, // Пользователь, создавший маршрут
+          as:"author",
           attributes: ['id', 'username', 'email'],
         },
         {
           model: User, // Список спутников
+          as:"companions",
           through: { attributes: [] }, // Исключаем промежуточную таблицу
           attributes: ['id', 'username', 'email'],
         },
@@ -68,24 +72,24 @@ class RoadService {
   }
 
   //* Добавить пользователя в спутники маршрута
-  static async addCompanion(roadId, userId) {
-    const road = await this.getById(roadId);
-    if (!road) {
-      return null;
-    }
-    const companion = await Companion.create({ roadId, userId });
-    return companion;
-  }
+  // static async addCompanion(roadId, userId) {
+  //   const road = await this.getById(roadId);
+  //   if (!road) {
+  //     return null;
+  //   }
+  //   const companion = await Companion.create({ roadId, userId });
+  //   return companion;
+  // }
 
   //* Удалить пользователя из спутников маршрута
-  static async removeCompanion(roadId, userId) {
-    const companion = await Companion.findOne({ where: { roadId, userId } });
-    if (!companion) {
-      return null;
-    }
-    await companion.destroy();
-    return companion;
-  }
+  // static async removeCompanion(roadId, userId) {
+  //   const companion = await Companion.findOne({ where: { roadId, userId } });
+  //   if (!companion) {
+  //     return null;
+  //   }
+  //   await companion.destroy();
+  //   return companion;
+  // }
 }
 
 module.exports = RoadService;

@@ -15,6 +15,7 @@ export default function Router(): JSX.Element {
         <Route path={CLIENT_ROUTES.MAIN} element={<Layout />}>
           <Route path={CLIENT_ROUTES.MAIN} element={<MainPage />} />
           <Route path = {CLIENT_ROUTES.SIGN_UP} element = {<SignUpPage/>}/>
+          <Route path = {CLIENT_ROUTES.CABINET_PAGE} element = {<CabinetPage/>}/>
           {/* <Route path = {CLIENT_ROUTES.WELCOME_PAGE} element = {<WelcomePage/>}/> */}
      {/* <Route path={CLIENT_ROUTES.WELCOME_PAGE} element={<Layout />}>  */}
           

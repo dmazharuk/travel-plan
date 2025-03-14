@@ -74,7 +74,8 @@ export const createRoad = createAsyncThunk<
 // Обновить маршрут
 export const updateRoad = createAsyncThunk<
   IServerResponse<IRoad>,
-  { id: number; roadData: IRoad },
+  // { id: number; roadData: IRoad },
+  { id: number; roadData: Partial<IRoad> }, // Теперь можно передавать только изменяемые поля
   { rejectValue: IServerResponse }
 >(ROAD_THUNK_TYPES.UPDATE_ROAD, async ({ id, roadData }, { rejectWithValue }) => {
   try {

@@ -3,11 +3,14 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Road extends Model {
     static associate(models) {
-      Road.belongsTo(models.User, { foreignKey: 'userId' });
+      
+      Road.belongsTo(models.User, { foreignKey: 'userId', as: 'author' });
+      
       Road.belongsToMany(models.User, {
         through: models.Companion,
         foreignKey: 'roadId',
         otherKey: 'userId',
+        as: 'companions',
       });
     }
   }
