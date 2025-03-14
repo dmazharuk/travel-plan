@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "stylelint-config-recess-order": "^6.0.0"
+  }
+}
