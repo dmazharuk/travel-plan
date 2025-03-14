@@ -4,8 +4,8 @@
   padding: 2rem;
   margin: 0 auto;
   background-color: #f5f5f5; /* Светлый фон для контраста */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
 }
 
 .formTitle {
@@ -22,10 +22,10 @@
 
 .formLabel {
   display: block;
+  margin-bottom: 0.5rem;
   font-size: 0.9rem;
   font-weight: 500;
   color: #3d2c2e; /* Глубокий коричнево-красный */
-  margin-bottom: 0.5rem;
 }
 
 .formInput,
@@ -33,42 +33,17 @@
 .formTextarea {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
   font-size: 1rem;
   color: #333;
   background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.formInput:focus,
-.formSelect:focus,
-.formTextarea:focus {
-  border-color: #5a3d3f; /* Темный оттенок коричнево-красного */
-  box-shadow: 0 0 0 3px rgba(90, 61, 63, 0.1); /* Акцент на фокусе */
-  outline: none;
-}
-
 .formTextarea {
-  resize: vertical;
   min-height: 120px;
-}
-
-/* Стили для кнопки */
-.submitButton {
-  background-color: #5a3d3f; /* Темный оттенок коричнево-красного */
-  color: #fff;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.submitButton:hover {
-  background-color: #3d2c2e; /* Еще более темный оттенок */
+  resize: vertical;
 }
 
 /* Дополнительные стили для выпадающих списков и дат */
@@ -80,16 +55,42 @@
   background-size: 1rem;
 }
 
+.formInput:focus,
+.formSelect:focus,
+.formTextarea:focus {
+  outline: none;
+  border-color: #5a3d3f; /* Темный оттенок коричнево-красного */
+  box-shadow: 0 0 0 3px rgb(90 61 63 / 10%); /* Акцент на фокусе */
+}
+
+
+/* Стили для кнопки */
+.submitButton {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+  background-color: #5a3d3f; /* Темный оттенок коричнево-красного */
+  border: none;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.submitButton:hover {
+  background-color: #3d2c2e; /* Еще более темный оттенок */
+}
+
 /* Стили для разделов с дополнительными полями */
 .additionalFields {
-  margin-top: 1rem;
   padding: 1rem;
+  margin-top: 1rem;
   background-color: #e8e8e8; /* Светлый фон для выделения */
   border-radius: 8px;
 }
 
 /* Адаптивность */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .formContainer {
     padding: 1rem;
   }

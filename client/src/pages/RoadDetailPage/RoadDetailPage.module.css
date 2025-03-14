@@ -1,0 +1,127 @@
+/* Основные стили для контейнера */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #f5f5f5; /* Светлый фон для контраста */
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Заголовок страницы */
+.title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #3d2c2e; /* Глубокий коричнево-красный */
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Стили для формы */
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.formLabel {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #3d2c2e; /* Глубокий коричнево-красный */
+  margin-bottom: 0.5rem;
+}
+
+.formInput,
+.formSelect,
+.formTextarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #333;
+  background-color: #fff;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.formInput:focus,
+.formSelect:focus,
+.formTextarea:focus {
+  border-color: #5a3d3f; /* Темный оттенок коричнево-красного */
+  box-shadow: 0 0 0 3px rgba(90, 61, 63, 0.1); /* Акцент на фокусе */
+  outline: none;
+}
+
+.formTextarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* Стили для кнопок */
+.buttonGroup {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.buttonPrimary {
+  background-color: #5a3d3f; /* Темный оттенок коричнево-красного */
+  color: #fff;
+}
+
+.buttonPrimary:hover {
+  background-color: #3d2c2e; /* Еще более темный оттенок */
+}
+
+.buttonSuccess {
+  background-color: #4caf50; /* Зеленый для кнопки сохранения */
+  color: #fff;
+}
+
+.buttonSuccess:hover {
+  background-color: #388e3c; /* Темный зеленый */
+}
+
+.buttonDanger {
+  background-color: #f44336; /* Красный для кнопки удаления */
+  color: #fff;
+}
+
+.buttonDanger:hover {
+  background-color: #d32f2f; /* Темный красный */
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .formInput,
+  .formSelect,
+  .formTextarea {
+    padding: 0.5rem;
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+  }
+
+  .button {
+    width: 100%;
+    padding: 0.75rem;
+  }
+}
