@@ -1,4 +1,4 @@
-const { Road, User, Companion } = require('../db/models');
+const { Road, User } = require('../db/models');
 
 class RoadService {
   //* Получить все маршруты
@@ -7,12 +7,12 @@ class RoadService {
       include: [
         {
           model: User, // Пользователь, создавший маршрут
-          as:"author",
+          as: "author",
           attributes: ['id', 'username', 'email'],
         },
         {
           model: User, // Список спутников
-          as:"companions",
+          as: "companions",
           through: { attributes: [] }, // Исключаем промежуточную таблицу
           attributes: ['id', 'username', 'email'],
         },
@@ -26,12 +26,12 @@ class RoadService {
       include: [
         {
           model: User, // Пользователь, создавший маршрут
-          as:"author",
+          as: "author",
           attributes: ['id', 'username', 'email'],
         },
         {
           model: User, // Список спутников
-          as:"companions",
+          as: "companions",
           through: { attributes: [] }, // Исключаем промежуточную таблицу
           attributes: ['id', 'username', 'email'],
         },
@@ -41,7 +41,17 @@ class RoadService {
 
   //* Создать новый маршрут
   static async create(data) {
-    const road = await Road.create(data);
+    // Для создания нового маршрута пропускаем поля, не требующие валидации
+    const { city, country, transport, visibility, transportInfo, routeInfo, userId } = data;
+    const road = await Road.create({
+      city,
+      country,
+      transport,
+      visibility,
+      transportInfo,
+      routeInfo,
+      userId,
+    });
     return await this.getById(road.id);
   }
 
@@ -51,12 +61,15 @@ class RoadService {
     if (!road) {
       return null;
     }
-    road.country = data.country || road.country;
+
+    // Обновляем только поля, если они были переданы, иначе оставляем старые значения
     road.city = data.city || road.city;
+    road.country = data.country || road.country;
     road.transport = data.transport || road.transport;
     road.transportInfo = data.transportInfo || road.transportInfo;
     road.routeInfo = data.routeInfo || road.routeInfo;
     road.visibility = data.visibility || road.visibility;
+
     await road.save();
     return road;
   }

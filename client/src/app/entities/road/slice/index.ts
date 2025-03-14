@@ -28,12 +28,11 @@ const roadSlice = createSlice({
       .addCase(getAllRoads.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
-        state.roads = action.payload.data;
+        state.roads = action.payload.data; // Данные маршрутов с автором
       })
       .addCase(getAllRoads.rejected, (state, action) => {
-        (state.isLoading = false);
-          (state.error = action.payload?.error ?? 'Unknown error');
-        // state.roads = [];
+        state.isLoading = false;
+        state.error = action.payload?.error ?? 'Unknown error';
       })
       // createRoadThunk
       .addCase(createRoad.pending, (state) => {
@@ -42,6 +41,7 @@ const roadSlice = createSlice({
       .addCase(createRoad.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
+        // Если массив уже существует, добавляем новый маршрут, иначе создаем новый массив
         if (state.roads) {
           state.roads.push(action.payload.data);
         } else {
@@ -51,7 +51,6 @@ const roadSlice = createSlice({
       .addCase(createRoad.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload?.error ?? 'Unknown error';
-        // state.roads = [];
       })
       // updateRoadThunk
       .addCase(updateRoad.pending, (state) => {
@@ -69,9 +68,8 @@ const roadSlice = createSlice({
       .addCase(updateRoad.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload?.error ?? 'Unknown error';
-        // state.roads = [];
       })
-      //deleteRoadThunk
+      // deleteRoadThunk
       .addCase(deleteRoad.pending, (state) => {
         state.isLoading = true;
       })
@@ -85,9 +83,8 @@ const roadSlice = createSlice({
       .addCase(deleteRoad.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload?.error ?? 'Unknown error';
-        // state.roads = [];
       })
-      //getRoadByIdThunk
+      // getRoadByIdThunk
       .addCase(getRoadById.pending, (state) => {
         state.isLoading = true;
       })
@@ -108,6 +105,5 @@ const roadSlice = createSlice({
       });
   },
 });
-
 
 export const roadReducer = roadSlice.reducer;
