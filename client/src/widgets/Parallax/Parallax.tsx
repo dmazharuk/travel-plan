@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import styles from './Parallax.module.css'; 
 
+//fghjk
+
 const Parallax: React.FC = () => {
   const backgroundRef = useRef<HTMLDivElement>(null);
   const foregroundRef = useRef<HTMLDivElement>(null);
