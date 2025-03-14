@@ -79,8 +79,8 @@ class RoadController {
       transportInfo,
       routeInfo,
     });
-    if (!isValid(id)) {
-      return res.status(400).json(formatResponse(400, 'ошибка валидации'), null, error);
+    if (!isValid) {
+      return res.status(400).json(formatResponse(400, 'ошибка валидации', null, error));
     }
     try {
       const existingRoad = await RoadService.getById(Number(id));
@@ -90,8 +90,8 @@ class RoadController {
 
       if (existingRoad.userId !== user.id) {
         return res
-          .status(400)
-          .json(formatResponse(400, 'Маршрут не принадлежит пользователю'));
+          .status(403)
+          .json(formatResponse(403, 'Маршрут не принадлежит пользователю'));
       }
       const updatedRoad = await RoadService.update(Number(id), {
         city,
@@ -121,11 +121,11 @@ if(!isValidId(id)){
 try {
 const existingRoad = await RoadService.getById(Number(id));
 if(!existingRoad){
-  return res.status(404).json(formatResponse(400, 'Маршрут не найден'));
+  return res.status(404).json(formatResponse(404, 'Маршрут не найден'));
 }
 
 if(existingRoad.userId !== user.id){
-  return res.status(400).json(formatResponse(400, 'Маршрут не принадлежит пользователю'));
+  return res.status(403).json(formatResponse(403, 'Маршрут не принадлежит пользователю'));
 } 
   await RoadService.delete(Number(id));
   res.status(200).json(formatResponse(200, 'Маршрут успешно удален'));

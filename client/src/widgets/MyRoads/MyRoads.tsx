@@ -18,7 +18,24 @@ export function MyRoads() {
 
   const handleToggleVisibility = (roadId: number, currentVisibility: string) => {
     const newVisibility = currentVisibility === 'public' ? 'private' : 'public';
-    dispatch(updateRoad({ id: roadId, roadData: { visibility: newVisibility }}));
+  
+    const roadToUpdate = roads.find((road) => road.id === roadId);
+  
+    if (roadToUpdate) {
+      
+      const updatedRoadData = {
+        ...roadToUpdate,
+        visibility: newVisibility,
+        city: roadToUpdate.city,
+        country: roadToUpdate.country,
+        transport: roadToUpdate.transport,
+        transportInfo: roadToUpdate.transportInfo,
+        routeInfo: roadToUpdate.routeInfo,
+      };
+  
+     
+      dispatch(updateRoad({ id: roadId, roadData: updatedRoadData }));
+    }
   };
 
   const handleRoadClick = (roadId: number) => {
@@ -31,7 +48,7 @@ export function MyRoads() {
   return (
     <div className="p-4 max-w-3xl mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Мои маршруты</h1>
+        <h1 className="text-2xl font-bold">Мой кабинет</h1>
         <button
           onClick={() => navigate('/create-road')}
           className="bg-blue-500 text-white px-4 py-2 rounded"
