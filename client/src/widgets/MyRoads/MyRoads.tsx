@@ -14,7 +14,7 @@ export function MyRoads() {
     dispatch(getAllRoads());
   }, [dispatch]);
 
-  const userRoads = roads.filter((road) => road.userId === user?.id);
+  const userRoads = roads.filter((road) => road.author.id === user?.id);
 
   const handleToggleVisibility = (roadId: number, currentVisibility: string) => {
     const newVisibility = currentVisibility === 'public' ? 'private' : 'public';
@@ -39,7 +39,7 @@ export function MyRoads() {
   };
 
   const handleRoadClick = (roadId: number) => {
-    navigate(`/road/${roadId}`);
+    navigate(`/cabinet/road/${roadId}`);
   };
 
   if (isLoading) return <div>Loading...</div>;

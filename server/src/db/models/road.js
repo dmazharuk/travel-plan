@@ -20,9 +20,20 @@ module.exports = (sequelize, DataTypes) => {
       country: DataTypes.STRING,
       city: DataTypes.STRING,
       transport: DataTypes.ENUM('поезд', 'самолет', 'машина'),
-      transportInfo: DataTypes.TEXT,
-      routeInfo: DataTypes.TEXT,
+      transportInfo: DataTypes.TEXT, // Информация о транспорте (включая время отправления, прибытия и номер рейса)
+      routeInfo: DataTypes.TEXT, // Информация о маршруте (включая жилье, посещение мест)
       visibility: DataTypes.ENUM('private', 'friends', 'public'),
+      
+      // Новые поля
+      departureDate: DataTypes.DATE, // Дата отправления
+      arrivalDate: DataTypes.DATE, // Дата прибытия
+      flightTrainNumber: DataTypes.STRING, // Номер рейса/поезда (для самолета и поезда)
+      accommodation: DataTypes.STRING, // Название отеля
+      checkInDate: DataTypes.DATE, // Дата заезда в отель
+      checkOutDate: DataTypes.DATE, // Дата выезда из отеля
+      visitDates: DataTypes.JSONB, // Даты посещения мест (массив дат)
+      tripStartDate: DataTypes.DATE, // Общая дата начала поездки
+      tripEndDate: DataTypes.DATE, // Общая дата конца поездки
     },
     {
       sequelize,

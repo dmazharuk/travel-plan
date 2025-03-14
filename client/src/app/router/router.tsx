@@ -7,6 +7,7 @@ import {SignUpPage} from '@/pages/SignUpPage/SignUpPage';
 // import { WelcomePage } from '@/pages/WelcomePage/WelcomePage';
 import CabinetPage from '@/pages/CabinetPage/CabinetPage';
 import { CreateRoadPage } from '@/pages/CreateRoadPage/CreateRoadPage';
+import { RoadDetailPage } from '@/pages/RoadDetailPage/RoadDetailPage';
 
 export default function Router(): JSX.Element {
   return (
@@ -18,6 +19,7 @@ export default function Router(): JSX.Element {
           <Route path = {CLIENT_ROUTES.SIGN_UP} element = {<SignUpPage/>}/>
           <Route path = {CLIENT_ROUTES.CABINET_PAGE} element = {<CabinetPage/>}/>
           <Route path = {CLIENT_ROUTES.CREATE_ROAD_PAGE} element = {<CreateRoadPage/>}/>
+          <Route path = {CLIENT_ROUTES.ROAD_DETAIL_PAGE} element ={<RoadDetailPage/>}/>
           {/* <Route path = {CLIENT_ROUTES.WELCOME_PAGE} element = {<WelcomePage/>}/> */}
      {/* <Route path={CLIENT_ROUTES.WELCOME_PAGE} element={<Layout />}>  */}
           

@@ -1,7 +1,7 @@
-import { createRoad, IRoadRowData } from '@/app/entities/road';
-import { useAppDispatch } from '@/shared/hooks/reduxHooks';
 import { useState } from 'react';
+import { useAppDispatch } from '@/shared/hooks/reduxHooks';
 import { useNavigate } from 'react-router';
+import { createRoad, IRoadRowData } from '@/app/entities/road';
 
 export function CreateRoadPage() {
   const dispatch = useAppDispatch();
@@ -10,10 +10,16 @@ export function CreateRoadPage() {
   const initialFormData: IRoadRowData = {
     city: '',
     country: '',
-    transport: 'машина', // по умолчанию
+    transport: 'машина',
     transportInfo: '',
     routeInfo: '',
     visibility: 'private',
+    startDate: '',
+    endDate: '',
+    hotelName: '',
+    checkInDate: '',
+    checkOutDate: '',
+    placesToVisit: '',
   };
 
   const [formData, setFormData] = useState<IRoadRowData>(initialFormData);
@@ -23,6 +29,11 @@ export function CreateRoadPage() {
   ) => {
     const { name, value } = event.target;
     setFormData((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  const handleTransportChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const { value } = event.target;
+    setFormData((prevState) => ({ ...prevState, transport: value }));
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -78,7 +89,7 @@ export function CreateRoadPage() {
             id="transport"
             name="transport"
             value={formData.transport}
-            onChange={handleChange}
+            onChange={handleTransportChange}
             className="w-full px-4 py-2 border rounded"
             required
           >
@@ -88,20 +99,68 @@ export function CreateRoadPage() {
           </select>
         </div>
 
-        <div>
-          <label htmlFor="transportInfo" className="block text-sm font-semibold">
-            Информация о транспорте
-          </label>
-          <textarea
-            id="transportInfo"
-            name="transportInfo"
-            value={formData.transportInfo}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded"
-            rows={4}
-          />
-        </div>
+        {/* Дополнительные поля для транспорта */}
+        {(formData.transport === 'самолет' || formData.transport === 'поезд') && (
+          <div>
+            <label htmlFor="departureTime" className="block text-sm font-semibold">
+              Время отправления
+            </label>
+            <input
+              type="datetime-local"
+              name="departureTime"
+              value={formData.departureTime}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded"
+            />
+            <label htmlFor="arrivalTime" className="block text-sm font-semibold">
+              Время прибытия
+            </label>
+            <input
+              type="datetime-local"
+              name="arrivalTime"
+              value={formData.arrivalTime}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded"
+            />
+            <label htmlFor="flightNumber" className="block text-sm font-semibold">
+              Номер рейса
+            </label>
+            <input
+              type="text"
+              name="flightNumber"
+              value={formData.flightNumber}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded"
+            />
+          </div>
+        )}
 
+        {formData.transport === 'машина' && (
+          <div>
+            <label htmlFor="startDate" className="block text-sm font-semibold">
+              Дата начала поездки
+            </label>
+            <input
+              type="date"
+              name="startDate"
+              value={formData.startDate}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded"
+            />
+            <label htmlFor="endDate" className="block text-sm font-semibold">
+              Дата окончания поездки
+            </label>
+            <input
+              type="date"
+              name="endDate"
+              value={formData.endDate}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded"
+            />
+          </div>
+        )}
+
+        {/* Информация о маршруте */}
         <div>
           <label htmlFor="routeInfo" className="block text-sm font-semibold">
             Информация о маршруте
@@ -116,6 +175,64 @@ export function CreateRoadPage() {
           />
         </div>
 
+        {/* Информация о жилье */}
+        <div>
+          <label htmlFor="hotelName" className="block text-sm font-semibold">
+            Название отеля
+          </label>
+          <input
+            type="text"
+            id="hotelName"
+            name="hotelName"
+            value={formData.hotelName}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="checkInDate" className="block text-sm font-semibold">
+            Дата заезда
+          </label>
+          <input
+            type="date"
+            id="checkInDate"
+            name="checkInDate"
+            value={formData.checkInDate}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="checkOutDate" className="block text-sm font-semibold">
+            Дата выезда
+          </label>
+          <input
+            type="date"
+            id="checkOutDate"
+            name="checkOutDate"
+            value={formData.checkOutDate}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="placesToVisit" className="block text-sm font-semibold">
+            План посещения мест
+          </label>
+          <textarea
+            id="placesToVisit"
+            name="placesToVisit"
+            value={formData.placesToVisit}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded"
+            rows={4}
+          />
+        </div>
+
+        {/* Выбор приватности */}
         <div>
           <label htmlFor="visibility" className="block text-sm font-semibold">
             Доступность маршрута
@@ -128,6 +245,7 @@ export function CreateRoadPage() {
             className="w-full px-4 py-2 border rounded"
           >
             <option value="private">Приватный</option>
+            <option value="friends">Для друзей</option>
             <option value="public">Публичный</option>
           </select>
         </div>
