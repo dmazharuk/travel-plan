@@ -28,6 +28,7 @@ export function Header(): JSX.Element {
       <NavLink to={CLIENT_ROUTES.MAIN}>Начало тут</NavLink>
       {user ? (
         <>
+        <NavLink to={CLIENT_ROUTES.CALENDAR}>Календарик путешествия</NavLink>
         <button onClick={onSignOutHandler}>Выйти</button>
         </>
       ) : (
