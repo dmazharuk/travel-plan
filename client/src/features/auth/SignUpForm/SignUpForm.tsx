@@ -1,5 +1,5 @@
 import { IUserSignUpData, signUpThunk } from '@/app/entities/user';
-import { useAppDispatch, useAppSelector } from '@/shared/hooks/reduxHooks';
+import { useAppDispatch } from '@/shared/hooks/reduxHooks';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import UserValidator from '../validation/UserValidator';

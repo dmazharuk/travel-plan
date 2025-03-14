@@ -1,8 +1,11 @@
-const router = require('express').Router(); //* получаем экземпляр роутинга из библиотеки
-const authRoutes = require('./auth.routes'); //* подтягиваем набор роутинга для сущности auth по определенному пути
-const formatResponse = require('../utils/formatResponse'); //* подтягиваем утилиту для унификации ответа по 404
+const router = require('express').Router(); 
+const authRoutes = require('./auth.routes'); 
+const roadRoutes = require('./road.routes');
+const formatResponse = require('../utils/formatResponse'); 
+
 
 router.use('/auth', authRoutes); 
+router.use('/road', roadRoutes);
 
 router.use('*', (req, res) => {
   res.status(404).json(formatResponse(404, 'Not found'));
