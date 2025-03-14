@@ -19,7 +19,7 @@ export function Header(): JSX.Element {
   const onSignOutHandler = async () => {
     dispatch(signOutThunk());
     alert('Вы вышли');
-    navigate(CLIENT_ROUTES.WELCOME_PAGE);
+    navigate(CLIENT_ROUTES.MAIN);
   };
 
   return (
@@ -28,7 +28,7 @@ export function Header(): JSX.Element {
       <NavLink to={CLIENT_ROUTES.MAIN}>Начало тут</NavLink>
       {user ? (
         <>
-        <NavLink to={CLIENT_ROUTES.CALENDAR}>Календарик путешествия</NavLink>
+        {/* <NavLink to={CLIENT_ROUTES.CALENDAR}>Календарик путешествия</NavLink> */}
         <button onClick={onSignOutHandler}>Выйти</button>
         </>
       ) : (
