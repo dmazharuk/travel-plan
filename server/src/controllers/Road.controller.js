@@ -16,6 +16,7 @@ class RoadController {
       res.status(500).json(formatResponse(500, 'Internal server error', null, message));
     }
   }
+
   // получение маршрута по id
   static async getRoadById(req, res) {
     const { id } = req.params;
@@ -33,9 +34,10 @@ class RoadController {
       res.status(500).json(formatResponse(500, 'Internal server error', null, message));
     }
   }
+
   // создание маршрута
   static async createRoad(req, res) {
-    const { city, country, transport, visibility, transportInfo, routeInfo } = req.body;
+    const { city, country, transport, visibility, transportInfo, routeInfo, departureDate, arrivalDate, flightTrainNumber, accommodation, checkInDate, checkOutDate, visitDates, tripStartDate, tripEndDate } = req.body;
     const { user } = res.locals;
     const { isValid, error } = RoadValidator.validate({
       city,
@@ -56,6 +58,15 @@ class RoadController {
         visibility,
         transportInfo,
         routeInfo,
+        departureDate,
+        arrivalDate,
+        flightTrainNumber,
+        accommodation,
+        checkInDate,
+        checkOutDate,
+        visitDates,
+        tripStartDate,
+        tripEndDate,
         userId: user.id,
       });
       if (!newRoad) {
@@ -66,10 +77,11 @@ class RoadController {
       res.status(500).json(formatResponse(500, 'Internal server error', null, message));
     }
   }
+
   // обновление маршрута
   static async updateRoad(req, res) {
     const { id } = req.params;
-    const { city, country, transport, visibility, transportInfo, routeInfo } = req.body;
+    const { city, country, transport, visibility, transportInfo, routeInfo, departureDate, arrivalDate, flightTrainNumber, accommodation, checkInDate, checkOutDate, visitDates, tripStartDate, tripEndDate } = req.body;
     const { user } = res.locals;
     const { isValid, error } = RoadValidator.validate({
       city,
@@ -100,62 +112,48 @@ class RoadController {
         visibility,
         transportInfo,
         routeInfo,
-         
-        });
-        res.status(200).json(formatResponse(200, 'Маршрут обновлен', updatedRoad));
-      }
-     catch ({ message }) {
+        departureDate,
+        arrivalDate,
+        flightTrainNumber,
+        accommodation,
+        checkInDate,
+        checkOutDate,
+        visitDates,
+        tripStartDate,
+        tripEndDate,
+      });
+      res.status(200).json(formatResponse(200, 'Маршрут обновлен', updatedRoad));
+    } catch ({ message }) {
       res.status(500).json(formatResponse(500, 'Internal server error', null, message));
     }
   }
-// удаление маршрута
+
+  // удаление маршрута
   static async deleteRoad(req, res) {
-    const {id} = req.params;
-    const{user} = res.locals
+    const { id } = req.params;
+    const { user } = res.locals;
 
+    if (!isValidId(id)) {
+      return res.status(400).json(formatResponse(400, 'Неверный id маршрута'));
+    }
 
-if(!isValidId(id)){
-  return res.status(400).json(formatResponse(400, 'Неверный id маршрута'));
-}
+    try {
+      const existingRoad = await RoadService.getById(Number(id));
+      if (!existingRoad) {
+        return res.status(404).json(formatResponse(404, 'Маршрут не найден'));
+      }
 
-try {
-const existingRoad = await RoadService.getById(Number(id));
-if(!existingRoad){
-  return res.status(404).json(formatResponse(404, 'Маршрут не найден'));
-}
+      if (existingRoad.userId !== user.id) {
+        return res.status(403).json(formatResponse(403, 'Маршрут не принадлежит пользователю'));
+      }
 
-if(existingRoad.userId !== user.id){
-  return res.status(403).json(formatResponse(403, 'Маршрут не принадлежит пользователю'));
-} 
-  await RoadService.delete(Number(id));
-  res.status(200).json(formatResponse(200, 'Маршрут успешно удален'));
-} catch ({message}) {
-  console.error(message);
-  res.status(500).json(formatResponse(500, 'Internal server error', null, message));
-  
-}
-    
+      await RoadService.delete(Number(id));
+      res.status(200).json(formatResponse(200, 'Маршрут успешно удален'));
+    } catch ({ message }) {
+      console.error(message);
+      res.status(500).json(formatResponse(500, 'Internal server error', null, message));
+    }
   }
-
-  // static async addCompanion(req, res) {
-    
-  //   const companion = await RoadService.addCompanion(req.params.roadId, req.body.userId);
-  //   if (!companion) {
-  //     return res.status(404).json({ message: 'Маршрут не найден' });
-  //   }
-  //   res.status(201).json(companion);
-  // }
-
-  // static async removeCompanion(req, res) {
-  //   const companion = await RoadService.removeCompanion(
-  //     req.params.roadId,
-  //     req.params.userId,
-  //   );
-  //   if (!companion) {
-  //     return res.status(404).json({ message: 'Спутник не найден' });
-  //   }
-  //   res.json(companion);
-  // }
 }
 
 module.exports = RoadController;

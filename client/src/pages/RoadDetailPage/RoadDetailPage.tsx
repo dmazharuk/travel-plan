@@ -90,7 +90,40 @@ if(!road) return <p>Загрузка...</p>
         onChange={handleChange}
         disabled={!editable}
       />
-    </div>
+          </div>
+    <div className="mb-3">
+      <label className="form-label">Информация о транспорте</label>
+      <input
+        type="text"
+        name="transportInfo"
+        className="form-control"
+        value={formData.transportInfo || ''}
+        onChange={handleChange}
+        disabled={!editable}
+      />
+         </div>
+         <div className="mb-3">
+      <label className="form-label">Информация о маршруте</label>
+      <input
+        type="text"
+        name="routeInfo"
+        className="form-control"
+        value={formData.routeInfo || ''}
+        onChange={handleChange}
+        disabled={!editable}
+      />
+         </div>
+         <div className="mb-3">
+      <label className="form-label">Приватность</label>
+      <input
+        type="text"
+        name="visibility"
+        className="form-control"
+        value={formData.visibility || ''}
+        onChange={handleChange}
+        disabled={!editable}
+      />
+          </div>
     <button className="btn btn-primary me-2" onClick={() => setEditable(!editable)}>
       {editable ? 'Отменить' : 'Изменить маршрут'}
     </button>
