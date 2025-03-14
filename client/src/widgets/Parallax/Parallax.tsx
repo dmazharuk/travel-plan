@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import './Parallax.module.css'; 
+import styles from './Parallax.module.css'; 
 
 const Parallax: React.FC = () => {
   const backgroundRef = useRef<HTMLDivElement>(null);
@@ -22,11 +22,11 @@ const Parallax: React.FC = () => {
   }, []);
 
   return (
-    <div className="parallaxcontainer">
-      <div ref={backgroundRef} className="parallaxbackground">
+    <div className={styles.parallaxcontainer}>
+      <div ref={backgroundRef} className={styles.parallaxbackground}>
         {/* Фоновый контент */}
       </div>
-      <div ref={foregroundRef} className="parallaxforeground">
+      <div ref={foregroundRef} className={styles.parallaxforeground}>
         {/* Основной контент */}
         <div className="parallaxname">
           <h1 className="title">TravelPlan</h1>
