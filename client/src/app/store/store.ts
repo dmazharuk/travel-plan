@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { userReducer } from '../entities/user';
-import { roadReducer } from '../entities/route';
+import { roadReducer } from '../entities/road';
 
 const store = configureStore({
   reducer: {
-    user:userReducer,
-    road:roadReducer,
+    user: userReducer,
+    road: roadReducer,
   },
 });
 
