@@ -24,8 +24,7 @@ export function Header(): JSX.Element {
 
   return (
     <nav className={styles.container}>
-      {/* <NavLink to={CLIENT_ROUTES.WELCOME_PAGE}>Начало тут</NavLink> */}
-      <NavLink to={CLIENT_ROUTES.MAIN}>Начало тут</NavLink>
+      <NavLink to={CLIENT_ROUTES.MAIN}>Мы вас ждали</NavLink>
       {user ? (
         <>
         {/* <NavLink to={CLIENT_ROUTES.CALENDAR}>Календарик путешествия</NavLink> */}
