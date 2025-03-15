@@ -3,26 +3,33 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface) {
-    const users = await queryInterface.sequelize.query(`SELECT id FROM "Users";`);
-    const roads = await queryInterface.sequelize.query(`SELECT id FROM "Roads";`);
-
-    if (!users[0].length || !roads[0].length) return;
-
-    const userId = users[0][0].id;
-    const roadId = roads[0][1].id; // Берём второй маршрут
-
-    await queryInterface.bulkInsert(
-      'Companions',
-      [
-        {
-          userId,
-          roadId,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      ],
-      {}
+    // Получаем первого пользователя (Пупу) и его первый маршрут
+    const [pupa] = await queryInterface.sequelize.query(
+      'SELECT id FROM "Users" WHERE email = \'pupa@pupa.com\' LIMIT 1;',
+      { type: queryInterface.sequelize.QueryTypes.SELECT }
     );
+    
+    const [pupaFirstRoad] = await queryInterface.sequelize.query(
+      'SELECT id FROM "Roads" WHERE "userId" = :userId ORDER BY id ASC LIMIT 1;',
+      {
+        replacements: { userId: pupa.id },
+        type: queryInterface.sequelize.QueryTypes.SELECT
+      }
+    );
+
+    // Получаем второго пользователя (Лупу)
+    const [lupa] = await queryInterface.sequelize.query(
+      'SELECT id FROM "Users" WHERE email = \'lupa@lupa.com\' LIMIT 1;',
+      { type: queryInterface.sequelize.QueryTypes.SELECT }
+    );
+
+    // Добавляем Лупу компаньоном к первому маршруту Пупы
+    await queryInterface.bulkInsert('Companions', [{
+      userId: lupa.id,
+      roadId: pupaFirstRoad.id,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }], {});
   },
 
   async down(queryInterface) {

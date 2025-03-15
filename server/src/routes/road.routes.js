@@ -1,13 +1,26 @@
 const router = require('express').Router();
+const CompanionController = require('../controllers/Companion.controller.js');
 const RoadController = require('../controllers/Road.controller.js');
 const verifyAccessToken = require('../middleware/verifyAccessToken.js');
 
 router.get('/roads', RoadController.getAllRoads);
+// Получение маршрута по ID
 router.get('/:id', verifyAccessToken, RoadController.getRoadById);
+// Создание маршрута
 router.post('/', verifyAccessToken, RoadController.createRoad);
-// router.put('/:id', verifyAccessToken, RoadController.updateRoad);
-// router.delete('/:id', verifyAccessToken, RoadController.deleteRoad);
+// Обновление маршрута
 router.put('/update/:id', verifyAccessToken, RoadController.updateRoad);
+// Удаление маршрута
 router.delete('/delete/:id', verifyAccessToken, RoadController.deleteRoad);
+
+
+
+// Компаньоны
+// Получение списка компаньонов
+router.get('/:roadId/companions', CompanionController.getCompanions);
+// Добавление компаньона
+router.post('/:roadId/companions', CompanionController.addCompanion);
+// Удаление компаньона
+router.delete('/:roadId/companions/:userId', CompanionController.removeCompanion);
 
 module.exports = router;

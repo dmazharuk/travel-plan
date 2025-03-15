@@ -28,7 +28,8 @@ module.exports = {
         allowNull: false,
       },
       transportInfo: {
-        type: Sequelize.TEXT,
+        type: Sequelize.JSONB,
+        defaultValue: {},
       },
       routeInfo: {
         type: Sequelize.TEXT,
@@ -40,15 +41,7 @@ module.exports = {
       },
       
       // Новые поля
-      departureDate: {
-        type: Sequelize.DATE,
-      }, // Дата отправления
-      arrivalDate: {
-        type: Sequelize.DATE,
-      }, // Дата прибытия
-      flightTrainNumber: {
-        type: Sequelize.STRING,
-      }, // Номер рейса/поезда
+      
       accommodation: {
         type: Sequelize.STRING,
       }, // Название отеля
