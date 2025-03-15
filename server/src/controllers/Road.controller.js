@@ -68,6 +68,7 @@ class RoadController {
         tripStartDate,
         tripEndDate,
         userId: user.id,
+        
       });
       if (!newRoad) {
         return res.status(400).json(formatResponse(400, 'Не удалось создать маршрут'));

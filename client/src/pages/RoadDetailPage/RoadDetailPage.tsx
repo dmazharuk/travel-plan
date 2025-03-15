@@ -24,6 +24,7 @@ export function RoadDetailPage() {
     checkInDate: road?.checkInDate,
     checkOutDate: road?.checkOutDate,
     placesToVisit: road?.placesToVisit,
+    
   });
 
   useEffect(() => {
