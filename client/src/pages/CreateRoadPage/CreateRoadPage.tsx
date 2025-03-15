@@ -1,10 +1,10 @@
 import { JSX } from 'react';
-import { CreateRoadForm } from "@/features/road/CreateRoadForm";
-// import styles from './MainPage.module.css';
+import { CreateRoadForm } from "@/features/road/CreateRoadForm/CreateRoadForm";
+import styles from './CreateRoadPage.module.css';
 
 export function CreateRoadPage(): JSX.Element {
   return (
-    <div >
+    <div className={styles.main} >
       <CreateRoadForm/></div>
   )
 }
