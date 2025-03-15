@@ -1,6 +1,6 @@
 /* Основные стили для контейнера */
 .container {
-  max-width: 800px;
+  max-width: 1200px; /* Увеличим ширину для двух колонок */
   padding: 2rem;
   margin: 0 auto;
   background-color: #f5f5f5; /* Светлый фон для контраста */
@@ -13,44 +13,97 @@
   margin-bottom: 1.5rem;
   font-size: 2rem;
   font-weight: 600;
-  color: #3d2c2e; /* Глубокий коричнево-красный */
+  color: #374151; /* Глубокий коричнево-красный */
   text-align: center;
+}
+
+.conteinerForTitle {
+  display: flex;
+  align-items: baseline; 
+  justify-content: space-between;
+  
 }
 
 /* Кнопка создания маршрута */
 .createButton {
+  position: relative; /* Для позиционирования подсказки */
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
   font-weight: 500;
   color: #fff;
   cursor: pointer;
-  background-color: #5a3d3f; /* Темный оттенок коричнево-красного */
+  background-color: #374151;
   border: none;
   border-radius: 8px;
   transition: background-color 0.3s ease;
 }
 
 .createButton:hover {
-  background-color: #3d2c2e; /* Еще более темный оттенок */
+  background-color: #1f2937;
 }
+
+.createButton .tooltip {
+  visibility: hidden; /* Скрываем подсказку по умолчанию */
+  min-width: 100px; /* Минимальная ширина, чтобы текст не обрезался */
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 4px; /* Уменьшили радиус скругления */
+  padding: 6px 8px; /* Увеличили отступы */
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Позиция подсказки над кнопкой */
+  left: 50%;
+  transform: translateX(-50%); /* Центрируем подсказку */
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  font-size: 0.75rem; /* Уменьшили размер шрифта */
+  white-space: nowrap; /* Текст в одну строку */
+}
+
+
+.createButton:hover .tooltip {
+  visibility: visible; /* Показываем подсказку при наведении */
+  opacity: 1;
+}
+
+.createButton .tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* Стрелка подсказки */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent;
+}
+
+.createButton span {
+  /* margin-right: 0.5rem; */
+  font-size: 1.2rem;
+}
+
+
 
 /* Стили для списка маршрутов */
 .roadList {
   margin-top: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Две колонки */
+  gap: 1rem; /* Расстояние между карточками */
 }
 
 .roadItem {
   padding: 1rem;
-  margin-bottom: 1rem;
   cursor: pointer;
-  background-color: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Легкая граница */
+  border-radius: 12px;
   transition: box-shadow 0.3s ease, transform 0.3s ease;
+  color: #333; /* Цвет текста */
 }
 
 .roadItem:hover {
-  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 20%);
   transform: translateY(-2px);
 }
 
@@ -63,21 +116,24 @@
 .roadTitle {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #3d2c2e; /* Глубокий коричнево-красный */
+  color: inherit; /* Наследуем цвет текста */
 }
 
 .roadDate {
   font-size: 0.875rem;
-  color: #666;
+  color: inherit; /* Наследуем цвет текста */
+  opacity: 0.8; /* Легкая прозрачность */
 }
+
+
 
 .visibilityButton {
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #3d2c2e; /* Глубокий коричнево-красный */
+  color: inherit; /* Наследуем цвет текста */
   cursor: pointer;
-  background-color: #e8e8e8; /* Светлый фон для кнопки */
+  background-color: rgba(255, 255, 255, 0.3); /* Полупрозрачный фон */
   border: none;
   border-radius: 8px;
   transition: background-color 0.3s ease;
@@ -85,11 +141,11 @@
 
 .visibilityButton.public {
   color: #fff;
-  background-color: #5a3d3f; /* Темный оттенок коричнево-красного */
+  background-color: rgba(0, 0, 0, 0.5); /* Темный полупрозрачный фон */
 }
 
 .visibilityButton:hover {
-  background-color: #d0d0d0; /* Светлый оттенок при наведении */
+  background-color: rgba(255, 255, 255, 0.5); /* Светлее при наведении */
 }
 
 /* Сообщение об отсутствии маршрутов */
@@ -113,6 +169,10 @@
   .createButton {
     width: 100%;
     padding: 0.75rem;
+  }
+
+  .roadList {
+    grid-template-columns: 1fr; /* Одна колонка на мобильных */
   }
 
   .roadItem {

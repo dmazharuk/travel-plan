@@ -1,0 +1,78 @@
+/* Основной контейнер */
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* На всю высоту экрана */
+  background: linear-gradient(135deg, #6a11cb, #2575fc); /* Градиентный фон */
+  color: #fff;
+  font-family: "Arial", sans-serif;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Контент */
+.content {
+  max-width: 600px;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.1); /* Полупрозрачный фон */
+  border-radius: 20px;
+  backdrop-filter: blur(10px); /* Размытие фона */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Заголовок 404 */
+.title {
+  font-size: 8rem;
+  font-weight: 900;
+  margin: 0;
+  animation: float 3s ease-in-out infinite; /* Анимация плавания */
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* Подзаголовок */
+.subtitle {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 1rem 0;
+}
+
+/* Описание */
+.description {
+  font-size: 1.2rem;
+  margin: 1rem 0 2rem;
+}
+
+/* Кнопка */
+.button {
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #6a11cb;
+  background: #fff;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.button:hover {
+  background: #f0f0f0;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.button:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
