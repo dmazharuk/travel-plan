@@ -13,20 +13,14 @@ enum ROAD_THUNK_TYPES {
 }
 
 enum ROAD_API_ENDPOINTS {
-  GET_ALL_ROADS = 'road/roads',// Изменено для уникальности
+  GET_ALL_ROADS = '/road/roads',// Изменено для уникальности
   CREATE_ROAD = '/road',
   UPDATE_ROAD = '/road/update/:id', // Изменено для уникальности
   DELETE_ROAD = '/road/delete/:id', // Изменено для уникальности
   GET_ROAD_BY_ID = '/road/:id',
 }
 
-// enum ROAD_API_ENDPOINTS {
-//   GET_ALL_ROADS = '/road',
-//   CREATE_ROAD = '/road',
-//   UPDATE_ROAD = '/road/:id',
-//   DELETE_ROAD = '/road/:id',
-//   GET_ROAD_BY_ID = '/road/:id',
-// }
+
 
 // Получить все маршруты
 export const getAllRoads = createAsyncThunk<

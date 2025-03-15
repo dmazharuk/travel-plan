@@ -32,6 +32,10 @@ module.exports = {
         defaultValue: Sequelize.fn('NOW'),
       },
     });
+    await queryInterface.addIndex('Companions', ['userId', 'roadId'], {
+      unique: true,
+      name: 'companions_unique_index',
+    });
   },
   async down(queryInterface) {
     await queryInterface.dropTable('Companions');

@@ -1,5 +1,5 @@
 import styles from './SignInModal.module.css';
-import { IUserSignInData, signInThunk } from '@/app/entities/user';
+import { signInThunk, signUpThunk } from '@/app/entities/user';
 import { useAppDispatch } from '@/shared/hooks/reduxHooks';
 import { useId, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -11,89 +11,143 @@ interface SignInModalProps {
 }
 
 const INITIAL_INPUTS_DATA = {
+  username: '',
   email: '',
   password: '',
+  repeatPassword: '',
 };
 
 export function SignInModal({ closeModal }: SignInModalProps) {
-  const [inputs, setInputs] = useState<IUserSignInData>(INITIAL_INPUTS_DATA);
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [inputs, setInputs] = useState<typeof INITIAL_INPUTS_DATA>(INITIAL_INPUTS_DATA);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const usernameInputId = useId();
   const emailInputId = useId();
   const passwordInputId = useId();
+  const repeatPasswordInputId = useId();
 
   const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputs((prev) => ({ ...prev, [event.target.name]: event.target.value }));
   };
 
+  const handleFormSwitch = () => {
+    setIsSignUp(!isSignUp);
+    setInputs(INITIAL_INPUTS_DATA);
+  };
+
   const onSubmitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const { isValid, error } = UserValidator.validateSignIn(inputs);
-    if (!isValid) return alert(error);
+
+    if (isSignUp) {
+      const { isValid, error } = UserValidator.validateSignUp(inputs);
+      if (!isValid) return alert(error);
+
+      if (inputs.password !== inputs.repeatPassword) {
+        return alert('Пароли не совпадают');
+      }
+    } else {
+      const { isValid, error } = UserValidator.validateSignIn(inputs);
+      if (!isValid) return alert(error);
+    }
     try {
-      const resultAction = await dispatch(signInThunk(inputs));
+      let resultAction;
+      if (isSignUp) {
+        const signUpData = {
+          username: inputs.username,
+          email: inputs.email,
+          password: inputs.password,
+        };
+        resultAction = await dispatch(signUpThunk(signUpData));
+      } else {
+        const { email, password } = inputs;
+        resultAction = await dispatch(signInThunk({ email, password }));
+      }
       if (resultAction.payload?.error) {
-        alert('ошибка авторизации');
-        return;
+        return alert('ошибка авторизации');
       }
       alert('вы успешно авторизованы');
       setInputs(INITIAL_INPUTS_DATA);
-      navigate(CLIENT_ROUTES.MAIN); // поправь наигацию на страничку кабинета пользователя
+      navigate(CLIENT_ROUTES.CABINET_PAGE);
       closeModal();
     } catch (error) {
       console.log(error);
     }
   };
 
-  const { email, password } = inputs;
-
   return (
     <div className={styles.modal} onClick={closeModal}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-        <h2>вход в TRAVEL-PLAN</h2>
+        <h2>{isSignUp ? 'Регистрация в Travel-Plan' : 'Вход в Travel-Plan'}</h2>
+
         <form className={styles.modalForm} onSubmit={onSubmitHandler}>
-          <label htmlFor={emailInputId}>email:</label>
+          {isSignUp && (
+            <>
+              <label htmlFor={usernameInputId}>Имя пользователя:</label>
+              <input
+                type="text"
+                name="username"
+                placeholder="Введите имя"
+                onChange={onChangeHandler}
+                value={inputs.username}
+                id={usernameInputId}
+                className={styles.modalInput}
+              />
+            </>
+          )}
+
+          <label htmlFor={emailInputId}>Email:</label>
           <input
             type="email"
             name="email"
-            placeholder="введите email"
+            placeholder="Введите email"
             onChange={onChangeHandler}
-            value={email}
+            value={inputs.email}
             id={emailInputId}
             className={styles.modalInput}
           />
 
-          <label htmlFor={passwordInputId}>пароль:</label>
+          <label htmlFor={passwordInputId}>Пароль:</label>
           <input
             type="password"
             name="password"
-            placeholder="введите пароль"
+            placeholder="Введите пароль"
             onChange={onChangeHandler}
-            value={password}
+            value={inputs.password}
             id={passwordInputId}
             className={styles.modalInput}
           />
 
+          {isSignUp && (
+            <>
+              <label htmlFor={repeatPasswordInputId}>Повторите пароль:</label>
+              <input
+                type="password"
+                name="repeatPassword"
+                placeholder="Повторите пароль"
+                onChange={onChangeHandler}
+                value={inputs.repeatPassword}
+                id={repeatPasswordInputId}
+                className={styles.modalInput}
+              />
+            </>
+          )}
+
           <button
             className={styles.modalButton}
             type="submit"
-            disabled={!email || !password}
+            disabled={!inputs.email || !inputs.password || (isSignUp && !inputs.username)}
           >
-            войти
+            {isSignUp ? 'Зарегистрироваться' : 'Войти'}
           </button>
         </form>
 
         <p className={styles.modalText}>
-          Не зарегестрированы?
-          <span
-            className={styles.registerLink}
-            onClick={() => {
-              closeModal();
-              navigate(CLIENT_ROUTES.SIGN_UP);
-            }}
-          >
-            зарегистрироваться
+          {isSignUp ? 'Уже зарегистрированы?' : 'Не зарегистрированы?'}
+          <span className={styles.registerLink} onClick={handleFormSwitch}>
+            {isSignUp ? 'Войти' : 'Зарегистрироваться'}
           </span>
         </p>
       </div>

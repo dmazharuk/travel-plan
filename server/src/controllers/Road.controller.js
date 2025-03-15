@@ -37,15 +37,28 @@ class RoadController {
 
   // создание маршрута
   static async createRoad(req, res) {
-    const { city, country, transport, visibility, transportInfo, routeInfo, departureDate, arrivalDate, flightTrainNumber, accommodation, checkInDate, checkOutDate, visitDates, tripStartDate, tripEndDate } = req.body;
+    const { city, 
+      country, 
+      transport, 
+      visibility,
+      transportInfo,
+      routeInfo,
+      accommodation,
+      checkInDate,
+      checkOutDate,
+      visitDates,
+      tripStartDate,
+      tripEndDate } = req.body;
+
     const { user } = res.locals;
+
     const { isValid, error } = RoadValidator.validate({
       city,
       country,
       transport,
       visibility,
-      transportInfo,
-      routeInfo,
+      tripStartDate,
+      tripEndDate
     });
     if (!isValid) {
       return res.status(400).json(formatResponse(400, 'Неверные данные', null, error));
@@ -56,18 +69,16 @@ class RoadController {
         country,
         transport,
         visibility,
-        transportInfo,
+        transportInfo: transportInfo || {},
         routeInfo,
-        departureDate,
-        arrivalDate,
-        flightTrainNumber,
         accommodation,
         checkInDate,
         checkOutDate,
-        visitDates,
+        visitDates: visitDates || [],
         tripStartDate,
         tripEndDate,
-        userId: user.id,
+        userId: user.id
+
       });
       if (!newRoad) {
         return res.status(400).json(formatResponse(400, 'Не удалось создать маршрут'));
@@ -81,15 +92,28 @@ class RoadController {
   // обновление маршрута
   static async updateRoad(req, res) {
     const { id } = req.params;
-    const { city, country, transport, visibility, transportInfo, routeInfo, departureDate, arrivalDate, flightTrainNumber, accommodation, checkInDate, checkOutDate, visitDates, tripStartDate, tripEndDate } = req.body;
+    const { city, 
+      country, 
+      transport, 
+      visibility,
+      transportInfo,
+      routeInfo,
+      accommodation,
+      checkInDate,
+      checkOutDate,
+      visitDates,
+      tripStartDate,
+      tripEndDate} = req.body;
+
     const { user } = res.locals;
+
     const { isValid, error } = RoadValidator.validate({
       city,
       country,
       transport,
       visibility,
-      transportInfo,
-      routeInfo,
+      tripStartDate,
+      tripEndDate
     });
     if (!isValid) {
       return res.status(400).json(formatResponse(400, 'ошибка валидации', null, error));
@@ -110,17 +134,14 @@ class RoadController {
         country,
         transport,
         visibility,
-        transportInfo,
+        transportInfo: transportInfo || existingRoad.transportInfo,
         routeInfo,
-        departureDate,
-        arrivalDate,
-        flightTrainNumber,
         accommodation,
         checkInDate,
         checkOutDate,
-        visitDates,
+        visitDates: visitDates || existingRoad.visitDates,
         tripStartDate,
-        tripEndDate,
+        tripEndDate
       });
       res.status(200).json(formatResponse(200, 'Маршрут обновлен', updatedRoad));
     } catch ({ message }) {
