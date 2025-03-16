@@ -28,9 +28,8 @@ export function RoadDetailForm() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const road = useAppSelector((state) =>
-    state.road.roads.find((road) => road.id === Number(id))
-  );
-
+    state.road.road);
+const {user} = useAppSelector((state)=>state.user)
   const [editable, setEditable] = useState(false);
   const [formData, setFormData] = useState<Partial<IRoad>>({
     city: '',
@@ -315,7 +314,7 @@ export function RoadDetailForm() {
       </div>
 
       {/* Кнопки управления */}
-      <div className={styles.buttonGroup}>
+      {road?.author?.id === user?.id && (<div className={styles.buttonGroup}>
         <button
           type="button"
           className={`${styles.button} ${styles.buttonPrimary}`}
@@ -341,7 +340,7 @@ export function RoadDetailForm() {
         >
           Удалить маршрут
         </button>
-      </div>
+      </div>)}
     </div>
   );
 }

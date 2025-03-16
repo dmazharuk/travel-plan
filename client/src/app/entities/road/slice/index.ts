@@ -1,16 +1,23 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { RouteArrayType } from '../model';
+import { IRoad, RouteArrayType } from '../model';
 import { createRoad, deleteRoad, getAllRoads, getRoadById, updateRoad } from '../api';
+import {
+  addCompanionToRoad,
+  getCompanionsForRoad,
+  removeCompanionFromRoad,
+} from '../../companion/api';
 
 type RoadState = {
   roads: RouteArrayType;
   error: string | null;
+  road: IRoad | null;
   isLoading: boolean;
 };
 
 const initialState: RoadState = {
   roads: [],
+  road: null,
   error: null,
   isLoading: false,
 };
@@ -91,17 +98,44 @@ const roadSlice = createSlice({
       .addCase(getRoadById.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = null;
-        const updatedRoad = action.payload.data;
-        const index = state.roads.findIndex((road) => road.id === updatedRoad.id);
-        if (index !== -1) {
-          state.roads[index] = updatedRoad;
-        } else {
-          state.roads.push(updatedRoad);
-        }
+        state.road = action.payload.data;
+        // const updatedRoad = action.payload.data;
+        // const index = state.roads.findIndex((road) => road.id === updatedRoad.id);
+        // if (index !== -1) {
+        //   state.roads[index] = updatedRoad;
+        // } else {
+        //   state.roads.push(updatedRoad);
+        // }
       })
       .addCase(getRoadById.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload?.error ?? 'Unknown error';
+      })
+
+
+      
+      // добавл компаньонов
+      .addCase(getCompanionsForRoad.fulfilled, (state, action) => {
+        if (state.road) {
+          console.log(action.payload.data, ",,,,getCompanionsForRoad");
+          
+          // state.road.companions = action.payload.data.map((companion) => companion.User) || [];
+          state.road.companions = action.payload.data.map((companion) => companion);
+        }
+      })
+      .addCase(addCompanionToRoad.fulfilled, (state, action) => {
+        if (state.road && action.payload.data) {
+          console.log(action.payload.data, ",,,,");
+          
+          state.road.companions.push(action.payload.data);
+        }
+      })
+      .addCase(removeCompanionFromRoad.fulfilled, (state, action) => {
+        if (state.road && action.payload.data) {
+          state.road.companions = state.road.companions.filter(
+            (c) => c.id !== action.payload.data?.id,
+          );
+        }
       });
   },
 });

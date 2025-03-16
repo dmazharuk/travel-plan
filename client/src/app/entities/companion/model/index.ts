@@ -5,3 +5,4 @@ export interface ICompanion {
 }
 
 export type CompanionArrayType = ICompanion[];
+

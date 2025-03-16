@@ -16,7 +16,7 @@ export function MyRoads() {
   }, [dispatch]);
 
   // Добавлена проверка на наличие author
-  const userRoads = roads.filter((road) => road.author?.id === user?.id);
+  const userRoads = roads.filter((road) => road.author?.id === user?.id || road.companions?.some((companion) => companion.id === user?.id) && road.visibility === "public");
 
   const getRandomColor = () => {
     const hue = Math.floor(Math.random() * 360);
@@ -84,6 +84,8 @@ export function MyRoads() {
       ) : (
         <div className={styles.roadList}>
           {userRoads.map((road) => (
+           
+          
             <div
               key={road.id}
               className={styles.roadItem}
@@ -102,8 +104,9 @@ export function MyRoads() {
                     Даты путешествия: {new Date(road.tripStartDate).toLocaleDateString()} - {new Date(road.tripEndDate).toLocaleDateString()}
                   </p>
                 </div>
-
+                {road.author?.id === user?.id && (
                 <button
+                  
                   onClick={(e) => {
                     e.stopPropagation();
                     handleToggleVisibility(road.id, road.visibility);
@@ -114,6 +117,7 @@ export function MyRoads() {
                 >
                   {road.visibility === "public" ? "Публичный" : "Приватный"}
                 </button>
+                )}
               </div>
             </div>
           ))}

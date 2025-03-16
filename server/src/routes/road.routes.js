@@ -17,10 +17,10 @@ router.delete('/delete/:id', verifyAccessToken, RoadController.deleteRoad);
 
 // Компаньоны
 // Получение списка компаньонов
-router.get('/:roadId/companions', CompanionController.getCompanions);
+router.get('/:roadId/companions', verifyAccessToken, CompanionController.getCompanions);
 // Добавление компаньона
-router.post('/:roadId/companions', CompanionController.addCompanion);
+router.post('/:roadId/companion', verifyAccessToken, CompanionController.addCompanion); // !!!
 // Удаление компаньона
-router.delete('/:roadId/companions/:userId', CompanionController.removeCompanion);
+router.delete('/:roadId/companions/:userId', verifyAccessToken, CompanionController.removeCompanion);
 
 module.exports = router;
