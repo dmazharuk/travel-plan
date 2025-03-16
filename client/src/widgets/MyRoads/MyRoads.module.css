@@ -43,22 +43,22 @@
 }
 
 .createButton .tooltip {
-  visibility: hidden; /* Скрываем подсказку по умолчанию */
-  min-width: 100px; /* Минимальная ширина, чтобы текст не обрезался */
-  background-color: #333;
-  color: #fff;
-  text-align: center;
-  border-radius: 4px; /* Уменьшили радиус скругления */
-  padding: 6px 8px; /* Увеличили отступы */
   position: absolute;
-  z-index: 1;
   bottom: 125%; /* Позиция подсказки над кнопкой */
   left: 50%;
-  transform: translateX(-50%); /* Центрируем подсказку */
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  z-index: 1;
+  visibility: hidden; /* Скрываем подсказку по умолчанию */
+  min-width: 100px; /* Минимальная ширина, чтобы текст не обрезался */
+  padding: 6px 8px; /* Увеличили отступы */
   font-size: 0.75rem; /* Уменьшили размер шрифта */
+  color: #fff;
+  text-align: center;
   white-space: nowrap; /* Текст в одну строку */
+  background-color: #333;
+  border-radius: 4px; /* Уменьшили радиус скругления */
+  opacity: 0;
+  transform: translateX(-50%); /* Центрируем подсказку */
+  transition: opacity 0.3s ease;
 }
 
 
@@ -68,14 +68,14 @@
 }
 
 .createButton .tooltip::after {
-  content: "";
   position: absolute;
   top: 100%; /* Стрелка подсказки */
   left: 50%;
   margin-left: -5px;
-  border-width: 5px;
+  content: "";
+  border-color: #333 transparent transparent;
   border-style: solid;
-  border-color: #333 transparent transparent transparent;
+  border-width: 5px;
 }
 
 .createButton span {
@@ -87,19 +87,19 @@
 
 /* Стили для списка маршрутов */
 .roadList {
-  margin-top: 1.5rem;
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* Две колонки */
   gap: 1rem; /* Расстояние между карточками */
+  margin-top: 1.5rem;
 }
 
 .roadItem {
   padding: 1rem;
+  color: #333; /* Цвет текста */
   cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.3); /* Легкая граница */
+  border: 1px solid rgb(255 255 255 / 30%); /* Легкая граница */
   border-radius: 12px;
   transition: box-shadow 0.3s ease, transform 0.3s ease;
-  color: #333; /* Цвет текста */
 }
 
 .roadItem:hover {
@@ -126,6 +126,9 @@
 }
 
 
+.private {
+  display: none;
+}
 
 .visibilityButton {
   padding: 0.5rem 1rem;
@@ -133,7 +136,7 @@
   font-weight: 500;
   color: inherit; /* Наследуем цвет текста */
   cursor: pointer;
-  background-color: rgba(255, 255, 255, 0.3); /* Полупрозрачный фон */
+  background-color: rgb(255 255 255 / 30%); /* Полупрозрачный фон */
   border: none;
   border-radius: 8px;
   transition: background-color 0.3s ease;
@@ -141,11 +144,11 @@
 
 .visibilityButton.public {
   color: #fff;
-  background-color: rgba(0, 0, 0, 0.5); /* Темный полупрозрачный фон */
+  background-color: rgb(0 0 0 / 50%); /* Темный полупрозрачный фон */
 }
 
 .visibilityButton:hover {
-  background-color: rgba(255, 255, 255, 0.5); /* Светлее при наведении */
+  background-color: rgb(255 255 255 / 50%); /* Светлее при наведении */
 }
 
 /* Сообщение об отсутствии маршрутов */

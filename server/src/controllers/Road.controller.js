@@ -49,20 +49,31 @@ class RoadController {
       visitDates,
       tripStartDate,
       tripEndDate } = req.body;
-
+  
     const { user } = res.locals;
-
+  
+    // Если tripStartDate и tripEndDate не переданы, используем данные из transportInfo
+    const finalTripStartDate = tripStartDate || transportInfo?.departureTime;
+    const finalTripEndDate = tripEndDate || transportInfo?.arrivalTime;
+  
+    // Валидация данных с использованием измененных дат
     const { isValid, error } = RoadValidator.validate({
       city,
       country,
       transport,
       visibility,
-      tripStartDate,
-      tripEndDate
+      tripStartDate: finalTripStartDate, // Передаем окончательные даты
+      tripEndDate: finalTripEndDate,
+      transportInfo,
+      checkInDate,
+      checkOutDate,
+      visitDates, // это не даты, а места посещения!!!
     });
+  
     if (!isValid) {
       return res.status(400).json(formatResponse(400, 'Неверные данные', null, error));
     }
+  
     try {
       const newRoad = await RoadService.create({
         city,
@@ -74,12 +85,12 @@ class RoadController {
         accommodation,
         checkInDate,
         checkOutDate,
-        visitDates: visitDates || [],
-        tripStartDate,
-        tripEndDate,
+        visitDates: visitDates,
+        tripStartDate: finalTripStartDate,  // Добавляем в объект перед записью в БД
+        tripEndDate: finalTripEndDate,      // Добавляем в объект перед записью в БД
         userId: user.id
-
       });
+  
       if (!newRoad) {
         return res.status(400).json(formatResponse(400, 'Не удалось создать маршрут'));
       }
@@ -88,7 +99,7 @@ class RoadController {
       res.status(500).json(formatResponse(500, 'Internal server error', null, message));
     }
   }
-
+  
   // обновление маршрута
   static async updateRoad(req, res) {
     const { id } = req.params;
@@ -107,15 +118,35 @@ class RoadController {
 
     const { user } = res.locals;
 
-    const { isValid, error } = RoadValidator.validate({
+    console.log('Received update data:====>', {
       city,
       country,
       transport,
       visibility,
       tripStartDate,
-      tripEndDate
+      tripEndDate,
+      transportInfo,
+      checkInDate,
+      checkOutDate,
+      visitDates
+    });
+
+
+
+    const { isValid, error } = RoadValidator.validate({
+      city,
+    country,
+    transport,
+    visibility,
+    tripStartDate,
+    tripEndDate,
+    transportInfo,
+    checkInDate,
+    checkOutDate,
+    visitDates
     });
     if (!isValid) {
+      console.error('Validation error:', error); 
       return res.status(400).json(formatResponse(400, 'ошибка валидации', null, error));
     }
     try {

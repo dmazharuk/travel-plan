@@ -15,19 +15,19 @@ export function MyRoads() {
     dispatch(getAllRoads());
   }, [dispatch]);
 
-  const userRoads = roads.filter((road) => road.author.id === user?.id);
+  // Добавлена проверка на наличие author
+  const userRoads = roads.filter((road) => road.author?.id === user?.id || road.companions?.some((companion) => companion.id === user?.id) && road.visibility === "public");
 
-  // Функция для генерации случайного приглушенного цвета
   const getRandomColor = () => {
-    const hue = Math.floor(Math.random() * 360); // Случайный оттенок
-    const saturation = 50 + Math.floor(Math.random() * 30); // Насыщенность (50-80%)
-    const lightness = 70 + Math.floor(Math.random() * 10); // Светлота (70-80%)
+    const hue = Math.floor(Math.random() * 360);
+    const saturation = 50 + Math.floor(Math.random() * 30);
+    const lightness = 70 + Math.floor(Math.random() * 10);
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
   };
 
   const handleToggleVisibility = (
     roadId: number,
-    currentVisibility: string
+    currentVisibility: "private" | "friends" | "public"
   ) => {
     const newVisibility = currentVisibility === "public" ? "private" : "public";
 
@@ -36,7 +36,7 @@ export function MyRoads() {
     if (roadToUpdate) {
       const updatedRoadData = {
         ...roadToUpdate,
-        visibility: newVisibility,
+        visibility: newVisibility as "private" | "friends" | "public",
         city: roadToUpdate.city,
         country: roadToUpdate.country,
         transport: roadToUpdate.transport,
@@ -54,6 +54,10 @@ export function MyRoads() {
     navigate(`/cabinet/road/${roadId}`);
   };
 
+  const handleCreateRoadClick = () => {
+    navigate("/create-road");
+  };
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -62,14 +66,14 @@ export function MyRoads() {
       <div className={styles.header}>
         <h1 className={styles.title}>Мой кабинет</h1>
         <div className={styles.conteinerForTitle}>
-        <h3>Мои маршруты</h3>
-        <button
-          onClick={() => navigate("/create-road")}
-          className={styles.createButton}
-        >
-          <span>+</span>
-          <span className={styles.tooltip}>Создать маршрут</span>
-        </button>
+          <h3>Мои маршруты</h3>
+          <button
+            onClick={handleCreateRoadClick}
+            className={styles.createButton}
+          >
+            <span>+</span>
+            <span className={styles.tooltip}>Создать маршрут</span>
+          </button>
         </div>
       </div>
 
@@ -80,11 +84,13 @@ export function MyRoads() {
       ) : (
         <div className={styles.roadList}>
           {userRoads.map((road) => (
+           
+          
             <div
               key={road.id}
               className={styles.roadItem}
               onClick={() => handleRoadClick(road.id)}
-              style={{ backgroundColor: getRandomColor() }} // Добавляем случайный цвет фона
+              style={{ backgroundColor: getRandomColor() }}
             >
               <div className={styles.roadHeader}>
                 <div>
@@ -94,9 +100,13 @@ export function MyRoads() {
                   <p className={styles.roadDate}>
                     Создан: {new Date(road.createdAt).toLocaleDateString()}
                   </p>
+                  <p className={styles.tripDate}>
+                    Даты путешествия: {new Date(road.tripStartDate).toLocaleDateString()} - {new Date(road.tripEndDate).toLocaleDateString()}
+                  </p>
                 </div>
-
+                {road.author?.id === user?.id && (
                 <button
+                  
                   onClick={(e) => {
                     e.stopPropagation();
                     handleToggleVisibility(road.id, road.visibility);
@@ -107,6 +117,7 @@ export function MyRoads() {
                 >
                   {road.visibility === "public" ? "Публичный" : "Приватный"}
                 </button>
+                )}
               </div>
             </div>
           ))}
@@ -115,3 +126,4 @@ export function MyRoads() {
     </div>
   );
 }
+

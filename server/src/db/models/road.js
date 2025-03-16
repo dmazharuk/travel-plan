@@ -4,18 +4,18 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Road extends Model {
     static associate(models) {
-      Road.belongsTo(models.User, { 
-        foreignKey: 'userId', 
+      Road.belongsTo(models.User, {
+        foreignKey: 'userId',
         as: 'author',
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
       });
-      
+
       Road.belongsToMany(models.User, {
         through: models.Companion,
         foreignKey: 'roadId',
         otherKey: 'userId',
         as: 'companions',
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
       });
     }
   }
@@ -24,69 +24,69 @@ module.exports = (sequelize, DataTypes) => {
     {
       userId: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       country: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       city: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       transport: {
         type: DataTypes.ENUM('поезд', 'самолет', 'машина'),
-        allowNull: false
+        allowNull: false,
       },
       transportInfo: {
         type: DataTypes.JSONB,
         defaultValue: {},
-        comment: 'Структура зависит от типа транспорта'
+        comment: 'Структура зависит от типа транспорта',
       },
       tripStartDate: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: true,
       },
       tripEndDate: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: true,
       },
       accommodation: {
         type: DataTypes.STRING,
-        comment: 'Название отеля/жилья'
+        comment: 'Название отеля/жилья',
       },
       checkInDate: {
         type: DataTypes.DATE,
-        comment: 'Дата заселения'
+        comment: 'Дата заселения',
       },
       checkOutDate: {
         type: DataTypes.DATE,
-        comment: 'Дата выселения'
+        comment: 'Дата выселения',
       },
       visitDates: {
-        type: DataTypes.JSONB,
-        defaultValue: [],
-        comment: 'Массив дат в формате ISO'
+        type: DataTypes.STRING,
+        comment: 'Места посещения  c  датами посещения',
       },
       routeInfo: {
         type: DataTypes.TEXT,
-        comment: 'Дополнительная информация'
+        comment: 'Дополнительная информация',
       },
       visibility: {
         type: DataTypes.ENUM('private', 'friends', 'public'),
         defaultValue: 'private',
-        allowNull: false
-      }
+        allowNull: false,
+      },
     },
     {
       sequelize,
       modelName: 'Road',
+      timestamps: true,
       indexes: [
         { fields: ['tripStartDate'] },
         { fields: ['tripEndDate'] },
-        { fields: ['transport'] }
-      ]
-    }
+        { fields: ['transport'] },
+      ],
+    },
   );
 
   return Road;

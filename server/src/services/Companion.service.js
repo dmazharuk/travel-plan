@@ -1,5 +1,5 @@
-const Companion = require('../db/models/companion');
-const User = require('../db/models/user');
+const {Companion, User} = require('../db/models');
+
 
 class CompanionService {
   // Добавить компаньона
@@ -27,6 +27,10 @@ class CompanionService {
         attributes: ['id', 'username', 'email'],
       },
     });
+  }
+
+  static async getByRoadIdAndUserId(roadId, userId) {
+    return Companion.findOne({ where: { roadId, userId } });
   }
 }
 
