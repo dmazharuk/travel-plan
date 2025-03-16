@@ -40,7 +40,7 @@ module.exports = {
         defaultValue: 'private',
       },
       
-      // Новые поля
+     
       
       accommodation: {
         type: Sequelize.STRING,

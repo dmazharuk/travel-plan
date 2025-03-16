@@ -7,12 +7,12 @@ class RoadService {
       include: [
         {
           model: User, // Пользователь, создавший маршрут
-          as: "author",
+          as: 'author',
           attributes: ['id', 'username', 'email'],
         },
         {
           model: User, // Список спутников
-          as: "companions",
+          as: 'companions',
           through: { attributes: [] }, // Исключаем промежуточную таблицу
           attributes: ['id', 'username', 'email'],
         },
@@ -26,12 +26,12 @@ class RoadService {
       include: [
         {
           model: User, // Пользователь, создавший маршрут
-          as: "author",
+          as: 'author',
           attributes: ['id', 'username', 'email'],
         },
         {
           model: User, // Список спутников
-          as: "companions",
+          as: 'companions',
           through: { attributes: [] }, // Исключаем промежуточную таблицу
           attributes: ['id', 'username', 'email'],
         },
@@ -41,22 +41,17 @@ class RoadService {
 
   //* Создать новый маршрут
   static async create(data) {
-    return await Road.create({
-      city: data.city,
-      country: data.country,
-      transport: data.transport,
-      visibility: data.visibility,
-      transportInfo: data.transportInfo,
-      routeInfo: data.routeInfo,
-      accommodation: data.accommodation,
-      checkInDate: data.checkInDate,
-      checkOutDate: data.checkOutDate,
-      visitDates: data.visitDates,
-      tripStartDate: data.tripStartDate,
-      tripEndDate: data.tripEndDate,
-      userId: data.userId
-    });
-   
+    const formattedData = {
+      ...data,
+      tripStartDate: data.tripStartDate ? new Date(data.tripStartDate) : null,
+      tripEndDate: data.tripEndDate ? new Date(data.tripEndDate) : null,
+      checkInDate: data.checkInDate ? new Date(data.checkInDate) : null,
+      checkOutDate: data.checkOutDate ? new Date(data.checkOutDate) : null,
+      transportInfo: data.transportInfo || {},
+      visitDates: Array.isArray(data.visitDates) ? data.visitDates : [],
+    };
+
+    return await Road.create(formattedData);
   }
 
   //* Обновить маршрут по ID
@@ -68,13 +63,21 @@ class RoadService {
     }
 
     const fields = [
-      'city', 'country', 'transport', 'visibility',
-      'transportInfo', 'routeInfo', 'accommodation',
-      'checkInDate', 'checkOutDate', 'visitDates',
-      'tripStartDate', 'tripEndDate'
+      'city',
+      'country',
+      'transport',
+      'visibility',
+      'transportInfo',
+      'routeInfo',
+      'accommodation',
+      'checkInDate',
+      'checkOutDate',
+      'visitDates',
+      'tripStartDate',
+      'tripEndDate',
     ];
 
-    fields.forEach(field => {
+    fields.forEach((field) => {
       if (data[field] !== undefined) road[field] = data[field];
     });
 
@@ -91,8 +94,6 @@ class RoadService {
     await road.destroy();
     return road;
   }
-
-  
 }
 
 module.exports = RoadService;

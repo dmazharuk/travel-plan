@@ -4,7 +4,11 @@ module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
       User.hasMany(models.Road, { foreignKey: 'userId', as: 'roads' });
-      User.belongsToMany(models.Road, { through:models.Companion, foreignKey:'userId', as:'companionRoads' });
+      User.belongsToMany(models.Road, {
+        through: models.Companion,
+        foreignKey: 'userId',
+        as: 'companionRoads',
+      });
     }
   }
   User.init(
@@ -16,7 +20,8 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: 'User',
-    }
+      timestamps: true,
+    },
   );
   return User;
 };

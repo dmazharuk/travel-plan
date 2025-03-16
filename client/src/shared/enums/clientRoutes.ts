@@ -5,8 +5,5 @@ export enum CLIENT_ROUTES {
   CABINET_PAGE = '/cabinet',
   CREATE_ROAD_PAGE = '/create-road',
   ROAD_DETAIL_PAGE = '/cabinet/road/:id',
-  // CALENDAR = '/calendar',
-  // WELCOME_PAGE = '/welcome',
-  // WELCOME_PAGE = '/',
   NOT_FOUND = '*',
 }

@@ -1,44 +1,36 @@
-// Интерфейс для данных при создании маршрута
+export interface ITransportInfo {
+  departureTime?: string; // для транспорта (самолет, поезд)
+  arrivalTime?: string; // для транспорта (самолет, поезд)
+  flightNumber?: string; // для рейсов
+  carNumber?: string; // для машин
+}
+
 export interface IRoadRowData {
   country: string;
   city: string;
-  transport: string;
-  transportInfo: string;
-  routeInfo: string;
-  visibility: string;
-  
-  // Добавляем поля для транспорта
-  departureTime?: string; // для транспорта (самолет, поезд)
-  arrivalTime?: string;   // для транспорта (самолет, поезд)
-  flightNumber?: string;  // для рейсов
-  
-  // Для машин
-  startDate?: string;   // Начало поездки для машины
-  endDate?: string;     // Конец поездки для машины
-  
-  // Информация о жилье
-  hotelName?: string;
+  transport: 'поезд' | 'самолет' | 'машина';
+  transportInfo?: ITransportInfo | null;
+  routeInfo?: string;
+  visibility: 'private' | 'friends' | 'public';
+  tripStartDate: string;
+  tripEndDate: string;
+  accommodation?: string;
   checkInDate?: string;
   checkOutDate?: string;
-  
-  // План посещения мест
-  placesToVisit?: string;
+  visitDates: string[];
 }
 
-// Интерфейс для маршрута с учетом ассоциаций и связей с пользователями
 export interface IRoad extends IRoadRowData {
   id: number;
   createdAt: Date;
   updatedAt: Date;
 
-  // Информация о пользователе, который создал маршрут (author)
   author: {
     id: number;
     username: string;
     email: string;
   };
 
-  // Список спутников, теперь ассоциация через companions
   companions: Array<{
     id: number;
     username: string;
@@ -46,6 +38,4 @@ export interface IRoad extends IRoadRowData {
   }>;
 }
 
-// Массив маршрутов
 export type RouteArrayType = IRoad[];
-
