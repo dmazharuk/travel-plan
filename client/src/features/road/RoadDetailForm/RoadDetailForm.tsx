@@ -44,7 +44,7 @@ export function RoadDetailForm() {
     accommodation: '',
     checkInDate: '',
     checkOutDate: '',
-    visitDates: [],
+    visitDates: '',
   });
 
   useEffect(() => {
@@ -62,7 +62,7 @@ export function RoadDetailForm() {
         tripEndDate: formatDateForInput(road.tripEndDate),
         checkInDate: formatDateForInput(road.checkInDate),
         checkOutDate: formatDateForInput(road.checkOutDate),
-        visitDates: road.visitDates?.map(formatDateForInput) || [],
+      
       });
     }
   }, [road]);
@@ -95,7 +95,7 @@ export function RoadDetailForm() {
         tripEndDate: parseDateToISO(formData.tripEndDate || ''),
         checkInDate: parseDateToISO(formData.checkInDate || ''),
         checkOutDate: parseDateToISO(formData.checkOutDate || ''),
-        visitDates: formData.visitDates?.map(parseDateToISO) || [],
+       
       };
       
       dispatch(updateRoad({ 
@@ -282,15 +282,15 @@ export function RoadDetailForm() {
         <div className={styles.formGroup}>
           <label className={styles.formLabel}>Даты посещения</label>
           <input
-            type="text"
+            type="text-area"
             name="visitDates"
             className={styles.formInput}
-            value={(formData.visitDates || []).join(', ')}
+            value={formData.visitDates}
             onChange={(e) => 
               setFormData(prev => ({
                 ...prev,
-                visitDates: e.target.value.split(',').map(d => d.trim())
-              }))
+                visitDates: e.target.value})
+              )
             }
             disabled={!editable}
             placeholder="Введите даты через запятую (гггг-мм-дд)"

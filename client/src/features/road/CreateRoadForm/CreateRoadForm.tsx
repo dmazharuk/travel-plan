@@ -23,7 +23,7 @@ const initialFormData: IRoadRowData = {
   accommodation: '',
   checkInDate: '',
   checkOutDate: '',
-  visitDates: [],
+  visitDates: '',
 };
 
 export function CreateRoadForm() {
@@ -53,7 +53,7 @@ export function CreateRoadForm() {
             accommodation: roadData.accommodation,
             checkInDate: roadData.checkInDate,
             checkOutDate: roadData.checkOutDate,
-            visitDates: roadData.visitDates || [],
+            visitDates: roadData.visitDates,
           });
         }
       };
@@ -308,21 +308,21 @@ export function CreateRoadForm() {
         {/* Места для посещения */}
         <div className={styles.formGroup}>
           <label htmlFor="visitDates" className={styles.formLabel}>
-            Даты посещений
+            Места посещения
           </label>
-          <input
-            type="text"
+          <textarea
             id="visitDates"
             name="visitDates"
-            value={formData.visitDates.join(', ')}
+            value={formData.visitDates}
             onChange={(e) =>
               setFormData({
                 ...formData,
-                visitDates: e.target.value.split(',').map((date) => date.trim()),
+                visitDates: e.target.value
               })
             }
+            
             className={styles.formInput}
-            placeholder="Введите даты, разделенные запятой"
+            placeholder="Места посещения с датами посещения"
           />
         </div>
 

@@ -17,7 +17,7 @@ export interface IRoadRowData {
   accommodation?: string;
   checkInDate?: string;
   checkOutDate?: string;
-  visitDates: string[];
+  visitDates?: string;
 }
 
 export interface IRoad extends IRoadRowData {

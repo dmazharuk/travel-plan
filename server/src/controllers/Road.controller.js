@@ -67,7 +67,7 @@ class RoadController {
       transportInfo,
       checkInDate,
       checkOutDate,
-      visitDates,
+      visitDates, // это не даты, а места посещения!!!
     });
   
     if (!isValid) {
@@ -85,7 +85,7 @@ class RoadController {
         accommodation,
         checkInDate,
         checkOutDate,
-        visitDates: visitDates || [],
+        visitDates: visitDates,
         tripStartDate: finalTripStartDate,  // Добавляем в объект перед записью в БД
         tripEndDate: finalTripEndDate,      // Добавляем в объект перед записью в БД
         userId: user.id

@@ -59,9 +59,9 @@ if (new Date(tripStartDate) > new Date(tripEndDate)) {
     }
 
     // Проверка visitDates
-    if (visitDates && !Array.isArray(visitDates)) {
-      errors.push('Даты посещения должны быть массивом');
-    }
+    // if (visitDates && !Array.isArray(visitDates)) {
+    //   errors.push('Даты посещения должны быть массивом');
+    // }
     
     if (errors.length > 0) {
       return { isValid: false, error: errors.join(', ') };

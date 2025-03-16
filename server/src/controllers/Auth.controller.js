@@ -12,7 +12,7 @@ class AuthController {
     try {
       const { user } = res.locals;
 
-      const { accessToken, refreshToken } = generateTokens({ user });
+      const { accessToken, refreshToken } = generateTokens( {user });
 
       res.status(200).cookie('refreshToken', refreshToken, cookiesConfig).json(
         formatResponse(200, 'Successfully regenerate tokens', {

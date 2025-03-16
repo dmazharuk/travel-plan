@@ -52,8 +52,8 @@ module.exports = {
         type: Sequelize.DATE,
       }, // Дата выезда
       visitDates: {
-        type: Sequelize.JSONB,
-      }, // Массив дат посещения мест
+        type: Sequelize.STRING,
+      }, // Места посещения  c  датами посещения в виде строки
       tripStartDate: {
         type: Sequelize.DATE,
       }, // Общая дата начала поездки

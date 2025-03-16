@@ -64,9 +64,8 @@ module.exports = (sequelize, DataTypes) => {
         comment: 'Дата выселения',
       },
       visitDates: {
-        type: DataTypes.JSONB,
-        defaultValue: [],
-        comment: 'Массив дат в формате ISO',
+        type: DataTypes.STRING,
+        comment: 'Места посещения  c  датами посещения',
       },
       routeInfo: {
         type: DataTypes.TEXT,

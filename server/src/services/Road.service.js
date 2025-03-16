@@ -48,7 +48,7 @@ class RoadService {
       checkInDate: data.checkInDate ? new Date(data.checkInDate) : null,
       checkOutDate: data.checkOutDate ? new Date(data.checkOutDate) : null,
       transportInfo: data.transportInfo || {},
-      visitDates: Array.isArray(data.visitDates) ? data.visitDates : [],
+      visitDates: data.visitDates,
     };
 
     return await Road.create(formattedData);
