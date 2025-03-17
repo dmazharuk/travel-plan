@@ -9,6 +9,7 @@ import {
   
 } from '@/app/entities/road';
 import styles from './CreateRoadForm.module.css';
+import { axiosInstance } from '@/shared/lib/axiosInstance';
 
 // Определение начальных данных для формы
 const initialFormData: IRoadRowData = {
@@ -101,6 +102,7 @@ export function CreateRoadForm() {
     event.preventDefault();
     console.log("=====>",formData);
     
+    
     try {
       if (isEditMode) {
         // Обновление маршрута
@@ -112,6 +114,23 @@ export function CreateRoadForm() {
       navigate('/cabinet');
     } catch (error) {
       console.error('Ошибка при сохранении маршрута', error);
+    }
+  };
+
+  // Обработчик для получения рекомендаций
+  const handleGetRecommendation = async () => {
+    try {
+      const recomendation = await axiosInstance.post('http://localhost:3000/api/gigachat/recommendations', { city: formData.city });
+       console.log(recomendation.data, '<========recomendation');
+
+      // Записываем рекомендации в поле "Информация о маршруте"
+      setFormData((prevState) => ({
+        ...prevState,
+        routeInfo: recomendation.data.data, // Рекомендации от чата
+      }));
+      
+    } catch (error) {
+      console.error('Ошибка при получении рекомендаций', error);
     }
   };
 
@@ -260,6 +279,18 @@ export function CreateRoadForm() {
             className={styles.formInput}
             rows={2}
           />
+        </div>
+        {/* Кнопка получения рекомендации */}
+        <div className={styles.formGroup}>
+          <button
+            type="button"
+            disabled={!formData.city}
+            
+            onClick={handleGetRecommendation}
+            className={styles.submitButton}
+          >
+            Получить рекомендацию
+          </button>
         </div>
 
         {/* Жилье */}
