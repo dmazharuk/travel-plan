@@ -129,6 +129,25 @@ export function CreateRoadForm() {
     }
   };
 
+  const handleRecomImportantThings = async () => {
+    console.log(formData.city, 'formData.city');
+    
+    try {
+      const recomendation = await axiosInstance.post(
+        'http://localhost:3000/api/gigachat/recommendations',
+        { city: formData.city,
+          type:'items'
+         },
+      );
+      console.log(recomendation.data, '<========recomendation');
+      setFormData((prevState) => ({
+        ...prevState,
+        visitDates: recomendation.data.data,
+      }));
+    } catch (error) {
+      console.error('Ошибка при получении рекомендаций', error);
+    }
+  };
   return (
     <div className={styles.formContainer}>
       <h1 className={styles.formTitle}>Создать новый маршрут</h1>
@@ -162,7 +181,7 @@ export function CreateRoadForm() {
               onChange={handleChange}
               className={styles.formInput}
               required
-               placeholder="обязательно укажите страну"
+              placeholder="обязательно укажите страну"
             />
           </div>
         </div>
@@ -335,16 +354,31 @@ export function CreateRoadForm() {
           <textarea
             id="visitDates"
             name="visitDates"
-            value={formData.visitDates}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                visitDates: e.target.value,
-              })
-            }
+            // value={formData.visitDates}
+            value={formData.visitDates || ''}
+            // onChange={(e) =>
+            //   setFormData({
+            //     ...formData,
+            //     visitDates: e.target.value,
+            //   })
+            // }
+           
+            onChange={handleChange}
             className={styles.formInput}
-            
+            rows={2}
+           
           />
+        </div>
+        {/* Кнопка получения рекомендации */}
+        <div className={styles.formGroup}>
+          <button
+           // type="button"
+          // disabled={!formData.visitDates}
+            onClick={handleRecomImportantThings}
+            className={styles.submitButton}
+          >
+            спроси меня что взять с собой
+          </button>
         </div>
 
         {/* Выбор видимости маршрута */}

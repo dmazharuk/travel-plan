@@ -103,11 +103,8 @@ const {user} = useAppSelector((state)=>state.user)
       }))
       .unwrap()
       .then(() => {
-        // 1. Обновляем текущий маршрут
         dispatch(getRoadById({ id: Number(id) }));
-        // 2. Перезагружаем список всех маршрутов
         dispatch(getAllRoads());
-        // 3. Переходим после успешного обновления
         navigate(CLIENT_ROUTES.CABINET_PAGE);
       })
       .catch((error) => {

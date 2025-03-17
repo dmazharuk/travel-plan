@@ -10,34 +10,61 @@ let token = null;
 let lastCall = 0;
 
 class GigaChatService {
-  static async getRecommendations(city) {
+  static async getRecommendations(city, type) {
     try {
-      if (!token) {
-        await this.Authorization();
+      if (!token) await this.Authorization();
+
+      let content;
+
+      if (type === 'items') {
+        content = `Составь список необходимых вещей для поездки в ${city}. 
+                  . Максимум 10 символов.`;
+      } else if (city) {
+        content = `Перечисли достопримечательности в ${city}
+                  в формате Название - Адрес. Максимум 10 символов.`;
+      } else {
+        throw new Error('Не указан город');
       }
+
       const response = await axios.post(
         `${GIGACHAT_API_URL}/chat/completions`,
         {
           model: 'GigaChat',
-          messages: [
-            {
-              role: 'user',
-              content:
-                `Текст должен быть не более 255 символов. Не должен прерываться на полуслове.Ты туристический эксперт.Давай места и описание достопримечательностей в городе ${city}. Всегда возвращай законченное предложение`,
-            },
-          ],
-          max_tokens: 255,
+          messages: [{ role: 'user', content }],
+          max_tokens: 10,
           temperature: 0.5,
-
         },
         {
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
-            Accept: 'application/json',
           },
         },
       );
+
+      // const response = await axios.post(
+      //   `${GIGACHAT_API_URL}/chat/completions`,
+      //   {
+      //     model: 'GigaChat',
+      //     messages: [
+      //       {
+      //         role: 'user',
+      //         content:
+      //           `Текст должен быть не более 255 символов. Не должен прерываться на полуслове.Ты туристический эксперт.Давай места и описание достопримечательностей в городе ${city}. Всегда возвращай законченное предложение`,
+      //       },
+      //     ],
+      //     max_tokens: 255,
+      //     temperature: 0.5,
+
+      //   },
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${token}`,
+      //       'Content-Type': 'application/json',
+      //       Accept: 'application/json',
+      //     },
+      //   },
+      // );
 
       // return response.data.choices[0].message.content;
       return response.data.choices[0].message.content;
