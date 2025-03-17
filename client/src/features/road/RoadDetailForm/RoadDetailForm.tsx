@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from "@/shared/hooks/reduxHooks";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import styles from "./RoadDetailForm.module.css";
+import CompanionWidget from "@/widgets/CompanionWidget/CompanionWidget";
 
 // Функция для преобразования даты в формат yyyy-MM-dd
 const formatDateForInput = (dateString?: string) => {
@@ -120,6 +121,17 @@ const {user} = useAppSelector((state)=>state.user)
       <div className={styles.formGrid}>
         {/* Страна и город */}
         <div className={styles.formRow}>
+        <div className={styles.formGroup}>
+            <label className={styles.formLabel}>Город</label>
+            <input
+              type="text"
+              name="city"
+              className={styles.formInput}
+              value={formData.city || ""}
+              onChange={handleChange}
+              disabled={!editable}
+            />
+          </div>
           <div className={styles.formGroup}>
             <label className={styles.formLabel}>Страна</label>
             <input
@@ -131,17 +143,7 @@ const {user} = useAppSelector((state)=>state.user)
               disabled={!editable}
             />
           </div>
-          <div className={styles.formGroup}>
-            <label className={styles.formLabel}>Город</label>
-            <input
-              type="text"
-              name="city"
-              className={styles.formInput}
-              value={formData.city || ""}
-              onChange={handleChange}
-              disabled={!editable}
-            />
-          </div>
+          
         </div>
 
         {/* Транспорт и информация */}
@@ -164,7 +166,7 @@ const {user} = useAppSelector((state)=>state.user)
         {(formData.transport === 'самолет' || formData.transport === 'поезд') && (
           <div className={styles.formRow}>
             <div className={styles.formGroup}>
-              <label className={styles.formLabel}>Дата отправления</label>
+              <label className={styles.formLabel}>Дата и время отправления</label>
               <input
                 type="datetime-local"
                 value={formData.transportInfo?.departureTime || ''}
@@ -175,7 +177,7 @@ const {user} = useAppSelector((state)=>state.user)
               />
             </div>
             <div className={styles.formGroup}>
-              <label className={styles.formLabel}>Дата прибытия</label>
+              <label className={styles.formLabel}>Дата и время прибытия</label>
               <input
                 type="datetime-local"
                 value={formData.transportInfo?.arrivalTime || ''}
@@ -185,7 +187,7 @@ const {user} = useAppSelector((state)=>state.user)
                 disabled={!editable}
               />
             </div>
-            {formData.transport === 'самолет' && (
+            {formData.transport === 'самолет' || formData.transport === 'поезд' && (
               <div className={styles.formGroup}>
                 <label className={styles.formLabel}>Номер рейса</label>
                 <input
@@ -204,7 +206,7 @@ const {user} = useAppSelector((state)=>state.user)
         {/* Даты поездки */}
         <div className={styles.formRow}>
           <div className={styles.formGroup}>
-            <label className={styles.formLabel}>Дата начала</label>
+            <label className={styles.formLabel}>Дата начала путешествия</label>
             <input
               type="date"
               name="tripStartDate"
@@ -215,7 +217,7 @@ const {user} = useAppSelector((state)=>state.user)
             />
           </div>
           <div className={styles.formGroup}>
-            <label className={styles.formLabel}>Дата окончания</label>
+            <label className={styles.formLabel}>Дата окончания путешествия</label>
             <input
               type="date"
               name="tripEndDate"
@@ -226,7 +228,18 @@ const {user} = useAppSelector((state)=>state.user)
             />
           </div>
         </div>
-
+{/* Дополнительная информация */}
+<div className={styles.formGroup}>
+          <label className={styles.formLabel}>Информация о маршруте</label>
+          <textarea
+            name="routeInfo"
+            className={styles.formTextarea}
+            value={formData.routeInfo || ""}
+            onChange={handleChange}
+            disabled={!editable}
+            rows={2}
+          />
+        </div>
         {/* Информация о жилье */}
         <div className={styles.formRow}>
           <div className={styles.formGroup}>
@@ -264,22 +277,11 @@ const {user} = useAppSelector((state)=>state.user)
           </div>
         </div>
 
-        {/* Дополнительная информация */}
-        <div className={styles.formGroup}>
-          <label className={styles.formLabel}>Описание маршрута</label>
-          <textarea
-            name="routeInfo"
-            className={styles.formTextarea}
-            value={formData.routeInfo || ""}
-            onChange={handleChange}
-            disabled={!editable}
-            rows={3}
-          />
-        </div>
+        
 
-        {/* Даты посещения */}
+        {/* Места посещения */}
         <div className={styles.formGroup}>
-          <label className={styles.formLabel}>Даты посещения</label>
+          <label className={styles.formLabel}>Места посещения</label>
           <input
             type="text-area"
             name="visitDates"
@@ -312,7 +314,7 @@ const {user} = useAppSelector((state)=>state.user)
           </select>
         </div>
       </div>
-
+      <CompanionWidget/>
       {/* Кнопки управления */}
       {road?.author?.id === user?.id && (<div className={styles.buttonGroup}>
         <button
