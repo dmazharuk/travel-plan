@@ -1,5 +1,6 @@
 import {
   deleteRoad,
+  getAllRoads,
   getRoadById,
   IRoad,
   updateRoad,
@@ -88,22 +89,31 @@ const {user} = useAppSelector((state)=>state.user)
 
   const handleSave = () => {
     if (id) {
-      // Преобразование дат обратно в ISO формат перед отправкой
       const dataToSend = {
         ...formData,
         tripStartDate: parseDateToISO(formData.tripStartDate || ''),
         tripEndDate: parseDateToISO(formData.tripEndDate || ''),
         checkInDate: parseDateToISO(formData.checkInDate || ''),
         checkOutDate: parseDateToISO(formData.checkOutDate || ''),
-       
       };
-      
+  
       dispatch(updateRoad({ 
         id: Number(id), 
         roadData: dataToSend 
-      }));
+      }))
+      .unwrap()
+      .then(() => {
+        // 1. Обновляем текущий маршрут
+        dispatch(getRoadById({ id: Number(id) }));
+        // 2. Перезагружаем список всех маршрутов
+        dispatch(getAllRoads());
+        // 3. Переходим после успешного обновления
+        navigate(CLIENT_ROUTES.CABINET_PAGE);
+      })
+      .catch((error) => {
+        console.error('Ошибка обновления:', error);
+      });
     }
-    setEditable(false);
   };
 
   const handleDelete = () => {
@@ -281,9 +291,9 @@ const {user} = useAppSelector((state)=>state.user)
 
         {/* Места посещения */}
         <div className={styles.formGroup}>
-          <label className={styles.formLabel}>Места посещения</label>
-          <input
-            type="text-area"
+          <label className={styles.formLabel}>что нужно взять с собой</label>
+          <textarea
+            
             name="visitDates"
             className={styles.formInput}
             value={formData.visitDates}
@@ -294,7 +304,7 @@ const {user} = useAppSelector((state)=>state.user)
               )
             }
             disabled={!editable}
-            placeholder="Введите даты через запятую (гггг-мм-дд)"
+            
           />
         </div>
 
@@ -314,7 +324,9 @@ const {user} = useAppSelector((state)=>state.user)
           </select>
         </div>
       </div>
+
       <CompanionWidget/>
+
       {/* Кнопки управления */}
       {road?.author?.id === user?.id && (<div className={styles.buttonGroup}>
         <button
