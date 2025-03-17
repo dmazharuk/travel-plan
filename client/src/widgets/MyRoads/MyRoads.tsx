@@ -15,7 +15,7 @@ export function MyRoads() {
     dispatch(getAllRoads());
   }, [dispatch]);
 
-  // Добавлена проверка на наличие author
+  // проверка на наличие author
   const userRoads = roads.filter((road) => road.author?.id === user?.id || road.companions?.some((companion) => companion.id === user?.id) && road.visibility === "public");
 
   const getRandomColor = () => {

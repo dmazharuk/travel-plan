@@ -82,7 +82,8 @@ export function CreateRoadForm() {
           : {
               departureTime: '',
               arrivalTime: '',
-              flightNumber: value === 'самолет' ? '' : undefined,
+              // flightNumber: value === 'самолет' ? '' : undefined,
+              flightNumber: '',
             },
     }));
   };
@@ -219,7 +220,7 @@ export function CreateRoadForm() {
                 required
               />
             </div>
-            {formData.transport === 'самолет' && (
+            {(formData.transport === 'самолет' || formData.transport === 'поезд') && (
               <div className={styles.formGroup}>
                 <label htmlFor="flightNumber">Номер рейса</label>
                 <input
