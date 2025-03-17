@@ -23,7 +23,7 @@ export function ConfirmationEmailPage() {
     };
 
     fetchFunction();
-  }, [token]);
+  }, [dispatch, navigate, token]);
 
   return <div>{token}</div>;
 }
