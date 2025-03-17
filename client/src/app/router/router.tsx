@@ -1,6 +1,6 @@
 import { JSX } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router';
-import { NotFoundPage } from '@/pages';
+import { ConfirmationEmailPage, NotFoundPage } from '@/pages';
 import { CLIENT_ROUTES } from '@/shared/enums/clientRoutes';
 import Layout from '../layout/Layout';
 
@@ -16,9 +16,19 @@ export default function Router(): JSX.Element {
         <Route path={CLIENT_ROUTES.MAIN} element={<Layout />}>
           <Route path={CLIENT_ROUTES.MAIN} element={<WelcomePage />} />
 
-          <Route path={CLIENT_ROUTES.CREATE_ROAD_PAGE} element={<CreateRoadPage />} />
-          <Route path={CLIENT_ROUTES.ROAD_DETAIL_PAGE} element={<RoadDetailPage />} />
+          <Route
+            path={CLIENT_ROUTES.CREATE_ROAD_PAGE}
+            element={<CreateRoadPage />}
+          />
+          <Route
+            path={CLIENT_ROUTES.ROAD_DETAIL_PAGE}
+            element={<RoadDetailPage />}
+          />
           <Route path={CLIENT_ROUTES.CABINET_PAGE} element={<CabinetPage />} />
+          <Route
+            path={CLIENT_ROUTES.СONF_EMAIL}
+            element={<ConfirmationEmailPage />}
+          />
           <Route path={CLIENT_ROUTES.NOT_FOUND} element={<NotFoundPage />} />
         </Route>
       </Routes>
