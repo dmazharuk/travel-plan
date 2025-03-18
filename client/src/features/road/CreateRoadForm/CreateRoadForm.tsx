@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router';
 import { createRoad, updateRoad, IRoadRowData, getRoadById } from '@/app/entities/road';
 import styles from './CreateRoadForm.module.css';
 import { axiosInstance } from '@/shared/lib/axiosInstance';
-import CompanionWidget from '@/widgets/CompanionWidget/CompanionWidget';
+
 import { showAlert } from '@/features/alert/slice/alertsSlice';
 
 
@@ -67,6 +67,7 @@ export function CreateRoadForm() {
         if (response?.data) {
           setFormData((prev) => ({ ...prev, ...response.data }));
         }
+        // dispatch(resetRoad());
       } catch (error) {
         console.error('Ошибка загрузки маршрута', error);
         dispatch(showAlert({ message: 'Ошибка загрузки маршрута', status: 'mistake' }));
@@ -416,14 +417,14 @@ export function CreateRoadForm() {
             name="visibility"
             value={formData.visibility}
             onChange={handleChange}
-            className={styles.formInput}
+            className={styles.formInput} 
           >
             <option value="private">Приватный</option>
             <option value="friends">Для друзей</option>
             <option value="public">Публичный</option>
           </select>
-        </div>
-        <CompanionWidget />
+        </div> 
+       
         {/* Кнопка отправки */}
         <div className={styles.formGroup}>
           <button type="submit" className={styles.submitButton}>

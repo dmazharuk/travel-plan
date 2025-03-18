@@ -65,10 +65,10 @@ class CompanionController {
       //const isTargetCompanion = road.companions.some((c) => c.userId === Number(userId)); // Проверяем, есть ли удаляемый в списке
   console.log('isCompanion====>',isCompanion, road.companions[0].id, user);
   
-      if (!isCompanion) {
-        return res.status(400).json(formatResponse(400, "Пользователь не является компаньоном"));
-      }
-  
+      // if (!isCompanion) {
+      //   return res.status(400).json(formatResponse(400, "Пользователь не является компаньоном"));
+      // }
+   
       // Владелец может удалить любого компаньона
       if (isOwner) {
         await CompanionService.removeCompanion(Number(roadId), Number(userId));
