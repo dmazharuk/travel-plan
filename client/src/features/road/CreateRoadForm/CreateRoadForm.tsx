@@ -5,8 +5,10 @@ import { createRoad, updateRoad, IRoadRowData, getRoadById } from '@/app/entitie
 import styles from './CreateRoadForm.module.css';
 import { axiosInstance } from '@/shared/lib/axiosInstance';
 import CompanionWidget from '@/widgets/CompanionWidget/CompanionWidget';
+import { showAlert } from '@/features/alert/slice/alertsSlice';
 
-// Определение начальных данных для формы
+
+
 const initialFormData: IRoadRowData = {
   country: '',
   city: '',
@@ -27,35 +29,52 @@ export function CreateRoadForm() {
   const navigate = useNavigate();
   const { id } = useParams();
   const isEditMode = Boolean(id);
-
   const [formData, setFormData] = useState<IRoadRowData>(initialFormData);
 
   // Загрузка данных для редактирования
+  // useEffect(() => {
+  //   if (isEditMode) {
+  //     const fetchRoadData = async () => {
+  //       const response = await dispatch(getRoadById({ id: Number(id) }));
+  //       if (response.payload?.data) {
+  //         const roadData = response.payload.data;
+  //         setFormData({
+  //           city: roadData.city,
+  //           country: roadData.country,
+  //           transport: roadData.transport,
+  //           transportInfo: roadData.transportInfo,
+  //           routeInfo: roadData.routeInfo,
+  //           visibility: roadData.visibility,
+  //           tripStartDate: roadData.tripStartDate,
+  //           tripEndDate: roadData.tripEndDate,
+  //           accommodation: roadData.accommodation,
+  //           checkInDate: roadData.checkInDate,
+  //           checkOutDate: roadData.checkOutDate,
+  //           visitDates: roadData.visitDates, // Места посещения
+  //         });
+  //       }
+  //     };
+  //     fetchRoadData();
+  //   }
+  // }, [id, dispatch]);
+
   useEffect(() => {
-    if (isEditMode) {
-      const fetchRoadData = async () => {
-        const response = await dispatch(getRoadById({ id: Number(id) }));
-        if (response.payload?.data) {
-          const roadData = response.payload.data;
-          setFormData({
-            city: roadData.city,
-            country: roadData.country,
-            transport: roadData.transport,
-            transportInfo: roadData.transportInfo,
-            routeInfo: roadData.routeInfo,
-            visibility: roadData.visibility,
-            tripStartDate: roadData.tripStartDate,
-            tripEndDate: roadData.tripEndDate,
-            accommodation: roadData.accommodation,
-            checkInDate: roadData.checkInDate,
-            checkOutDate: roadData.checkOutDate,
-            visitDates: roadData.visitDates, // Места посещения
-          });
+    if (!isEditMode) return;
+  
+    const fetchRoadData = async () => {
+      try {
+        const response = await dispatch(getRoadById({ id: Number(id) })).unwrap();
+        if (response?.data) {
+          setFormData((prev) => ({ ...prev, ...response.data }));
         }
-      };
-      fetchRoadData();
-    }
-  }, [id, dispatch]);
+      } catch (error) {
+        console.error('Ошибка загрузки маршрута', error);
+        dispatch(showAlert({ message: 'Ошибка загрузки маршрута', status: 'mistake' }));
+      }
+    };
+  
+    fetchRoadData();
+  }, [isEditMode, id, dispatch]);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
@@ -94,7 +113,7 @@ export function CreateRoadForm() {
   // Обработчик отправки формы
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('=====>', formData);
+    // console.log('=====>', formData);
 
     try {
       if (isEditMode) {
@@ -107,6 +126,7 @@ export function CreateRoadForm() {
       navigate('/cabinet');
     } catch (error) {
       console.error('Ошибка при сохранении маршрута', error);
+      dispatch(showAlert({ message: 'Необходимо заполнить обязательные поля', status: 'mistake' }));
     }
   };
 
@@ -119,16 +139,19 @@ export function CreateRoadForm() {
       );
       // console.log(recomendation.data, '<========recomendation');
 
-      // Записываем рекомендации в поле "Информация о маршруте"
       setFormData((prevState) => ({
         ...prevState,
-        routeInfo: recomendation.data.data, // Рекомендации от чата
+        routeInfo: recomendation.data.data, 
       }));
+      dispatch(showAlert({ message: 'Рекомендации получены', status: 'success' }));
     } catch (error) {
-      console.error('Ошибка при получении рекомендаций', error);
-    }
-  };
+      console.error(`Ошибка при получении рекомендаций ${error}`, error);
+      dispatch(showAlert({ message: `Ошибка при получении рекомендаций:${error}`, status: 'mistake' }));
 
+  };
+  }
+
+  // Обработчик для получения рекомендаций по вещам
   const handleRecomImportantThings = async () => {
     console.log(formData.city, 'formData.city');
     
@@ -145,7 +168,8 @@ export function CreateRoadForm() {
         visitDates: recomendation.data.data,
       }));
     } catch (error) {
-      console.error('Ошибка при получении рекомендаций', error);
+      console.error(`Ошибка при получении рекомендаций:${error}`, error);
+      dispatch(showAlert({ message: `Ошибка при получении рекомендаций:${error}`, status: 'mistake' }));
     }
   };
   return (
@@ -210,7 +234,7 @@ export function CreateRoadForm() {
         {(formData.transport === 'самолет' || formData.transport === 'поезд') && (
           <div className={styles.formRow}>
             <div className={styles.formGroup}>
-              <label htmlFor="departureTime">Дата и время отправления</label>
+              <label htmlFor="departureTime">Дата отправления (обязательно)</label>
               <input
                 type="datetime-local"
                 id="departureTime"
@@ -222,7 +246,7 @@ export function CreateRoadForm() {
               />
             </div>
             <div className={styles.formGroup}>
-              <label htmlFor="arrivalTime">Дата и время прибытия</label>
+              <label htmlFor="arrivalTime">Дата прибытия (обязательно)</label>
               <input
                 type="datetime-local"
                 id="arrivalTime"
@@ -233,7 +257,7 @@ export function CreateRoadForm() {
             </div>
             {(formData.transport === 'самолет' || formData.transport === 'поезд') && (
               <div className={styles.formGroup}>
-                <label htmlFor="flightNumber">Номер рейса</label>
+                <label htmlFor="flightNumber">Номер рейса (обязательно)</label>
                 <input
                   type="text"
                   id="flightNumber"
@@ -253,7 +277,7 @@ export function CreateRoadForm() {
         <div className={styles.formRow}>
           <div className={styles.formGroup}>
             <label htmlFor="tripStartDate" className={styles.formLabel}>
-              Дата начала путешествия
+              Дата начала путешествия(обязательное поле)
             </label>
             <input
               type="date"
@@ -265,7 +289,7 @@ export function CreateRoadForm() {
           </div>
           <div className={styles.formGroup}>
             <label htmlFor="tripEndDate" className={styles.formLabel}>
-              Дата окончания путешествия
+              Дата окончания путешествия(обязательное поле)
             </label>
             <input
               type="date"
@@ -369,10 +393,11 @@ export function CreateRoadForm() {
            
           />
         </div>
+       
         {/* Кнопка получения рекомендации */}
         <div className={styles.formGroup}>
           <button
-           // type="button"
+            type="button"
           // disabled={!formData.visitDates}
             onClick={handleRecomImportantThings}
             className={styles.submitButton}
