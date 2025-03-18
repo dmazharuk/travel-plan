@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from "react";
 // import styles from "./MapViewer.module.css";
 //for commit
+//for commit
+
 
 interface MapViewerProps {
   points: { coords: [number, number]; name: string; number: number }[];
