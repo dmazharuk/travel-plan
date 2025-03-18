@@ -160,6 +160,7 @@ class RoadController {
           .status(403)
           .json(formatResponse(403, 'Маршрут не принадлежит пользователю'));
       }
+      console.log('existingRoad', existingRoad , 'id', id);
       const updatedRoad = await RoadService.update(Number(id), {
         city,
         country,
