@@ -11,6 +11,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import styles from './RoadDetailForm.module.css';
 import CompanionWidget from '@/widgets/CompanionWidget/CompanionWidget';
+import { showAlert } from '@/features/alert/slice/alertsSlice';
+
 
 export function RoadDetailForm() {
   const { id } = useParams<{ id: string }>();
@@ -109,6 +111,7 @@ export function RoadDetailForm() {
         })
         .catch((error) => {
           console.error('Ошибка обновления:', error);
+          dispatch(showAlert({ message: 'Ошибка обновления маршрута', status: 'mistake' }));
         });
     }
   };
@@ -129,7 +132,7 @@ export function RoadDetailForm() {
         {/* Страна и город */}
         <div className={styles.formRow}>
           <div className={styles.formGroup}>
-            <label className={styles.formLabel}>Город</label>
+            <label className={styles.formLabel}>Город </label>
             <input
               type="text"
               name="city"
@@ -137,6 +140,8 @@ export function RoadDetailForm() {
               value={formData.city || ''}
               onChange={handleChange}
               disabled={!editable}
+              placeholder="обязательно укажите город"
+
             />
           </div>
           <div className={styles.formGroup}>
@@ -148,6 +153,7 @@ export function RoadDetailForm() {
               value={formData.country || ''}
               onChange={handleChange}
               disabled={!editable}
+              placeholder="обязательно укажите страну"
             />
           </div>
         </div>
@@ -172,7 +178,7 @@ export function RoadDetailForm() {
         {(formData.transport === 'самолет' || formData.transport === 'поезд') && (
           <div className={styles.formRow}>
             <div className={styles.formGroup}>
-              <label className={styles.formLabel}>Дата и время отправления</label>
+              <label className={styles.formLabel}>Дата и время отправления (обязательно)</label>
               <input
                 type="datetime-local"
                 value={formData.transportInfo?.departureTime || ''}
@@ -183,7 +189,7 @@ export function RoadDetailForm() {
               />
             </div>
             <div className={styles.formGroup}>
-              <label className={styles.formLabel}>Дата и время прибытия</label>
+              <label className={styles.formLabel}>Дата и время прибытия </label>
               <input
                 type="datetime-local"
                 value={formData.transportInfo?.arrivalTime || ''}
@@ -193,7 +199,7 @@ export function RoadDetailForm() {
             </div>
             {(formData.transport === 'самолет' || formData.transport === 'поезд') && (
               <div className={styles.formGroup}>
-                <label className={styles.formLabel}>Номер рейса</label>
+                <label className={styles.formLabel}>Номер рейса (обязательно)</label>
                 <input
                   type="text"
                   value={formData.transportInfo?.flightNumber || ''}
@@ -210,7 +216,7 @@ export function RoadDetailForm() {
         {/* Даты поездки */}
         <div className={styles.formRow}>
           <div className={styles.formGroup}>
-            <label className={styles.formLabel}>Дата начала путешествия</label>
+            <label className={styles.formLabel}>Дата начала путешествия (обязательно)</label>
             <input
               type="date"
               name="tripStartDate"
@@ -218,10 +224,11 @@ export function RoadDetailForm() {
               value={formData.tripStartDate || ''}
               onChange={handleChange}
               disabled={!editable}
+              
             />
           </div>
           <div className={styles.formGroup}>
-            <label className={styles.formLabel}>Дата окончания путешествия</label>
+            <label className={styles.formLabel}>Дата окончания путешествия (обязательно)</label>
             <input
               type="date"
               name="tripEndDate"
