@@ -111,7 +111,7 @@ export function RoadDetailForm() {
         })
         .catch((error) => {
           console.error('Ошибка обновления:', error);
-          dispatch(showAlert({ message: 'Ошибка обновления маршрута', status: 'mistake' }));
+          dispatch(showAlert({ message: 'Заполните все обязательные поля', status: 'mistake' }));
         });
     }
   };
