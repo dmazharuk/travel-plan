@@ -98,10 +98,12 @@ export function MyRoads() {
                     {road.city}, {road.country}
                   </h3>
                   <p className={styles.roadDate}>
-                    Создан: {new Date(road.createdAt).toLocaleDateString()}
+                    Создан: {new Date(road.createdAt).toLocaleDateString()} 
+                    <br/>
+                    Создатель: {road.author?.username}
                   </p>
                   <p className={styles.tripDate}>
-                    Даты путешествия: {new Date(road.tripStartDate).toLocaleDateString()} - {new Date(road.tripEndDate).toLocaleDateString()}
+                    Даты путешествия: {`${new Date(road.tripStartDate).toLocaleDateString()} - ${new Date(road.tripEndDate).toLocaleDateString()}`}
                   </p>
                 </div>
                 {road.author?.id === user?.id && (
