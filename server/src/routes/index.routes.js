@@ -4,12 +4,14 @@ const roadRoutes = require('./road.routes');
 const roadPaths = require('./path.routes');
 const roadCoordinates = require('./coordinate.routes');
 const formatResponse = require('../utils/formatResponse'); 
-
+const gigachatRoutes = require('./gigachat.routes');
 
 router.use('/auth', authRoutes); 
 router.use('/road', roadRoutes);
 router.use('/paths', roadPaths);
 router.use('/coordinates', roadCoordinates);
+router.use('/gigachat', gigachatRoutes);
+
 
 router.use('*', (req, res) => {
   res.status(404).json(formatResponse(404, 'Not found'));

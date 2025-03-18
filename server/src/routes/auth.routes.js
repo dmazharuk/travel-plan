@@ -6,5 +6,6 @@ router.get('/refreshTokens', verifyRefreshToken, AuthController.refreshTokens);
 router.post('/signUp', AuthController.signUp);
 router.post('/signIn', AuthController.signIn);
 router.get('/signOut', AuthController.signOut);
+router.get('/confirmEmail', AuthController.confirmEmail);
 
 module.exports = router;
