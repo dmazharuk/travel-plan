@@ -14,7 +14,7 @@ export default function CompanionWidget() {
   const isOwner = road?.author?.id === user?.id;
 
   // Проверка, является ли текущий пользователь попутчиком
-  const isCompanion = road?.companions?.some((c) => c.id === user?.id);
+  // const isCompanion = road?.companions?.some((c) => c.id === user?.id);
 
   // Обработчик добавления попутчика
   const handleAddCompanion = async () => {
