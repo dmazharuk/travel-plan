@@ -3,30 +3,30 @@ const PathService = require("../services/Path.service");
 const formatResponse = require("../utils/formatResponse");
 
 class PathController {
-  //вариант 1, максима
-  static async createPath(req, res) {
-    const { pathName } = req.body;
-    const { road } = res.locals;
+  // //вариант 1, максима
+  // static async createPath(req, res) {
+  //   const { pathName } = req.body;
+  //   const { road } = res.locals;
 
-    try {
-      const newPath = await PathService.create({
-        pathName: pathName,
-        roadId: road.id,
-      });
+  //   try {
+  //     const newPath = await PathService.create({
+  //       pathName: pathName,
+  //       roadId: road.id,
+  //     });
 
-      if (!newPath) {
-        return res
-          .status(400)
-          .json(formatResponse(400, `Failed to create new path`));
-      }
+  //     if (!newPath) {
+  //       return res
+  //         .status(400)
+  //         .json(formatResponse(400, `Failed to create new path`));
+  //     }
 
-      res.status(201).json(formatResponse(201, "Success", newPath));
-    } catch ({ message }) {
-      res
-        .status(500)
-        .json(formatResponse(500, "Internal server error", null, message));
-    }
-  }
+  //     res.status(201).json(formatResponse(201, "Success", newPath));
+  //   } catch ({ message }) {
+  //     res
+  //       .status(500)
+  //       .json(formatResponse(500, "Internal server error", null, message));
+  //   }
+  // }
 
   //вариант 2 от чата
   static async createPath(req, res) {
