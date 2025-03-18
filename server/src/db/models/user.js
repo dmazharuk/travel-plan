@@ -16,13 +16,12 @@ module.exports = (sequelize, DataTypes) => {
       username: DataTypes.STRING,
       email: DataTypes.STRING,
       password: DataTypes.STRING,
-      isEmailConfirmed: { type: DataTypes.BOOLEAN, allowNull: false },
     },
     {
       sequelize,
       modelName: 'User',
       timestamps: true,
-    }
+    },
   );
   return User;
 };

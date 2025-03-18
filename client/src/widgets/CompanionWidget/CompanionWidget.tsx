@@ -1,141 +1,116 @@
-import { addCompanionToRoad, getCompanionsForRoad, removeCompanionFromRoad } from "@/app/entities/companion/api";
-import { useAppDispatch, useAppSelector } from "@/shared/hooks/reduxHooks";
-import { useState } from "react";
-import { showAlert } from "@/features/alert/slice/alertsSlice";
+import { addCompanionToRoad, getCompanionsForRoad, removeCompanionFromRoad } from "@/app/entities/companion/api"
+
+import { useAppDispatch, useAppSelector } from "@/shared/hooks/reduxHooks"
+import {  useState } from "react"
+
+
 
 export default function CompanionWidget() {
-  const { road, isLoading, error } = useAppSelector((state) => state.road);
-  const dispatch = useAppDispatch();
-  const [newCompanionEmail, setNewCompanionEmail] = useState<string>("");
-  const [localError, setLocalError] = useState<string | null>(null);
-  const { user } = useAppSelector((state) => state.user);
 
-  // Проверка, является ли текущий пользователь хозяином маршрута
-  const isOwner = road?.author?.id === user?.id;
+  const {road,isLoading,error} = useAppSelector((state)=>state.road)
+  const dispatch = useAppDispatch()
+  const[newCompanionEmail,setNewCompanionEmail] = useState<string | ''>('')
+  const[localError,setLocalError] = useState<string | null>(null)
+const {user} = useAppSelector((state)=>state.user)
+  // useEffect(()=>{
+  //   if(road?.id){
+  //      dispatch(getCompanionsForRoad({roadId:road.id}))
+  //   }
+  // },[dispatch,road?.id])
 
-  // Проверка, является ли текущий пользователь попутчиком
-  const isCompanion = road?.companions?.some((c) => c.id === user?.id);
 
-  // Обработчик добавления попутчика
-  const handleAddCompanion = async () => {
-    if (!road?.id || !newCompanionEmail) return;
-
-    // Валидация email
-    if (!/\S+@\S+\.\S+/.test(newCompanionEmail)) {
-      dispatch(showAlert({ message: "Некорректный формат email", status: "mistake" }));
+  const handleAddCompanion = async ()=>{
+    if(!road?.id || !newCompanionEmail) return
+    if(!/\S+@\S+\.\S+/.test(newCompanionEmail)){
+      alert("Некорректный формат email");
       return;
     }
-
     try {
-      const result = await dispatch(
-        addCompanionToRoad({ roadId: road.id, email: newCompanionEmail })
-      );
+      const result = await dispatch(addCompanionToRoad({roadId:road.id,email:newCompanionEmail}))
+      if(addCompanionToRoad.fulfilled.match(result)){
+        setNewCompanionEmail('')
+        setLocalError(null)
+        dispatch(getCompanionsForRoad({roadId:road.id}))
 
-      if (addCompanionToRoad.fulfilled.match(result)) {
-        setNewCompanionEmail("");
-        setLocalError(null);
-        dispatch(getCompanionsForRoad({ roadId: road.id })); // Обновляем список попутчиков
-        dispatch(showAlert({ message: "Попутчик добавлен", status: "success" }));
-      } else {
-        setLocalError(result.payload?.error ?? "Ошибка при добавлении попутчика");
-        dispatch(showAlert({ message: "Ошибка при добавлении попутчика", status: "mistake" }));
+      }else{
+        setLocalError(result.payload?.error ?? 'Ошибка при добавлении компаньона')
       }
     } catch (error) {
-      setLocalError("Ошибка при добавлении попутчика");
-      console.error(error);
+      setLocalError('Ошибка при добавлении компаньона')
+      console.log(error)
     }
-  };
-
-  // Обработчик удаления попутчика
-  const handleRemoveCompanion = async (userId: number) => {
-    if (!road?.id) return;
-
+  }
+  const handleRemoveCompanion = async(userId:number)=>{
+    if(!road?.id) return
     try {
-      const result = await dispatch(
-        removeCompanionFromRoad({ roadId: road.id, userId })
-      );
-
-      if (removeCompanionFromRoad.fulfilled.match(result)) {
-        dispatch(getCompanionsForRoad({ roadId: road.id })); // Обновляем список попутчиков
-        dispatch(showAlert({ message: "Попутчик удален", status: "success" }));
-      } else {
-        setLocalError(result.payload?.error ?? "Ошибка при удалении попутчика");
-        dispatch(showAlert({ message: "Ошибка при удалении попутчика", status: "mistake" }));
+      const result = await dispatch(removeCompanionFromRoad({roadId:road.id,userId}))
+      if(removeCompanionFromRoad.fulfilled.match(result)){
+        dispatch(getCompanionsForRoad({roadId:road.id}))
+      }else{
+        setLocalError(result.payload?.error ?? 'Ошибка при удалении компаньона')
       }
     } catch (error) {
-      setLocalError("Ошибка при удалении попутчика");
-      console.error(error);
+      setLocalError('Ошибка при удалении компаньона')
+      console.log(error)
     }
-  };
-
+  }
+  //if (!road?.id){alert("Невозможно добавить компаньона, пока нет маршрута")}
   return (
     <div className="companion-widget">
       <h3>Компаньоны в маршруте</h3>
-
-      {/* Отображение ошибок */}
+      
       {(error || localError) && (
         <div className="error-message">{error || localError}</div>
       )}
 
-      {/* Форма добавления попутчика (только для хозяина) */}
-      {isOwner && (
-        <div className="add-companion-form">
-          <input
-            type="email"
-            value={newCompanionEmail}
-            onChange={(e) => {
-              setNewCompanionEmail(e.target.value);
-              setLocalError(null);
-            }}
-            placeholder="Введите email пользователя"
-            disabled={isLoading}
-          />
-          <button onClick={handleAddCompanion} disabled={isLoading}>
-            {isLoading ? "Добавление..." : "Добавить"}
-          </button>
-        </div>
-      )}
+      <div className="add-companion-form">
+        <input
+          type="email"
+          value={newCompanionEmail}
+          onChange={(e) => {
+            setNewCompanionEmail(e.target.value);
+            setLocalError(null);
+          }}
+          placeholder="Введите email пользователя"
+          disabled={isLoading}
+        />
+        {road?.author?.id === user?.id && (
+        <button 
+          onClick={handleAddCompanion}
+          disabled={isLoading}
+        >
+          {isLoading ? "Добавление..." : "Добавить"}
+          </button>)}
+      
+        
+      </div>
 
-      {/* Список попутчиков */}
       {isLoading ? (
         <div>Загрузка списка компаньонов...</div>
       ) : (
         <ul className="companion-list">
-          {/* Отображение хозяина маршрута */}
-          {road?.author && (
-            <li key={road.author.id} className="companion-item">
-              <div className="companion-info">
-                <span>{road.author.username}</span>
-                <br />
-                <span>{road.author.email}</span>
-              </div>
-              <span className="owner-label">Хозяин маршрута</span>
-            </li>
-          )}
-
-          {/* Отображение попутчиков */}
+        
           {road?.companions?.map((companion) => (
             <li key={companion.id} className="companion-item">
               <div className="companion-info">
-                <span>{companion.username}</span>
-                <br />
+                <span>{companion.username
+                }</span><br/>
                 <span>{companion.email}</span>
               </div>
-
-              {/* Кнопка удаления (для хозяина или для себя) */}
-              {(isOwner || companion.id === user?.id) && (
-                <button
-                  onClick={() => handleRemoveCompanion(companion.id)}
-                  disabled={isLoading}
-                  className="remove-button"
-                >
-                  Удалить
-                </button>
-              )}
+              {road?.companions.some((c) => c.id === user?.id) && (
+              <button 
+                onClick={() => handleRemoveCompanion(companion.id)}
+                disabled={isLoading}
+                className="remove-button"
+              >
+                Удалить
+              </button>)}
             </li>
           ))}
         </ul>
       )}
     </div>
   );
+
+  
 }

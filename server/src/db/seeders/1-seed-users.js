@@ -12,7 +12,6 @@ module.exports = {
         username: 'Пупа',
         email: 'pupa@pupa.com',
         password: password,
-        isEmailConfirmed: true,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -20,7 +19,6 @@ module.exports = {
         username: 'Лупа',
         email: 'lupa@lupa.com',
         password: password,
-        isEmailConfirmed: true,
         createdAt: new Date(),
         updatedAt: new Date(),
       }

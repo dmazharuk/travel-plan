@@ -4,7 +4,6 @@ import { Header } from '@/widgets/Header/Header';
 import { JSX, useEffect } from 'react';
 import { Outlet } from 'react-router';
 import { refreshTokensThunk } from '../entities/user';
-import { AlertContainer } from '@/features/alert/ui/AlertContainer';
 
 export default function Layout(): JSX.Element {
   
@@ -16,7 +15,6 @@ export default function Layout(): JSX.Element {
   return (
     <div>
       <Header />
-      <AlertContainer />
       <Outlet />
       <Footer />
     </div>

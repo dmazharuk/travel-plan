@@ -6,57 +6,7 @@ class UserService {
   }
 
   static async create(userData) {
-    return await User.create({ ...userData, isEmailConfirmed: false });
-  }
-
-  static async confirmEmail(id) {
-    const user = await User.findByPk(id);
-    if (!user) {
-      return null;
-    }
-    user.isEmailConfirmed = true;
-    await user.save();
-    return user;
-  }
-
-  static async createTokenPassword(id, token) {
-    const user = await User.findByPk(id);
-    if (!user) {
-      return null;
-    }
-    user.recoverToken = token;
-    user.recoverTokenDate = Date.now() + 3600000;
-    await user.save();
-
-    return user;
-  }
-
-  static async checkTokenPassword(token) {
-    const user = await User.findOne({
-      recoverToken: token,
-    });
-
-    if (!user || user.recoverTokenDate < Date.now()) {
-      return null;
-    }
-
-    return user;
-  }
-
-  static async resetPassword(id, password) {
-    const user = await User.findByPk(id);
-    if (!user) {
-      return null;
-    }
-    user.password = password;
-    user.recoverToken = undefined;
-    user.recoverTokenDate = undefined;
-    await user.save();
-    return user;
-  }
-
-  static async delete(id) {
-    return await User.destroy({ where: { id } });
+    return await User.create(userData);
   }
 }
 
