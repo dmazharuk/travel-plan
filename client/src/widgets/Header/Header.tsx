@@ -7,6 +7,7 @@ import { NavLink, useNavigate } from 'react-router';
 import styles from './Header.module.css';
 import { showAlert } from '@/features/alert';
 
+
 export function Header(): JSX.Element {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -32,6 +33,12 @@ export function Header(): JSX.Element {
           <NavLink to={CLIENT_ROUTES.CABINET_PAGE}>
             Мой кабинет {user.username}
           </NavLink>
+          {/* <NavLink
+            to={CLIENT_ROUTES.MAP}
+            className={({ isActive }) => (isActive ? styles.active : "")}
+          >
+            maps
+          </NavLink> */}
           <button onClick={onSignOutHandler}>Выйти</button>
         </>
       ) : (

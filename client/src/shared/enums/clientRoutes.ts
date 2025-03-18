@@ -5,6 +5,7 @@ export enum CLIENT_ROUTES {
   CABINET_PAGE = '/cabinet',
   CREATE_ROAD_PAGE = '/create-road',
   ROAD_DETAIL_PAGE = '/cabinet/road/:id',
+  MAP = '/map',
   СONF_EMAIL = '/confirm-email/:token',
   NOT_FOUND = '*',
 }
