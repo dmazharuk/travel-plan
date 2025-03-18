@@ -5,6 +5,7 @@ import { useId, useState } from 'react';
 import { useNavigate } from 'react-router';
 import UserValidator from '../validation/UserValidator';
 import { CLIENT_ROUTES } from '@/shared/enums/clientRoutes';
+import { showAlert } from '@/features/alert';
 
 interface SignInModalProps {
   closeModal: () => void;
@@ -19,7 +20,8 @@ const INITIAL_INPUTS_DATA = {
 
 export function SignInModal({ closeModal }: SignInModalProps) {
   const [isSignUp, setIsSignUp] = useState(false);
-  const [inputs, setInputs] = useState<typeof INITIAL_INPUTS_DATA>(INITIAL_INPUTS_DATA);
+  const [inputs, setInputs] =
+    useState<typeof INITIAL_INPUTS_DATA>(INITIAL_INPUTS_DATA);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -42,15 +44,21 @@ export function SignInModal({ closeModal }: SignInModalProps) {
     event.preventDefault();
 
     if (isSignUp) {
-      const { isValid, error } = UserValidator.validateSignUp(inputs);
-      if (!isValid) return alert(error);
+      const { error } = UserValidator.validateSignUp(inputs);
+      if (error) {
+        return dispatch(showAlert({ message: error, status: 'mistake' }));
+      }
 
       if (inputs.password !== inputs.repeatPassword) {
-        return alert('Пароли не совпадают');
+        return dispatch(
+          showAlert({ message: 'Неверный пароль', status: 'mistake' })
+        );
       }
     } else {
-      const { isValid, error } = UserValidator.validateSignIn(inputs);
-      if (!isValid) return alert(error);
+      const { error } = UserValidator.validateSignIn(inputs);
+      if (error) {
+        return dispatch(showAlert({ message: error, status: 'mistake' }));
+      }
     }
     try {
       let resultAction;
@@ -66,9 +74,13 @@ export function SignInModal({ closeModal }: SignInModalProps) {
         resultAction = await dispatch(signInThunk({ email, password }));
       }
       if (resultAction.payload?.error) {
-        return alert('ошибка авторизации');
+        return dispatch(
+          showAlert({ message: 'ошибка авторизации', status: 'mistake' })
+        );
       }
-      alert('вы успешно авторизованы');
+      dispatch(
+        showAlert({ message: 'вы успешно авторизованы', status: 'success' })
+      );
       setInputs(INITIAL_INPUTS_DATA);
       navigate(CLIENT_ROUTES.CABINET_PAGE);
       closeModal();
@@ -138,14 +150,18 @@ export function SignInModal({ closeModal }: SignInModalProps) {
           <button
             className={styles.modalButton}
             type="submit"
-            disabled={!inputs.email || !inputs.password || (isSignUp && !inputs.username)}
+            disabled={
+              !inputs.email ||
+              !inputs.password ||
+              (isSignUp && !inputs.username)
+            }
           >
             {isSignUp ? 'Зарегистрироваться' : 'Войти'}
           </button>
         </form>
 
         <p className={styles.modalText}>
-          {isSignUp ? 'Уже зарегистрированы?' : 'Не зарегистрированы?'}
+          {isSignUp ? 'Уже зарегистрированы? ' : 'Не зарегистрированы? '}
           <span className={styles.registerLink} onClick={handleFormSwitch}>
             {isSignUp ? 'Войти' : 'Зарегистрироваться'}
           </span>
