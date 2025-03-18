@@ -6,25 +6,22 @@ import styles from './CreateRoadForm.module.css';
 import { axiosInstance } from '@/shared/lib/axiosInstance';
 import CompanionWidget from '@/widgets/CompanionWidget/CompanionWidget';
 import { showAlert } from '@/features/alert/slice/alertsSlice';
-import RouteManager from "@/features/map/ui/RouteManager/RouteManager";
-import {
-  updatePathThunk,
-  useCreateNewPath,
-} from "@/app/entities/path";
+
+
 
 const initialFormData: IRoadRowData = {
-  country: "",
-  city: "",
-  transport: "машина", // Начальное значение
-  transportInfo: null, // Изначально транспортная информация отсутствует
-  routeInfo: "",
-  visibility: "private",
-  tripStartDate: "",
-  tripEndDate: "",
-  accommodation: "",
-  checkInDate: "",
-  checkOutDate: "",
-  visitDates: "", // это поле для рекомендаций что взять с собой!
+  country: '',
+  city: '',
+  transport: 'машина', 
+  transportInfo: null, 
+  routeInfo: '',
+  visibility: 'private',
+  tripStartDate: '',
+  tripEndDate: '',
+  accommodation: '',
+  checkInDate: '',
+  checkOutDate: '',
+  visitDates: '', // это поле для рекомендаций что взять с собой!
 };
 
 export function CreateRoadForm() {
@@ -33,6 +30,33 @@ export function CreateRoadForm() {
   const { id } = useParams();
   const isEditMode = Boolean(id);
   const [formData, setFormData] = useState<IRoadRowData>(initialFormData);
+
+  // Загрузка данных для редактирования
+  // useEffect(() => {
+  //   if (isEditMode) {
+  //     const fetchRoadData = async () => {
+  //       const response = await dispatch(getRoadById({ id: Number(id) }));
+  //       if (response.payload?.data) {
+  //         const roadData = response.payload.data;
+  //         setFormData({
+  //           city: roadData.city,
+  //           country: roadData.country,
+  //           transport: roadData.transport,
+  //           transportInfo: roadData.transportInfo,
+  //           routeInfo: roadData.routeInfo,
+  //           visibility: roadData.visibility,
+  //           tripStartDate: roadData.tripStartDate,
+  //           tripEndDate: roadData.tripEndDate,
+  //           accommodation: roadData.accommodation,
+  //           checkInDate: roadData.checkInDate,
+  //           checkOutDate: roadData.checkOutDate,
+  //           visitDates: roadData.visitDates, // Места посещения
+  //         });
+  //       }
+  //     };
+  //     fetchRoadData();
+  //   }
+  // }, [id, dispatch]);
 
   useEffect(() => {
     if (!isEditMode) return;
@@ -52,26 +76,21 @@ export function CreateRoadForm() {
     fetchRoadData();
   }, [isEditMode, id, dispatch]);
 
-
   const handleChange = (
-    event: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
     const { name, value } = event.target;
     setFormData((prevState) => ({ ...prevState, [name]: value }));
   };
 
   // Обработчик изменений для выбора транспорта
-  const handleTransportChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handleTransportChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = event.target;
     setFormData((prevState) => ({
       ...prevState,
-      transport: value as "поезд" | "самолет" | "машина",
+      transport: value as 'поезд' | 'самолет' | 'машина',
       transportInfo:
-        value === "машина"
+        value === 'машина'
           ? null
           : {
               departureTime: '',
@@ -91,74 +110,68 @@ export function CreateRoadForm() {
     }));
   };
 
-  // логика карты тут
-  const [isMapVisible, setIsMapVisible] = useState(false); // Создаем состояние для видимости карты
-  const { createNewPath } = useCreateNewPath();
-  const [pathId, setPathId] = useState<number | null>(null); // Состояние для хранения pathId
-  const [roadIdState, setRadIdState] = useState<number | null>(null); // Состояние для хранения roadId
-
-  const handleToggleMap = async () => {
-    if (isMapVisible === true) {
-      setIsMapVisible((prev) => !prev); // Меняем состояние по клику на кнопку
-    } else {
-      const isPathCreated = await createNewPath();
-      // console.log(isPathCreated?.id);
-
-      if (isPathCreated!) {
-        setIsMapVisible((prev) => !prev); // Меняем состояние по клику на кнопку
-        setPathId(isPathCreated?.id); // Сохраняем pathId
-      } else {
-        console.error("Ошибка при добавлении карты");
-      }
-    }
-  };
-
-
-
+  // Обработчик отправки формы
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // console.log('=====>', formData);
+
     try {
       if (isEditMode) {
         // Обновление маршрута
-        await dispatch(
-          updateRoad({ id: Number(id), roadData: formData })
-        ).unwrap();
+        await dispatch(updateRoad({ id: Number(id), roadData: formData })).unwrap();
       } else {
         // Создание нового маршрута
-        const createdRoad = await dispatch(createRoad(formData)).unwrap(); // Сохраняем результат
-        console.log("Created road:", createdRoad);
-  
-        const roadId = createdRoad.data.id; // Получаем roadId
-        setRadIdState(roadId); // Сохраняем roadId в состоянии
-        console.log(roadIdState);
-        
-  
-        if (pathId) {
-          // Обновляем path с roadId
-          try {
-            await dispatch(
-              updatePathThunk({
-                id: pathId, // ID пути
-                updatedPath: { roadId }, // Обновляем только roadId
-              })
-            ).unwrap();
-            console.log("Path updated with roadId:", roadId);
-          } catch (error) {
-            console.error("Ошибка при обновлении path:", error);
-          }
-        } else {
-          console.error("pathId не определен");
-        }
+        await dispatch(createRoad(formData)).unwrap();
       }
-  
-      navigate("/cabinet");
+      navigate('/cabinet');
     } catch (error) {
-
       console.error('Ошибка при сохранении маршрута', error);
       dispatch(showAlert({ message: 'Необходимо заполнить обязательные поля', status: 'mistake' }));
     }
   };
 
+  // Обработчик для получения рекомендаций
+  const handleGetRecommendation = async () => {
+    try {
+      const recomendation = await axiosInstance.post(
+        'http://localhost:3000/api/gigachat/recommendations',
+        { city: formData.city },
+      );
+      // console.log(recomendation.data, '<========recomendation');
+
+      setFormData((prevState) => ({
+        ...prevState,
+        routeInfo: recomendation.data.data, 
+      }));
+      dispatch(showAlert({ message: 'Рекомендации получены', status: 'success' }));
+    } catch (error) {
+      console.error(`Ошибка при получении рекомендаций ${error}`, error);
+      dispatch(showAlert({ message: `Ошибка при получении рекомендаций:${error}`, status: 'mistake' }));
+
+  };
+  }
+
+  // Обработчик для получения рекомендаций по вещам
+  const handleRecomImportantThings = async () => {
+    console.log(formData.city, 'formData.city');
+    
+    try {
+      const recomendation = await axiosInstance.post(
+        'http://localhost:3000/api/gigachat/recommendations',
+        { city: formData.city,
+          type:'items'
+         },
+      );
+      console.log(recomendation.data, '<========recomendation');
+      setFormData((prevState) => ({
+        ...prevState,
+        visitDates: recomendation.data.data,
+      }));
+    } catch (error) {
+      console.error(`Ошибка при получении рекомендаций:${error}`, error);
+      dispatch(showAlert({ message: `Ошибка при получении рекомендаций:${error}`, status: 'mistake' }));
+    }
+  };
   return (
     <div className={styles.formContainer}>
       <h1 className={styles.formTitle}>Создать новый маршрут</h1>
@@ -218,15 +231,14 @@ export function CreateRoadForm() {
 
         {/* Дополнительные поля для транспорта */}
 
-        {(formData.transport === "самолет" ||
-          formData.transport === "поезд") && (
+        {(formData.transport === 'самолет' || formData.transport === 'поезд') && (
           <div className={styles.formRow}>
             <div className={styles.formGroup}>
               <label htmlFor="departureTime">Дата отправления (обязательно)</label>
               <input
                 type="datetime-local"
                 id="departureTime"
-                value={formData.transportInfo?.departureTime || ""}
+                value={formData.transportInfo?.departureTime || ''}
                 onChange={(e) =>
                   handleTransportInfoChange('departureTime', e.target.value)
                 }
@@ -238,10 +250,8 @@ export function CreateRoadForm() {
               <input
                 type="datetime-local"
                 id="arrivalTime"
-                value={formData.transportInfo?.arrivalTime || ""}
-                onChange={(e) =>
-                  handleTransportInfoChange("arrivalTime", e.target.value)
-                }
+                value={formData.transportInfo?.arrivalTime || ''}
+                onChange={(e) => handleTransportInfoChange('arrivalTime', e.target.value)}
                 required
               />
             </div>
@@ -251,9 +261,9 @@ export function CreateRoadForm() {
                 <input
                   type="text"
                   id="flightNumber"
-                  value={formData.transportInfo?.flightNumber || ""}
+                  value={formData.transportInfo?.flightNumber || ''}
                   onChange={(e) =>
-                    handleTransportInfoChange("flightNumber", e.target.value)
+                    handleTransportInfoChange('flightNumber', e.target.value)
                   }
                   required
                 />
@@ -263,6 +273,7 @@ export function CreateRoadForm() {
         )}
 
         {/* Даты поездки */}
+
         <div className={styles.formRow}>
           <div className={styles.formGroup}>
             <label htmlFor="tripStartDate" className={styles.formLabel}>
@@ -298,7 +309,7 @@ export function CreateRoadForm() {
           <textarea
             id="routeInfo"
             name="routeInfo"
-            value={formData.routeInfo || ""}
+            value={formData.routeInfo || ''}
             onChange={handleChange}
             className={styles.formInput}
             rows={2}
@@ -326,7 +337,7 @@ export function CreateRoadForm() {
               type="text"
               id="accommodation"
               name="accommodation"
-              value={formData.accommodation || ""}
+              value={formData.accommodation || ''}
               onChange={handleChange}
               className={styles.formInput}
             />
@@ -339,7 +350,7 @@ export function CreateRoadForm() {
               type="date"
               id="checkInDate"
               name="checkInDate"
-              value={formData.checkInDate || ""}
+              value={formData.checkInDate || ''}
               onChange={handleChange}
               className={styles.formInput}
             />
@@ -352,7 +363,7 @@ export function CreateRoadForm() {
               type="date"
               id="checkOutDate"
               name="checkOutDate"
-              value={formData.checkOutDate || ""}
+              value={formData.checkOutDate || ''}
               onChange={handleChange}
               className={styles.formInput}
             />
@@ -375,6 +386,7 @@ export function CreateRoadForm() {
             //     visitDates: e.target.value,
             //   })
             // }
+           
             onChange={handleChange}
             className={styles.formInput}
             rows={2}
@@ -411,22 +423,11 @@ export function CreateRoadForm() {
             <option value="public">Публичный</option>
           </select>
         </div>
-
-        <div className={styles.main}>
-          <h1>Маршрут путешествия</h1>
-          {/* {isMapVisible ? "Скрыть карту" 
-          :
-           "Добавим карту?" } */}
-          <button type="button" onClick={handleToggleMap}>
-            {isMapVisible ? "Скрыть карту" : "Добавим карту?"}
-          </button>
-          {isMapVisible && <RouteManager pathId={pathId} />}{" "}
-        </div>
         <CompanionWidget />
         {/* Кнопка отправки */}
         <div className={styles.formGroup}>
           <button type="submit" className={styles.submitButton}>
-            {isEditMode ? "Сохранить изменения" : "Создать маршрут"}
+            {isEditMode ? 'Сохранить изменения' : 'Создать маршрут'}
           </button>
         </div>
       </form>
