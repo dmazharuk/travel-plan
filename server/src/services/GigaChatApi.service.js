@@ -13,12 +13,18 @@ let lastCall = 0;
 
 class GigaChatService {
   static async getRecommendations(city, type) {
+    const now = new Date().getTime();
+    console.log(now, 'now');
+    
+   
+    
     try {
-      if (!token) {
+      if (!token || now - lastCall > 1000 * 60 * 28) {
+        lastCall = new Date().getTime(); 
         await this.Authorization();
         console.log('Ошибка авторизации: токен не получен');
       }
-
+     
       let content;
 
       if (type === 'items') {
@@ -51,11 +57,9 @@ class GigaChatService {
       throw new Error('Не удалось получить рекомендации');
     }
   }
+
   static async Authorization() {
-    const now = new Date().getTime();
-    if (token && now - lastCall < 1000 * 60 * 28) {
-      return;
-    }
+    
     const response = await axios.post(
       `https://ngw.devices.sberbank.ru:9443/api/v2/oauth`,
       {
@@ -73,7 +77,7 @@ class GigaChatService {
     // проверяем есть ли токен в ответе
     if (response.data && response.data.access_token) {
       token = response.data.access_token; 
-      lastCall = new Date().getTime(); 
+     
       console.log('Токен обновлен:', token);
     } else {
       throw new Error('Токен не получен');
