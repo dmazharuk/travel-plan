@@ -3,6 +3,7 @@ require('dotenv').config();
 
 const GIGACHAT_API_URL = process.env.GIGACHAT_API_URL;
 //  const GIGACHAT_API_KEY = process.env.GIGACHAT_API_KEY;
+
 // Отключаем проверку SSL (НЕ ИСПОЛЬЗУЙ В ПРОДАКШЕНЕ!)
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -12,7 +13,10 @@ let lastCall = 0;
 class GigaChatService {
   static async getRecommendations(city, type) {
     try {
-      if (!token) await this.Authorization();
+      if (!token) {
+        await this.Authorization();
+        console.log('Ошибка авторизации: токен не получен');
+      }
 
       let content;
 
@@ -66,7 +70,6 @@ class GigaChatService {
       //   },
       // );
 
-      // return response.data.choices[0].message.content;
       return response.data.choices[0].message.content;
     } catch (error) {
       console.error('Ошибка при запросе к GigaChat:', error);

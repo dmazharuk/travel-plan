@@ -10,8 +10,8 @@ import CompanionWidget from '@/widgets/CompanionWidget/CompanionWidget';
 const initialFormData: IRoadRowData = {
   country: '',
   city: '',
-  transport: 'машина', // Начальное значение
-  transportInfo: null, // Изначально транспортная информация отсутствует
+  transport: 'машина', 
+  transportInfo: null, 
   routeInfo: '',
   visibility: 'private',
   tripStartDate: '',
@@ -19,7 +19,7 @@ const initialFormData: IRoadRowData = {
   accommodation: '',
   checkInDate: '',
   checkOutDate: '',
-  visitDates: '',
+  visitDates: '', // это поле для рекомендаций что взять с собой!
 };
 
 export function CreateRoadForm() {
