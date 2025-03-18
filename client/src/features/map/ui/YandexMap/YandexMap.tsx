@@ -1,14 +1,24 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./YandexMap.module.css";
+import {
+  createCoordinateThunk,
+} from "@/app/entities/coordinate";
+import { useAppDispatch } from "@/shared/hooks/reduxHooks";
 
 declare const ymaps: typeof import("yandex-maps");
 
+// interface YandexMapProps {
+//   points: { coords: [number, number]; name: string; number: number }[]; // Добавляем поле number
+//   onAddToRoute?: (coords: [number, number], name: string) => void; // Обработчик добавления точки в маршрут
+// }
+
 interface YandexMapProps {
-  points: { coords: [number, number]; name: string; number: number }[]; // Добавляем поле number
-  onAddToRoute?: (coords: [number, number], name: string) => void; // Обработчик добавления точки в маршрут
+  points: { coords: [number, number]; name: string; number: number ; description?: string; }[];
+  onAddToRoute?: (coords: [number, number], name: string) => void;
+  pathId: number | null; // Добавляем pathId в пропсы
 }
 
-const YandexMap: React.FC<YandexMapProps> = ({ points, onAddToRoute }) => {
+const YandexMap: React.FC<YandexMapProps> = ({ points, onAddToRoute, pathId  }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<ymaps.Map | null>(null); // Для хранения экземпляра карты
   const placemarksRef = useRef<ymaps.GeoObjectCollection>(
@@ -18,6 +28,7 @@ const YandexMap: React.FC<YandexMapProps> = ({ points, onAddToRoute }) => {
     null
   ); // Выбранные координаты
   const [pointName, setPointName] = useState(""); // Название точки
+  const [pointDescription, setpointDescription] = useState(""); // Описание точки
   const tempPlacemarkRef = useRef<ymaps.Placemark | null>(null); // Для хранения временной метки
 
   // Добавление временной метки
@@ -32,7 +43,7 @@ const YandexMap: React.FC<YandexMapProps> = ({ points, onAddToRoute }) => {
       hintContent: pointName || "Новая точка",
       balloonContent: `Название: ${
         pointName || "Новая точка"
-      }<br>Координаты: ${coords.join(", ")}`,
+      }<br>Описание: ${pointDescription}<br>Координаты: ${coords.join(", ")}`,
     });
 
     // Добавляем временную метку на карту
@@ -98,48 +109,47 @@ const YandexMap: React.FC<YandexMapProps> = ({ points, onAddToRoute }) => {
     points.forEach((point) => {
       const placemark = new ymaps.Placemark(point.coords, {
         hintContent: `${point.number}. ${point.name}`, // Добавляем номер в подпись
-        balloonContent: `Название: ${
-          point.name
+        balloonContent: `Название: ${point.name}<br>Описание: ${
+          point.description
         }<br>Координаты: ${point.coords.join(", ")}`,
       });
       placemarksRef.current.add(placemark);
     });
   }, [points]);
 
-  // // Добавление временной метки
-  // const addTempPlacemark = (coords: [number, number]) => {
-  //   if (tempPlacemarkRef.current) {
-  //     // Удаляем старую временную метку
-  //     mapInstance.current?.geoObjects.remove(tempPlacemarkRef.current);
-  //   }
-
-  //   // Создаем новую временную метку
-  //   tempPlacemarkRef.current = new ymaps.Placemark(coords, {
-  //     hintContent: pointName || 'Новая точка',
-  //     balloonContent: `Название: ${pointName || 'Новая точка'}<br>Координаты: ${coords.join(', ')}`,
-  //   });
-
-  //   // Добавляем временную метку на карту
-  //   mapInstance.current?.geoObjects.add(tempPlacemarkRef.current);
-  // };
-
   // Обработка добавления точки в маршрут
-  const handleAddToRoute = () => {
+  const dispatch = useAppDispatch();
+  
+  const handleAddToRoute = async () => {
     if (selectedCoords && onAddToRoute) {
-      onAddToRoute(selectedCoords, pointName); // Вызываем обработчик с координатами и названием
+      onAddToRoute(selectedCoords, pointName);
 
-      // Удаляем временную метку
       if (tempPlacemarkRef.current) {
         mapInstance.current?.geoObjects.remove(tempPlacemarkRef.current);
         tempPlacemarkRef.current = null;
       }
 
-      // Очищаем поле ввода названия
-      setPointName("");
-      setSelectedCoords(null); // Сбрасываем выбранные координаты
+      if (pathId) { // Проверяем, что pathId существует
+        await dispatch(
+          createCoordinateThunk({
+            latitude: selectedCoords[0],
+            longitude: selectedCoords[1],
+            coordinateTitle: pointName,
+            coordinateBody: pointDescription,
+            coordinateNumber: points.length + 1, // Номер точки
+            pathId: pathId, // Используем pathId
+          })
+        );
+
+        setPointName("");
+        setpointDescription("");
+        setSelectedCoords(null);
+      } else {
+        console.error("pathId не определен");
+      }
     }
   };
-
+  
   return (
     <div className={styles.main}>
       <div ref={mapRef} style={{ width: "100%", height: "400px" }} />
@@ -152,7 +162,14 @@ const YandexMap: React.FC<YandexMapProps> = ({ points, onAddToRoute }) => {
             onChange={(e) => setPointName(e.target.value)}
             style={{ marginRight: "10px", padding: "5px" }}
           />
-          <button onClick={handleAddToRoute}>
+          <input
+            type="text"
+            placeholder="Опишите место"
+            value={pointDescription}
+            onChange={(e) => setpointDescription(e.target.value)}
+            style={{ marginRight: "10px", padding: "5px" }}
+          />
+          <button type="button" onClick={handleAddToRoute}>
             Добавить в маршрут: {selectedCoords[0].toFixed(4)},{" "}
             {selectedCoords[1].toFixed(4)}
           </button>

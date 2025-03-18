@@ -22,6 +22,8 @@ class PathService {
         const path = await this.getById(id);
         if (path) {
             path.pathName = data.pathName;
+            path.roadId = data.roadId;
+
             await path.save();
         }
         return path;

@@ -31,12 +31,12 @@ export function Header(): JSX.Element {
           <NavLink to={CLIENT_ROUTES.CABINET_PAGE}>
             Мой кабинет {user.username}
           </NavLink>
-          <NavLink
+          {/* <NavLink
             to={CLIENT_ROUTES.MAP}
             className={({ isActive }) => (isActive ? styles.active : "")}
           >
             maps
-          </NavLink>
+          </NavLink> */}
           <button onClick={onSignOutHandler}>Выйти</button>
         </>
       ) : (

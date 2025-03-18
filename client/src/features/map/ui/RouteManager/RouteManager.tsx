@@ -2,22 +2,26 @@ import React, { useState } from 'react';
 import YandexMap from '../YandexMap/YandexMap';
 import styles from './RouteManager.module.css';
 
-const RouteManager: React.FC = () => {
+interface RouteManagerProps {
+  pathId: number | null; // Добавляем pathId в пропсы
+}
+
+const RouteManager: React.FC<RouteManagerProps> = ({ pathId }) => {
   const [points, setPoints] = useState<{ coords: [number, number]; name: string; number: number }[]>([]);
 
   const handleAddToRoute = (coords: [number, number], name: string) => {
     const newPoint = {
       coords,
       name,
-      number: points.length + 1, // Номер точки = текущее количество точек + 1
+      number: points.length + 1,
     };
-    setPoints((prev) => [...prev, newPoint]); // Добавляем точку в список с номером
-    alert(`Точка "${name}" добавлена`); // Показываем сообщение с названием
+    setPoints((prev) => [...prev, newPoint]);
+    alert(`Точка "${name}" добавлена`);
   };
 
   return (
     <div className={styles.main}>
-      <YandexMap points={points} onAddToRoute={handleAddToRoute} />
+      <YandexMap points={points} onAddToRoute={handleAddToRoute} pathId={pathId} />
       <div>
         <h2>Точки маршрута:</h2>
         <ul>

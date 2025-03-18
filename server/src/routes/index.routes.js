@@ -8,8 +8,8 @@ const formatResponse = require('../utils/formatResponse');
 
 router.use('/auth', authRoutes); 
 router.use('/road', roadRoutes);
-router.use('/path', roadPaths);
-router.use('/coordinate', roadCoordinates);
+router.use('/paths', roadPaths);
+router.use('/coordinates', roadCoordinates);
 
 router.use('*', (req, res) => {
   res.status(404).json(formatResponse(404, 'Not found'));

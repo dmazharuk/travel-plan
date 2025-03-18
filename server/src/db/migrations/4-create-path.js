@@ -20,6 +20,7 @@ module.exports = {
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
+        defaultValue: 1,
       },
       createdAt: {
         allowNull: false,
