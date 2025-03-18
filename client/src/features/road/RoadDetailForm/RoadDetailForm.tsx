@@ -1,5 +1,6 @@
 import {
   deleteRoad,
+  getAllRoads,
   getRoadById,
   IRoad,
   updateRoad,
@@ -9,6 +10,7 @@ import { useAppDispatch, useAppSelector } from "@/shared/hooks/reduxHooks";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import styles from "./RoadDetailForm.module.css";
+import CompanionWidget from "@/widgets/CompanionWidget/CompanionWidget";
 
 // Функция для преобразования даты в формат yyyy-MM-dd
 const formatDateForInput = (dateString?: string) => {
@@ -87,22 +89,28 @@ const {user} = useAppSelector((state)=>state.user)
 
   const handleSave = () => {
     if (id) {
-      // Преобразование дат обратно в ISO формат перед отправкой
       const dataToSend = {
         ...formData,
         tripStartDate: parseDateToISO(formData.tripStartDate || ''),
         tripEndDate: parseDateToISO(formData.tripEndDate || ''),
         checkInDate: parseDateToISO(formData.checkInDate || ''),
         checkOutDate: parseDateToISO(formData.checkOutDate || ''),
-       
       };
-      
+  
       dispatch(updateRoad({ 
         id: Number(id), 
         roadData: dataToSend 
-      }));
+      }))
+      .unwrap()
+      .then(() => {
+        dispatch(getRoadById({ id: Number(id) }));
+        dispatch(getAllRoads());
+        navigate(CLIENT_ROUTES.CABINET_PAGE);
+      })
+      .catch((error) => {
+        console.error('Ошибка обновления:', error);
+      });
     }
-    setEditable(false);
   };
 
   const handleDelete = () => {
@@ -120,6 +128,17 @@ const {user} = useAppSelector((state)=>state.user)
       <div className={styles.formGrid}>
         {/* Страна и город */}
         <div className={styles.formRow}>
+        <div className={styles.formGroup}>
+            <label className={styles.formLabel}>Город</label>
+            <input
+              type="text"
+              name="city"
+              className={styles.formInput}
+              value={formData.city || ""}
+              onChange={handleChange}
+              disabled={!editable}
+            />
+          </div>
           <div className={styles.formGroup}>
             <label className={styles.formLabel}>Страна</label>
             <input
@@ -131,17 +150,7 @@ const {user} = useAppSelector((state)=>state.user)
               disabled={!editable}
             />
           </div>
-          <div className={styles.formGroup}>
-            <label className={styles.formLabel}>Город</label>
-            <input
-              type="text"
-              name="city"
-              className={styles.formInput}
-              value={formData.city || ""}
-              onChange={handleChange}
-              disabled={!editable}
-            />
-          </div>
+          
         </div>
 
         {/* Транспорт и информация */}
@@ -164,7 +173,7 @@ const {user} = useAppSelector((state)=>state.user)
         {(formData.transport === 'самолет' || formData.transport === 'поезд') && (
           <div className={styles.formRow}>
             <div className={styles.formGroup}>
-              <label className={styles.formLabel}>Дата отправления</label>
+              <label className={styles.formLabel}>Дата и время отправления</label>
               <input
                 type="datetime-local"
                 value={formData.transportInfo?.departureTime || ''}
@@ -175,7 +184,7 @@ const {user} = useAppSelector((state)=>state.user)
               />
             </div>
             <div className={styles.formGroup}>
-              <label className={styles.formLabel}>Дата прибытия</label>
+              <label className={styles.formLabel}>Дата и время прибытия</label>
               <input
                 type="datetime-local"
                 value={formData.transportInfo?.arrivalTime || ''}
@@ -185,7 +194,7 @@ const {user} = useAppSelector((state)=>state.user)
                 disabled={!editable}
               />
             </div>
-            {formData.transport === 'самолет' && (
+            {formData.transport === 'самолет' || formData.transport === 'поезд' && (
               <div className={styles.formGroup}>
                 <label className={styles.formLabel}>Номер рейса</label>
                 <input
@@ -204,7 +213,7 @@ const {user} = useAppSelector((state)=>state.user)
         {/* Даты поездки */}
         <div className={styles.formRow}>
           <div className={styles.formGroup}>
-            <label className={styles.formLabel}>Дата начала</label>
+            <label className={styles.formLabel}>Дата начала путешествия</label>
             <input
               type="date"
               name="tripStartDate"
@@ -215,7 +224,7 @@ const {user} = useAppSelector((state)=>state.user)
             />
           </div>
           <div className={styles.formGroup}>
-            <label className={styles.formLabel}>Дата окончания</label>
+            <label className={styles.formLabel}>Дата окончания путешествия</label>
             <input
               type="date"
               name="tripEndDate"
@@ -226,7 +235,18 @@ const {user} = useAppSelector((state)=>state.user)
             />
           </div>
         </div>
-
+{/* Дополнительная информация */}
+<div className={styles.formGroup}>
+          <label className={styles.formLabel}>Информация о маршруте</label>
+          <textarea
+            name="routeInfo"
+            className={styles.formTextarea}
+            value={formData.routeInfo || ""}
+            onChange={handleChange}
+            disabled={!editable}
+            rows={2}
+          />
+        </div>
         {/* Информация о жилье */}
         <div className={styles.formRow}>
           <div className={styles.formGroup}>
@@ -264,24 +284,13 @@ const {user} = useAppSelector((state)=>state.user)
           </div>
         </div>
 
-        {/* Дополнительная информация */}
-        <div className={styles.formGroup}>
-          <label className={styles.formLabel}>Описание маршрута</label>
-          <textarea
-            name="routeInfo"
-            className={styles.formTextarea}
-            value={formData.routeInfo || ""}
-            onChange={handleChange}
-            disabled={!editable}
-            rows={3}
-          />
-        </div>
+        
 
-        {/* Даты посещения */}
+        {/* Места посещения */}
         <div className={styles.formGroup}>
-          <label className={styles.formLabel}>Даты посещения</label>
-          <input
-            type="text-area"
+          <label className={styles.formLabel}>что нужно взять с собой</label>
+          <textarea
+            
             name="visitDates"
             className={styles.formInput}
             value={formData.visitDates}
@@ -292,7 +301,7 @@ const {user} = useAppSelector((state)=>state.user)
               )
             }
             disabled={!editable}
-            placeholder="Введите даты через запятую (гггг-мм-дд)"
+            
           />
         </div>
 
@@ -312,6 +321,8 @@ const {user} = useAppSelector((state)=>state.user)
           </select>
         </div>
       </div>
+
+      <CompanionWidget/>
 
       {/* Кнопки управления */}
       {road?.author?.id === user?.id && (<div className={styles.buttonGroup}>

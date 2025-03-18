@@ -1,21 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useAppDispatch } from '@/shared/hooks/reduxHooks';
 import { useNavigate, useParams } from 'react-router';
-import {
-  createRoad,
-  updateRoad,
-  IRoadRowData,
-  getRoadById,
-  
-} from '@/app/entities/road';
+import { createRoad, updateRoad, IRoadRowData, getRoadById } from '@/app/entities/road';
 import styles from './CreateRoadForm.module.css';
+import { axiosInstance } from '@/shared/lib/axiosInstance';
+import CompanionWidget from '@/widgets/CompanionWidget/CompanionWidget';
 
 // Определение начальных данных для формы
 const initialFormData: IRoadRowData = {
   country: '',
   city: '',
-  transport: 'машина', // Начальное значение
-  transportInfo: null, // Изначально транспортная информация отсутствует
+  transport: 'машина', 
+  transportInfo: null, 
   routeInfo: '',
   visibility: 'private',
   tripStartDate: '',
@@ -23,13 +19,13 @@ const initialFormData: IRoadRowData = {
   accommodation: '',
   checkInDate: '',
   checkOutDate: '',
-  visitDates: '',
+  visitDates: '', // это поле для рекомендаций что взять с собой!
 };
 
 export function CreateRoadForm() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { id } = useParams(); 
+  const { id } = useParams();
   const isEditMode = Boolean(id);
 
   const [formData, setFormData] = useState<IRoadRowData>(initialFormData);
@@ -53,7 +49,7 @@ export function CreateRoadForm() {
             accommodation: roadData.accommodation,
             checkInDate: roadData.checkInDate,
             checkOutDate: roadData.checkOutDate,
-            visitDates: roadData.visitDates,
+            visitDates: roadData.visitDates, // Места посещения
           });
         }
       };
@@ -61,7 +57,6 @@ export function CreateRoadForm() {
     }
   }, [id, dispatch]);
 
-  
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
@@ -81,7 +76,7 @@ export function CreateRoadForm() {
           : {
               departureTime: '',
               arrivalTime: '',
-              flightNumber: value === 'самолет' ? '' : undefined,
+              flightNumber: '',
             },
     }));
   };
@@ -99,8 +94,8 @@ export function CreateRoadForm() {
   // Обработчик отправки формы
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("=====>",formData);
-    
+    console.log('=====>', formData);
+
     try {
       if (isEditMode) {
         // Обновление маршрута
@@ -115,11 +110,47 @@ export function CreateRoadForm() {
     }
   };
 
+  // Обработчик для получения рекомендаций
+  const handleGetRecommendation = async () => {
+    try {
+      const recomendation = await axiosInstance.post(
+        'http://localhost:3000/api/gigachat/recommendations',
+        { city: formData.city },
+      );
+      // console.log(recomendation.data, '<========recomendation');
+
+      // Записываем рекомендации в поле "Информация о маршруте"
+      setFormData((prevState) => ({
+        ...prevState,
+        routeInfo: recomendation.data.data, // Рекомендации от чата
+      }));
+    } catch (error) {
+      console.error('Ошибка при получении рекомендаций', error);
+    }
+  };
+
+  const handleRecomImportantThings = async () => {
+    console.log(formData.city, 'formData.city');
+    
+    try {
+      const recomendation = await axiosInstance.post(
+        'http://localhost:3000/api/gigachat/recommendations',
+        { city: formData.city,
+          type:'items'
+         },
+      );
+      console.log(recomendation.data, '<========recomendation');
+      setFormData((prevState) => ({
+        ...prevState,
+        visitDates: recomendation.data.data,
+      }));
+    } catch (error) {
+      console.error('Ошибка при получении рекомендаций', error);
+    }
+  };
   return (
     <div className={styles.formContainer}>
-      <h1 className={styles.formTitle}>
-        {isEditMode ? 'Редактировать маршрут' : 'Создать новый маршрут'}
-      </h1>
+      <h1 className={styles.formTitle}>Создать новый маршрут</h1>
       <form onSubmit={handleSubmit} className={styles.formGrid}>
         {/* Город и страна в одной строке */}
         <div className={styles.formRow}>
@@ -135,6 +166,7 @@ export function CreateRoadForm() {
               onChange={handleChange}
               className={styles.formInput}
               required
+              placeholder="обязательно укажите город"
             />
           </div>
           <div className={styles.formGroup}>
@@ -149,6 +181,7 @@ export function CreateRoadForm() {
               onChange={handleChange}
               className={styles.formInput}
               required
+              placeholder="обязательно укажите страну"
             />
           </div>
         </div>
@@ -177,21 +210,19 @@ export function CreateRoadForm() {
         {(formData.transport === 'самолет' || formData.transport === 'поезд') && (
           <div className={styles.formRow}>
             <div className={styles.formGroup}>
-              <label htmlFor="departureTime">Время отправления</label>
+              <label htmlFor="departureTime">Дата и время отправления</label>
               <input
                 type="datetime-local"
                 id="departureTime"
                 value={formData.transportInfo?.departureTime || ''}
                 onChange={(e) =>
                   handleTransportInfoChange('departureTime', e.target.value)
-                 
-                  
                 }
                 required
               />
             </div>
             <div className={styles.formGroup}>
-              <label htmlFor="arrivalTime">Время прибытия</label>
+              <label htmlFor="arrivalTime">Дата и время прибытия</label>
               <input
                 type="datetime-local"
                 id="arrivalTime"
@@ -200,7 +231,7 @@ export function CreateRoadForm() {
                 required
               />
             </div>
-            {formData.transport === 'самолет' && (
+            {(formData.transport === 'самолет' || formData.transport === 'поезд') && (
               <div className={styles.formGroup}>
                 <label htmlFor="flightNumber">Номер рейса</label>
                 <input
@@ -217,35 +248,34 @@ export function CreateRoadForm() {
           </div>
         )}
 
-        {/* Для маршрута на машине */}
-        {formData.transport === 'машина' && (
-          <div className={styles.formRow}>
-            <div className={styles.formGroup}>
-              <label htmlFor="tripStartDate" className={styles.formLabel}>
-                Дата начала
-              </label>
-              <input
-                type="date"
-                name="tripStartDate"
-                value={formData.tripStartDate}
-                onChange={handleChange}
-                className={styles.formInput}
-              />
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="tripEndDate" className={styles.formLabel}>
-                Дата окончания
-              </label>
-              <input
-                type="date"
-                name="tripEndDate"
-                value={formData.tripEndDate}
-                onChange={handleChange}
-                className={styles.formInput}
-              />
-            </div>
+        {/* Даты поездки */}
+
+        <div className={styles.formRow}>
+          <div className={styles.formGroup}>
+            <label htmlFor="tripStartDate" className={styles.formLabel}>
+              Дата начала путешествия
+            </label>
+            <input
+              type="date"
+              name="tripStartDate"
+              value={formData.tripStartDate}
+              onChange={handleChange}
+              className={styles.formInput}
+            />
           </div>
-        )}
+          <div className={styles.formGroup}>
+            <label htmlFor="tripEndDate" className={styles.formLabel}>
+              Дата окончания путешествия
+            </label>
+            <input
+              type="date"
+              name="tripEndDate"
+              value={formData.tripEndDate}
+              onChange={handleChange}
+              className={styles.formInput}
+            />
+          </div>
+        </div>
 
         {/* Информация о маршруте */}
         <div className={styles.formGroup}>
@@ -260,6 +290,17 @@ export function CreateRoadForm() {
             className={styles.formInput}
             rows={2}
           />
+        </div>
+        {/* Кнопка получения рекомендации */}
+        <div className={styles.formGroup}>
+          <button
+            type="button"
+            disabled={!formData.city}
+            onClick={handleGetRecommendation}
+            className={styles.submitButton}
+          >
+            спроси меня об интересных метах
+          </button>
         </div>
 
         {/* Жилье */}
@@ -308,22 +349,36 @@ export function CreateRoadForm() {
         {/* Места для посещения */}
         <div className={styles.formGroup}>
           <label htmlFor="visitDates" className={styles.formLabel}>
-            Места посещения
+            Что нужно взять с собой
           </label>
           <textarea
             id="visitDates"
             name="visitDates"
-            value={formData.visitDates}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                visitDates: e.target.value
-              })
-            }
-            
+            // value={formData.visitDates}
+            value={formData.visitDates || ''}
+            // onChange={(e) =>
+            //   setFormData({
+            //     ...formData,
+            //     visitDates: e.target.value,
+            //   })
+            // }
+           
+            onChange={handleChange}
             className={styles.formInput}
-            placeholder="Места посещения с датами посещения"
+            rows={2}
+           
           />
+        </div>
+        {/* Кнопка получения рекомендации */}
+        <div className={styles.formGroup}>
+          <button
+           // type="button"
+          // disabled={!formData.visitDates}
+            onClick={handleRecomImportantThings}
+            className={styles.submitButton}
+          >
+            спроси меня что взять с собой
+          </button>
         </div>
 
         {/* Выбор видимости маршрута */}
@@ -343,7 +398,7 @@ export function CreateRoadForm() {
             <option value="public">Публичный</option>
           </select>
         </div>
-
+        <CompanionWidget />
         {/* Кнопка отправки */}
         <div className={styles.formGroup}>
           <button type="submit" className={styles.submitButton}>
