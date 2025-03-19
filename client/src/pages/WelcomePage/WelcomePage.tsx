@@ -123,6 +123,7 @@ export function WelcomePage(): JSX.Element {
           </div>
         </div>
         </div>
+        <div>
         {isModalOpen && <SignInModal closeModal={() => setIsModalOpen(false)} />}
       </div>
     </>
