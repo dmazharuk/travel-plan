@@ -3,10 +3,15 @@ import { getAllRoads } from "@/app/entities/road/api";
 import { useEffect } from "react";
 import{useAppSelector} from "@/shared/hooks/reduxHooks"
 import styles from "../../../widgets/MyRoads/MyRoads.module.css"
+import { useNavigate } from 'react-router';
 export default function PublicRoadForm() {
+
   const dispatch = useAppDispatch()
   const allPublicRoads = useAppSelector(state=>state.road.roads.filter(road=>road.visibility === 'public'))
+  const user = useAppSelector(state=>state.user.user)
   
+const navigate = useNavigate()
+
   useEffect(()=>{
     dispatch(getAllRoads())
   },[dispatch])
@@ -19,8 +24,10 @@ export default function PublicRoadForm() {
             <div
               key={road.id}
               className={styles.roadItem}
-              // onClick={() => handleRoadClick(road.id)}
-              // style={{ backgroundColor: getRandomColor() }}
+             
+             
+              
+              
             >
               <div className={styles.roadHeader}>
                 <div>
@@ -36,6 +43,9 @@ export default function PublicRoadForm() {
                     Даты путешествия:{' '}
                     {`${new Date(road.tripStartDate).toLocaleDateString()} - ${new Date(road.tripEndDate).toLocaleDateString()}`}
                   </p>
+
+                  {user ?(<button onClick={()=>navigate (`/cabinet/road/${road.id}`)}>посмотреть подробности</button>):(<button onClick={()=>navigate(`/login`)}>посмотреть подробности</button>)}
+                 
                 </div>
                 
               </div>
