@@ -8,6 +8,6 @@ module.exports = {
   },
 
   password: {
-    expiresIn: 1000 * 60 * 60,
+    expiresIn: '1h',
   },
 };

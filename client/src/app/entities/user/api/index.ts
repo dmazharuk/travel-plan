@@ -1,5 +1,5 @@
 import { axiosInstance, setAccessToken } from '@/shared/lib/axiosInstance';
-import { IAuthResponseData, IUserSignInData, IUserSignUpData } from '../model';
+import { IAuthResponseData, IResetPasswordData, IUserSignInData, IUserSignUpData } from '../model';
 import { IServerResponse } from '@/shared/types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosError } from 'axios';
@@ -125,7 +125,7 @@ export const recoverPasswordThunk = createAsyncThunk<
 
 export const resetPasswordThunk = createAsyncThunk<
   IServerResponse<IAuthResponseData>,
-  string,
+  IResetPasswordData,
   { rejectValue: IServerResponse }
 >(USER_THUNK_TYPES.RESET_PASS, async (newPassword, { rejectWithValue }) => {
   try {

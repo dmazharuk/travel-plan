@@ -32,6 +32,8 @@ export function SignInModal({ closeModal }: SignInModalProps) {
   const [inputs, setInputs] =
     useState<typeof INITIAL_INPUTS_DATA>(INITIAL_INPUTS_DATA);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -40,7 +42,6 @@ export function SignInModal({ closeModal }: SignInModalProps) {
   const passwordInputId = useId();
   const repeatPasswordInputId = useId();
   const newPasswordInputId = useId();
-  const resetTokenInputId = useId();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const resetToken = searchParams.get('token');
@@ -63,6 +64,7 @@ export function SignInModal({ closeModal }: SignInModalProps) {
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
 
     const isValid = UserValidator.validateEmail(inputs.email);
     if (!isValid) {
@@ -82,42 +84,76 @@ export function SignInModal({ closeModal }: SignInModalProps) {
       setFormMode('signIn');
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handlePasswordReset = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+
+    if (!resetToken) {
+      return dispatch(
+        showAlert({
+          message: 'Недействительная ссылка для сброса',
+          status: 'mistake',
+        })
+      );
+    }
 
     const isValid = UserValidator.validatePassword(inputs.newPassword);
 
     if (!isValid) {
       return dispatch(
-        showAlert({ message: 'ошибка валидации', status: 'mistake' })
+        showAlert({ message: 'Ошибка валидации', status: 'mistake' })
+      );
+    }
+
+    if (inputs.newPassword !== inputs.repeatPassword) {
+      return dispatch(
+        showAlert({ message: 'Пароли не совпадают', status: 'mistake' })
       );
     }
 
     try {
-      await dispatch(resetPasswordThunk(inputs.newPassword));
-
-      dispatch(
-        showAlert({
-          message: 'Пароль успешно изменен!',
-          status: 'success',
+      const response = await dispatch(
+        resetPasswordThunk({
+          token: resetToken,
+          newPassword: inputs.newPassword,
         })
       );
 
-      // Очищаем параметр token из URL
-      searchParams.delete('token');
-      setSearchParams(searchParams);
+      if (response.payload?.statusCode === 200) {
+        dispatch(
+          showAlert({
+            message: 'Пароль успешно изменен!',
+            status: 'success',
+          })
+        );
+        searchParams.delete('token');
+        setSearchParams(searchParams);
 
-      setFormMode('signIn');
+        setFormMode('signIn');
+        setInputs(INITIAL_INPUTS_DATA);
+      } else {
+        dispatch(
+          showAlert({
+            message: response.payload!.message,
+            status: 'mistake',
+          })
+        );
+      }
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const onSubmitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsLoading(true);
 
     if (formMode === 'signUp') {
       const { error } = UserValidator.validateSignUp(inputs);
@@ -167,6 +203,8 @@ export function SignInModal({ closeModal }: SignInModalProps) {
       closeModal();
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -237,7 +275,8 @@ export function SignInModal({ closeModal }: SignInModalProps) {
                   !inputs.email ||
                   !inputs.password ||
                   !inputs.username ||
-                  inputs.password !== inputs.repeatPassword
+                  inputs.password !== inputs.repeatPassword ||
+                  isLoading
                 }
               >
                 Зарегистрироваться
@@ -265,7 +304,7 @@ export function SignInModal({ closeModal }: SignInModalProps) {
               <button
                 className={styles.modalButton}
                 type="submit"
-                disabled={!inputs.email}
+                disabled={!inputs.email || isLoading}
               >
                 Отправить инструкции
               </button>
@@ -278,17 +317,6 @@ export function SignInModal({ closeModal }: SignInModalProps) {
           <>
             <h2>Сброс пароля</h2>
             <form className={styles.modalForm} onSubmit={handlePasswordReset}>
-              <label htmlFor={resetTokenInputId}>Код подтверждения:</label>
-              <input
-                type="text"
-                name="resetToken"
-                placeholder="Введите код из письма"
-                onChange={onChangeHandler}
-                value={inputs.resetToken}
-                id={resetTokenInputId}
-                className={styles.modalInput}
-              />
-
               <label htmlFor={newPasswordInputId}>Новый пароль:</label>
               <input
                 type="password"
@@ -300,10 +328,25 @@ export function SignInModal({ closeModal }: SignInModalProps) {
                 className={styles.modalInput}
               />
 
+              <label htmlFor={repeatPasswordInputId}>Повторите пароль:</label>
+              <input
+                type="password"
+                name="repeatPassword"
+                placeholder="Повторите новый пароль"
+                onChange={onChangeHandler}
+                value={inputs.repeatPassword}
+                id={repeatPasswordInputId}
+                className={styles.modalInput}
+              />
+
               <button
                 className={styles.modalButton}
                 type="submit"
-                disabled={!inputs.resetToken || !inputs.newPassword}
+                disabled={
+                  !inputs.newPassword ||
+                  inputs.newPassword !== inputs.repeatPassword ||
+                  isLoading
+                }
               >
                 Сбросить пароль
               </button>
@@ -341,7 +384,7 @@ export function SignInModal({ closeModal }: SignInModalProps) {
               <button
                 className={styles.modalButton}
                 type="submit"
-                disabled={!inputs.email || !inputs.password}
+                disabled={!inputs.email || !inputs.password || isLoading}
               >
                 Войти
               </button>

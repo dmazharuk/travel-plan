@@ -354,9 +354,13 @@ class AuthController {
     try {
       const normalizedEmail = email.toLowerCase();
       const user = await UserService.getByEmail(normalizedEmail);
+      const plainUser = user.get({ plain: true });
+      delete plainUser.password;
 
       if (user) {
-        const passwordToken = generateTokensPassword({ user: user }).password;
+        const passwordToken = generateTokensPassword({
+          user: plainUser,
+        }).passwordToken;
         const resetLink = `http://localhost:5173/?token=${passwordToken}`;
 
         await sendEmail({
@@ -406,40 +410,43 @@ class AuthController {
   /**
    * Сброс пароля по токену
    */
+
   static async resetPassword(req, res) {
     const { token, newPassword } = req.body;
 
-    const { isValid, error } = AuthValidator.validatePassword(newPassword);
+    const isValid = AuthValidator.validatePassword(newPassword);
 
     if (!isValid) {
       return res
         .status(400)
-        .json(formatResponse(400, 'Validation error', null, error));
+        .json(formatResponse(400, 'Validation error', null));
     }
 
     try {
       const decoded = jwt.verify(token, process.env.JWT_PASS);
-      const user = await UserService.getById(decoded.user.id);
 
-      if (!user) {
-        return res
-          .status(404)
-          .json(formatResponse(404, 'Пользователь не найден', null));
+      const user = await UserService.getByEmail(decoded.user.email);
+      const plainUser = user.get({ plain: true });
+      delete plainUser.password;
+
+      if (!plainUser) {
+        return res.status(404).json(formatResponse(404, 'User not found'));
       }
 
       const hashedPassword = await bcrypt.hash(newPassword, 10);
-      await UserService.update(user.id, { password: hashedPassword });
-
-      res.status(200).json(formatResponse(200, 'Пароль успешно изменен'));
+      await UserService.updatePass(plainUser.id, {
+        password: hashedPassword,
+      });
+      res.status(200).json(formatResponse(200, 'Password updated'));
     } catch (error) {
-      const message =
-        error instanceof jwt.TokenExpiredError
-          ? 'Срок действия токена истек'
-          : 'Неверный токен';
+      let message = 'Просроченная ссылка, запросите новую';
+      if (error instanceof jwt.TokenExpiredError) {
+        message = 'Просроченная ссылка, запросите новую';
+      } else if (error instanceof jwt.JsonWebTokenError) {
+        message = 'Просроченная ссылка, запросите новую';
+      }
 
-      res
-        .status(400)
-        .json(formatResponse(400, 'Ошибка сброса пароля', null, message));
+      res.status(401).json(formatResponse(401, message, null));
     }
   }
 }

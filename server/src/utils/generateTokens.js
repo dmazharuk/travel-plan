@@ -10,7 +10,7 @@ const generateTokens = (payload) => ({
 });
 
 const generateTokensPassword = (payload) => ({
-  password: jwt.sign(payload, JWT_PASS, jwtConfig.password),
+  passwordToken: jwt.sign(payload, JWT_PASS, jwtConfig.password),
 });
 
 module.exports = { generateTokens, generateTokensPassword };
