@@ -11,6 +11,7 @@ declare const ymaps: typeof import("yandex-maps");
 //   points: { coords: [number, number]; name: string; number: number }[]; // Добавляем поле number
 //   onAddToRoute?: (coords: [number, number], name: string) => void; // Обработчик добавления точки в маршрут
 // }
+//
 
 interface YandexMapProps {
   points: { coords: [number, number]; name: string; number: number ; description?: string; }[];
