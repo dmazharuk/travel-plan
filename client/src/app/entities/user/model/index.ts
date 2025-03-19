@@ -20,3 +20,8 @@ export interface IAuthResponseData extends IUser {
   accessToken: string;
   user: IUser;
 }
+
+export interface IResetPasswordData {
+  token: string;
+  newPassword: string;
+}
