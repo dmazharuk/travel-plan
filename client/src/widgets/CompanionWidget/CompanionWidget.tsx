@@ -21,6 +21,7 @@ export default function CompanionWidget() {
   // Проверка на попутчика
   const isCompanion = road?.companions?.some((c) => c.id === user?.id);
 
+
   // Обработчик добавления попутчика
   const handleAddCompanion = async () => {
     if (!road?.id || !newCompanionEmail) return;

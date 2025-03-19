@@ -4,6 +4,7 @@ import {
   createCoordinateThunk,
 } from "@/app/entities/coordinate";
 import { useAppDispatch } from "@/shared/hooks/reduxHooks";
+//
 
 declare const ymaps: typeof import("yandex-maps");
 
@@ -16,8 +17,8 @@ declare const ymaps: typeof import("yandex-maps");
 interface YandexMapProps {
   points: { coords: [number, number]; name: string; number: number ; description?: string; }[];
   onAddToRoute?: (coords: [number, number], name: string) => void;
-  pathId: number | null; // Добавляем pathId в пропсы
-  coordinates?: { coords: [number, number]; coordinateNumber: number; coordinateTitle: string ; coordinateBody: string; }[];
+  pathId: number | null | undefined; // Добавляем pathId в пропсы
+  // coordinates?: { coords: [number, number]; coordinateNumber: number; coordinateTitle: string ; coordinateBody: string; }[];
 }
 
 // const coordinatesArray = [coordinates.latitude, coordinates.longitude];
@@ -35,7 +36,7 @@ const YandexMap: React.FC<YandexMapProps> = ({ points, onAddToRoute, pathId  }) 
   const [pointDescription, setpointDescription] = useState(""); // Описание точки
   const tempPlacemarkRef = useRef<ymaps.Placemark | null>(null); // Для хранения временной метки
 
-const coordinatesArray = [coordinates.latitude, coordinates.longitude];
+// const coordinatesArray = [coordinates.latitude, coordinates.longitude];
 
 
   // Добавление временной метки
@@ -79,6 +80,7 @@ const coordinatesArray = [coordinates.latitude, coordinates.longitude];
       mapInstance.current.controls.add(searchControl);
 
       // Обработка выбора результата поиска
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       searchControl.events.add("resultselect", (e: any) => {
         const results = searchControl.getResultsArray();
         const selectedResult = results[e.get("index")];
@@ -93,6 +95,7 @@ const coordinatesArray = [coordinates.latitude, coordinates.longitude];
       });
 
       // Обработка клика по карте
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       mapInstance.current.events.add("click", (e: any) => {
         const coords = e.get("coords") as [number, number];
         setSelectedCoords(coords); // Сохраняем выбранные координаты
