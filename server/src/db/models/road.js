@@ -17,6 +17,13 @@ module.exports = (sequelize, DataTypes) => {
         as: 'companions',
         onDelete: 'CASCADE',
       });
+
+      Road.hasMany(models.Path, {
+        foreignKey: 'roadId', 
+        as: 'paths', 
+        onUpdate: "CASCADE",
+        onDelete: 'CASCADE', 
+      });
     }
   }
 
