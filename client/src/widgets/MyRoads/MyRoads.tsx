@@ -23,6 +23,15 @@ export function MyRoads() {
         (road.visibility === 'public' || road.visibility === 'friends')),
   );
 
+
+  // const userRoads = roads.filter(
+  //   (road) =>
+  //     road.author?.id === user?.id ||
+  //     (road.companions?.some((companion) => companion.id === user?.id) ||
+  //     road.visibility === 'public' ||
+  //     (road.visibility === 'friends' && road.author?.friends?.some((friend) => friend.id === user?.id))
+  // ))
+
   const getRandomColor = () => {
     const hue = Math.floor(Math.random() * 360);
     const saturation = 50 + Math.floor(Math.random() * 30);
@@ -113,19 +122,6 @@ export function MyRoads() {
                   </p>
                 </div>
                 {road.author?.id === user?.id && (
-                  // <button
-
-                  //   onClick={(e) => {
-                  //     e.stopPropagation();
-                  //     handleToggleVisibility(road.id, road.visibility);
-                  //   }}
-                  //   className={`${styles.visibilityButton} ${
-                  //     road.visibility === "public" ? styles.public : ""
-                  //   }`}
-                  // >
-                  //   {road.visibility === "public" ? "Публичный" : "Приватный"}
-                  // </button>
-
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
