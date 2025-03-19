@@ -5,6 +5,8 @@ const verifyAccessToken = require('../middleware/verifyAccessToken.js');
 router.get('/', PathController.getAllPaths);
 // Получение маршрута по ID
 router.get('/:id', verifyAccessToken, PathController.getPathById);
+// Получение маршрута по roadId
+router.get('/by-road/:roadId', verifyAccessToken, PathController.getPathByRoadId); // Новый маршрут
 // Создание маршрута
 router.post('/', verifyAccessToken, PathController.createPath);
 // Обновление маршрута

@@ -13,6 +13,7 @@ enum COORDINATE_THUNKS_TYPES {
   CREATE = "coordinate/create",
   UPDATE = "coordinate/update",
   DELETE = "coordinate/delete",
+  GET_BY_PATH_ID = "coordinate/getByPathId", // Новый тип
 }
 
 export const getAllCoordinatesThunk = createAsyncThunk<
@@ -31,6 +32,28 @@ export const getAllCoordinatesThunk = createAsyncThunk<
     return rejectWithValue(err.response!.data);
   }
 });
+
+
+export const getCoordinatesByPathIdThunk = createAsyncThunk<
+  IServerResponse<ArrayCoordinatesType>,
+  number, // Принимаем pathId
+  { rejectValue: IServerResponse }
+>(
+  COORDINATE_THUNKS_TYPES.GET_BY_PATH_ID, // Новый тип для thunk
+  async (pathId, { rejectWithValue }) => {
+    try {
+      const { data } = await axiosInstance.get<IServerResponse<ArrayCoordinatesType>>(
+        `/coordinates/by-path/${pathId}` // Предполагаемый эндпоинт
+      );
+      console.log('Coordinates data received:', data);
+      return data;
+    } catch (error) {
+      const err = error as AxiosError<IServerResponse>;
+      return rejectWithValue(err.response!.data);
+    }
+  }
+);
+
 
 export const createCoordinateThunk = createAsyncThunk<
   IServerResponse<ICoordinate>,
