@@ -117,15 +117,14 @@ const roadSlice = createSlice({
       // добавл компаньонов
       .addCase(getCompanionsForRoad.fulfilled, (state, action) => {
         if (state.road) {
-          console.log(action.payload.data, ",,,,getCompanionsForRoad");
+          console.log(action.payload.data, ",,,,getCompanionsForRoad");         
           
-          // state.road.companions = action.payload.data.map((companion) => companion.User) || [];
-          state.road.companions = action.payload.data.map((companion) => companion);
+          state.road.companions = action.payload.data.map((companion) => companion.User) || [];
         }
       })
       .addCase(addCompanionToRoad.fulfilled, (state, action) => {
         if (state.road && action.payload.data) {
-          console.log(action.payload.data, ",,,,");
+          // console.log(action.payload.data, ",,,,");
           
           state.road.companions.push(action.payload.data);
         }
