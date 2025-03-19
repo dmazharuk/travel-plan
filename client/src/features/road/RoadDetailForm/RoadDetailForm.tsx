@@ -143,7 +143,7 @@ export function RoadDetailForm() {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>Детали маршрута</h2>
+      <h2 className={styles.title}>Детали маршрута 📋</h2>
       <div className={styles.formGrid}>
         {/* Страна и город */}
         <div className={styles.formRow}>
@@ -366,7 +366,7 @@ export function RoadDetailForm() {
             className={`${styles.button} ${styles.buttonPrimary}`}
             onClick={() => setEditable(!editable)}
           >
-            {editable ? "Отменить редактирование" : "Редактировать"}
+            {editable ? "Отменить" : "Редактировать"}
           </button>
 
           {editable && (
@@ -375,7 +375,7 @@ export function RoadDetailForm() {
               className={`${styles.button} ${styles.buttonSuccess}`}
               onClick={handleSave}
             >
-              Сохранить изменения
+              Сохранить
             </button>
           )}
 

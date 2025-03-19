@@ -139,7 +139,7 @@ const MapViewerYandexMap: React.FC<MapViewerYandexMapProps> = ({ points, onAddTo
 
   // Обновление постоянных меток при изменении points
   useEffect(() => {
-    if (!mapInstance.current) return;
+    // if (!mapInstance.current) return;
 
     // Очищаем старые метки
     placemarksRef.current.removeAll();
@@ -147,10 +147,10 @@ const MapViewerYandexMap: React.FC<MapViewerYandexMapProps> = ({ points, onAddTo
     // Добавляем новые метки
     points.forEach((point) => {
       const placemark = new ymaps.Placemark(point.coords, {
-        hintContent: `${point.number}. ${point.name}`, // Добавляем номер в подпись
-        balloonContent: `Название: ${point.name}<br>Описание: ${
+        hintContent: `${point.name}`, 
+        balloonContent: `Номер: ${point.number} <br> Название: ${point.name}<br>Описание: ${
           point.description || "Нет описания"
-        }<br>Координаты: ${point.coords.join(", ")}`,
+        }`,
       });
       placemarksRef.current.add(placemark);
     });
@@ -191,6 +191,8 @@ const MapViewerYandexMap: React.FC<MapViewerYandexMapProps> = ({ points, onAddTo
   return (
     <div className={styles.container}>
       <div ref={mapRef} className={styles.mapContainer} />
+
+      {/* вот тут начинается часть которую мне нужно показать только если он поршел проверку на идора */}
       {selectedCoords && (
         <div className={styles.formGroup}>
           <div className={styles.formRow}>
@@ -236,3 +238,12 @@ const MapViewerYandexMap: React.FC<MapViewerYandexMapProps> = ({ points, onAddTo
 };
 
 export default MapViewerYandexMap;
+
+
+
+
+
+
+
+
+

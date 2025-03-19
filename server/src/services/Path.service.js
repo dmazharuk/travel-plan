@@ -1,15 +1,17 @@
-const { Path, Road } = require('../db/models');
+const { Path, Road, User } = require('../db/models');
 
 class PathService {
     static async getAll() {
         return await Path.findAll({
             include: [{ model: Road }],
+            include: [{ model: User }],
         });
     }
 
     static async getById(id) {
         return await Path.findOne({
-            where: { id }
+            where: { id },
+            include: [{ model: User }],
         });
     }
 
