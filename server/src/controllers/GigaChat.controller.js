@@ -7,7 +7,6 @@ class GigaChatController {
   static async getRecommendations(req, res) {
     const { city, type} = req.body;
   
-    // const {visitDates} = req.body;
     console.log(city, type, 'city, type');
     if (!city) {
       return res.status(400).json(formatResponse(400, "Город не указан"));

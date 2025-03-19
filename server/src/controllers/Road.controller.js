@@ -20,6 +20,7 @@ class RoadController {
   // получение маршрута по id
   static async getRoadById(req, res) {
     const { id } = req.params;
+    const { user } = res.locals;
     if (!isValidId(id)) {
       return res.status(400).json(formatResponse(400, 'Неверный id маршрута'));
     }
@@ -28,6 +29,11 @@ class RoadController {
       if (!road) {
         return res.status(404).json({ message: 'Маршрут не найден' });
       }
+
+      if (road.visibility === 'private' && road.author.id !== user.id) {
+        return res.status(403).json(formatResponse(403, 'Маршрут не принадлежит пользователю'));
+      }
+
       res.status(200).json(formatResponse(200, 'Маршрут найден', road));
     } catch ({ message }) {
       console.error(message);
