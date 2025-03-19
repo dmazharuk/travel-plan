@@ -5,14 +5,21 @@ import { useAppSelector } from '@/shared/hooks/reduxHooks';
 import styles from '../../../widgets/MyRoads/MyRoads.module.css';
 import { useNavigate } from 'react-router';
 import { SignInModal } from '@/features/auth/SignInModal/SignInModal';
+
+
+
 export default function PublicRoadForm() {
+  
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  
   const allPublicRoads = useAppSelector((state) =>
     state.road.roads.filter((road) => road.visibility === 'public'),
   );
+
   const user = useAppSelector((state) => state.user.user);
 
-  const navigate = useNavigate();
+  
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   

@@ -1,9 +1,10 @@
-import { JSX } from 'react';
+import { JSX, useState } from 'react';
 import { motion } from 'framer-motion';
 import Parallax from '@/widgets/Parallax/Parallax';
 import styles from './WelcomePage.module.css';
 import { useNavigate } from 'react-router';
 import { CLIENT_ROUTES } from '@/shared/enums/clientRoutes';
+import { CalendarWidget } from '@/widgets/CalendarWidget/CalendarWidget';
 
 export function WelcomePage(): JSX.Element {
   const navigate = useNavigate();
@@ -13,6 +14,15 @@ export function WelcomePage(): JSX.Element {
     visible: { opacity: 1, x: 0 },
   });
 
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  
+  const handleDateChange = (dates: [Date | null, Date | null]) => {
+    const [start, end] = dates;
+    setStartDate(start);
+    setEndDate(end);
+  };
   return (
     <>
       <div>
@@ -63,13 +73,25 @@ export function WelcomePage(): JSX.Element {
                   whileInView="visible"
                   viewport={{ once: true, amount: 0.5 }}
                   transition={{ duration: 1.5, delay: 2 * 0.2 }} // Задержка зависит от индекса
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => setIsCalendarOpen(true)}
                 >
+                  
                   <div className={styles.linkCard}>
                     {' '}
                     <img className={styles.img} src="/div3.png" />
                   </div>
                   <div className={styles.linkCard}> Календарик путешествий</div>
                 </motion.div>
+                {isCalendarOpen && (
+                  <CalendarWidget
+                    startDate={startDate}
+                    endDate={endDate}
+                    onChange={handleDateChange}
+          onClose={() => setIsCalendarOpen(false)}
+                  />
+                )}
+                
               </div>
 
               <div>

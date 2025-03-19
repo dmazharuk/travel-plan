@@ -5,8 +5,6 @@ import { showAlert } from "@/features/alert/slice/alertsSlice";
 
 
 
-
-
 export default function CompanionWidget() {
 
   const { road, isLoading } = useAppSelector((state) => state.road);

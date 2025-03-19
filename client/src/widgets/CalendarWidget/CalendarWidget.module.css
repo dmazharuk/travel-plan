@@ -1,0 +1,111 @@
+
+/* stylelint-disable selector-class-pattern */
+
+
+/* Оверлей (фон) */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000; /* Оверлей поверх всех элементов */
+  display: flex;
+  align-items: center; /* Центрирование по вертикали */
+  justify-content: center; /* Центрирование по горизонтали */
+  width: 100%;
+  height: 100%;
+  background-color: rgb(0 0 0 / 50%); /* Полупрозрачный черный фон */
+}
+
+/* Модальное окно с календарем */
+.calendarModal {
+  z-index: 1001; /* Календарь поверх оверлея */
+  display: flex;
+  flex-direction: column; /* Элементы внутри модального окна располагаются вертикально */
+  align-items: center; /* Центрирование содержимого по горизонтали */
+  width: fit-content; /* Ширина по содержимому */
+  max-width: 90%; /* Ограничение ширины для мобильных устройств */
+  padding: 20px;
+  background-color: #333; /* Темный фон */
+  border: 2px solid #444; /* Рамка вокруг модального окна */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgb(0 0 0 / 20%); /* Исправлено: убрано "px" */
+}
+
+/* Кнопка закрытия */
+.closeButton {
+  width: 100%; /* Ширина кнопки равна ширине календаря */
+  padding: 8px 16px;
+  margin-top: 10px;
+  font-family: Arial, sans-serif; /* Шрифт, как в календаре */
+  font-size: 14px; /* Размер текста */
+  color: #fff; /* Белый текст */
+  cursor: pointer;
+  background-color: #444; /* Цвет фона, как у заголовка календаря */
+  border: none;
+  border-radius: 5px; /* Скругленные углы */
+  transition: background-color 0.3s ease; /* Плавное изменение цвета */
+}
+
+.closeButton:hover {
+  background-color: #555;
+}
+
+/* Стили для react-datepicker */
+.calendarWidget .react-datepicker {
+  font-family: Arial, sans-serif; /* Исправлено: font-family */
+  color: #fff; /* Белый текст */
+  background-color: #333; /* Исправлено: background-color */
+  border: 1px solid #444;
+  border-radius: 10px; /* Исправлено: border-radius */
+}
+
+.calendarWidget .react-datepicker__header {
+  background-color: #444; /* Исправлено: background-color */
+  border-bottom: 1px solid #555; /* Исправлено: border-bottom */
+  border-top-left-radius: 10px; /* Исправлено: border-top-left-radius */
+  border-top-right-radius: 10px; /* Исправлено: border-top-right-radius */
+}
+
+.calendarWidget .react-datepicker__current-month,
+.calendarWidget .react-datepicker__time-header,
+.calendarWidget .react-datepicker__year-header {
+  color: #fff; /* Белый текст заголовка */
+}
+
+.calendarWidget .react-datepicker__day-name,
+.calendarWidget .react-datepicker__day,
+.calendarWidget .react-datepicker__time-name {
+  color: #fff; /* Белый текст дней */
+}
+
+.calendarWidget .react-datepicker__day:hover,
+.calendarWidget .react-datepicker__month-text:hover,
+.calendarWidget .react-datepicker__quarter-text:hover,
+.calendarWidget .react-datepicker__year-text:hover {
+  background-color: #555; /* Исправлено: background-color */
+  border-radius: 50%; /* Исправлено: border-radius */
+}
+
+.calendarWidget .react-datepicker__day--selected,
+.calendarWidget .react-datepicker__day--in-selecting-range,
+.calendarWidget .react-datepicker__day--in-range,
+.calendarWidget .react-datepicker__month-text--selected,
+.calendarWidget .react-datepicker__month-text--in-selecting-range,
+.calendarWidget .react-datepicker__month-text--in-range,
+.calendarWidget .react-datepicker__quarter-text--selected,
+.calendarWidget .react-datepicker__quarter-text--in-selecting-range,
+.calendarWidget .react-datepicker__quarter-text--in-range,
+.calendarWidget .react-datepicker__year-text--selected,
+.calendarWidget .react-datepicker__year-text--in-selecting-range,
+.calendarWidget .react-datepicker__year-text--in-range {
+  background-color: #666; /* Исправлено: background-color */
+  border-radius: 50%; /* Исправлено: border-radius */
+}
+
+.calendarWidget .react-datepicker__navigation {
+  border-color: #fff; /* Исправлено: border-color */
+}
+
+.calendarWidget .react-datepicker__navigation:hover {
+  border-color: #ccc; /* Исправлено: border-color */
+}

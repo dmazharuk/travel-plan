@@ -24,14 +24,6 @@ export function MyRoads() {
   );
 
 
-  // const userRoads = roads.filter(
-  //   (road) =>
-  //     road.author?.id === user?.id ||
-  //     (road.companions?.some((companion) => companion.id === user?.id) ||
-  //     road.visibility === 'public' ||
-  //     (road.visibility === 'friends' && road.author?.friends?.some((friend) => friend.id === user?.id))
-  // ))
-
   const getRandomColor = () => {
     const hue = Math.floor(Math.random() * 360);
     const saturation = 50 + Math.floor(Math.random() * 30);
@@ -50,7 +42,7 @@ export function MyRoads() {
     currentVisibility: 'private' | 'friends' | 'public',
   ) => {
     const newVisibility = getNextVisibility(currentVisibility);
-    // const newVisibility = currentVisibility === "public" ? "private" : "public";
+    
 
     const roadToUpdate = roads.find((road) => road.id === roadId);
 
