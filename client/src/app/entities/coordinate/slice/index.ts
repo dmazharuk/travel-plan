@@ -1,20 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ArrayCoordinatesType } from "../model";
+import { ArrayCoordinatesType, ICoordinate } from "../model";
 import {
   createCoordinateThunk,
   getAllCoordinatesThunk,
   updateCoordinateThunk,
   deleteCoordinateThunk,
+  getCoordinatesByPathIdThunk,
 } from "../api";
 
 type CoordinateState = {
   coordinates: ArrayCoordinatesType | [];
+  coordinate: ICoordinate | null; // Добавляем поле для хранения одного path
   error: string | null;
   loading: boolean;
 };
 
 const initialState: CoordinateState = {
   coordinates: [],
+  coordinate: null, // Инициализируем поле
   error: null,
   loading: false,
 };
@@ -36,6 +39,21 @@ const coordinateSlice = createSlice({
       .addCase(getAllCoordinatesThunk.rejected, (state, action) => {
         state.loading = false;
         state.coordinates = [];
+        state.error = action.payload!.error ?? "Unknown error";
+      })
+
+      // Обработка нового thunk
+      .addCase(getCoordinatesByPathIdThunk.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getCoordinatesByPathIdThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.coordinates = action.payload.data; // Сохраняем один 
+        state.error = null;
+      })
+      .addCase(getCoordinatesByPathIdThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.coordinate = null;
         state.error = action.payload!.error ?? "Unknown error";
       })
 

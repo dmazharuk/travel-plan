@@ -4,15 +4,16 @@ import {
   getRoadById,
   IRoad,
   updateRoad,
-} from '@/app/entities/road';
-import { CLIENT_ROUTES } from '@/shared/enums/clientRoutes';
-import { useAppDispatch, useAppSelector } from '@/shared/hooks/reduxHooks';
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
-import styles from './RoadDetailForm.module.css';
-import CompanionWidget from '@/widgets/CompanionWidget/CompanionWidget';
-import { showAlert } from '@/features/alert/slice/alertsSlice';
+} from "@/app/entities/road";
+import { CLIENT_ROUTES } from "@/shared/enums/clientRoutes";
+import { useAppDispatch, useAppSelector } from "@/shared/hooks/reduxHooks";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
+import styles from "./RoadDetailForm.module.css";
+import CompanionWidget from "@/widgets/CompanionWidget/CompanionWidget";
+import { showAlert } from "@/features/alert/slice/alertsSlice";
 
+import MapViewer from "@/features/map/ui/MapViewer/MapViewer";
 
 export function RoadDetailForm() {
   const { id } = useParams<{ id: string }>();
@@ -22,25 +23,34 @@ export function RoadDetailForm() {
   const { user } = useAppSelector((state) => state.user);
   const [editable, setEditable] = useState(false);
   const [formData, setFormData] = useState<Partial<IRoad>>({
-    city: '',
-    country: '',
-    transport: 'машина',
+    city: "",
+    country: "",
+    transport: "машина",
     transportInfo: null,
-    routeInfo: '',
-    visibility: 'private',
-    tripStartDate: '',
-    tripEndDate: '',
-    accommodation: '',
-    checkInDate: '',
-    checkOutDate: '',
-    visitDates: '',
+    routeInfo: "",
+    visibility: "private",
+    tripStartDate: "",
+    tripEndDate: "",
+    accommodation: "",
+    checkInDate: "",
+    checkOutDate: "",
+    visitDates: "",
   });
+
+  //логика для карты, начало
+  useEffect(() => {
+    if (id) {
+      dispatch(getRoadById({ id: Number(id) }));
+    }
+  }, [id, dispatch]);
+
+  //логика для карты, конец
 
   // Функция для преобразования даты в формат yyyy-MM-dd
   const formatDateForInput = (dateString?: string) => {
-    if (!dateString) return '';
+    if (!dateString) return "";
     const date = new Date(dateString);
-    return date.toISOString().split('T')[0];
+    return date.toISOString().split("T")[0];
   };
 
   useEffect(() => {
@@ -63,7 +73,9 @@ export function RoadDetailForm() {
   }, [road]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -101,7 +113,7 @@ export function RoadDetailForm() {
         updateRoad({
           id: Number(id),
           roadData: dataToSend,
-        }),
+        })
       )
         .unwrap()
         .then(() => {
@@ -110,8 +122,13 @@ export function RoadDetailForm() {
           navigate(CLIENT_ROUTES.CABINET_PAGE);
         })
         .catch((error) => {
-          console.error('Ошибка обновления:', error);
-          dispatch(showAlert({ message: 'Заполните все обязательные поля', status: 'mistake' }));
+          console.error("Ошибка обновления:", error);
+          dispatch(
+            showAlert({
+              message: "Заполните все обязательные поля",
+              status: "mistake",
+            })
+          );
         });
     }
   };
@@ -137,11 +154,10 @@ export function RoadDetailForm() {
               type="text"
               name="city"
               className={styles.formInput}
-              value={formData.city || ''}
+              value={formData.city || ""}
               onChange={handleChange}
               disabled={!editable}
               placeholder="обязательно укажите город"
-
             />
           </div>
           <div className={styles.formGroup}>
@@ -150,7 +166,7 @@ export function RoadDetailForm() {
               type="text"
               name="country"
               className={styles.formInput}
-              value={formData.country || ''}
+              value={formData.country || ""}
               onChange={handleChange}
               disabled={!editable}
               placeholder="обязательно укажите страну"
@@ -164,7 +180,7 @@ export function RoadDetailForm() {
           <select
             name="transport"
             className={styles.formSelect}
-            value={formData.transport || ''}
+            value={formData.transport || ""}
             onChange={handleChange}
             disabled={!editable}
           >
@@ -175,15 +191,18 @@ export function RoadDetailForm() {
         </div>
 
         {/* Информация о транспорте */}
-        {(formData.transport === 'самолет' || formData.transport === 'поезд') && (
+        {(formData.transport === "самолет" ||
+          formData.transport === "поезд") && (
           <div className={styles.formRow}>
             <div className={styles.formGroup}>
-              <label className={styles.formLabel}>Дата и время отправления (обязательно)</label>
+              <label className={styles.formLabel}>
+                Дата и время отправления (обязательно)
+              </label>
               <input
                 type="datetime-local"
-                value={formData.transportInfo?.departureTime || ''}
+                value={formData.transportInfo?.departureTime || ""}
                 onChange={(e) =>
-                  handleTransportInfoChange('departureTime', e.target.value)
+                  handleTransportInfoChange("departureTime", e.target.value)
                 }
                 disabled={!editable}
               />
@@ -192,19 +211,24 @@ export function RoadDetailForm() {
               <label className={styles.formLabel}>Дата и время прибытия </label>
               <input
                 type="datetime-local"
-                value={formData.transportInfo?.arrivalTime || ''}
-                onChange={(e) => handleTransportInfoChange('arrivalTime', e.target.value)}
+                value={formData.transportInfo?.arrivalTime || ""}
+                onChange={(e) =>
+                  handleTransportInfoChange("arrivalTime", e.target.value)
+                }
                 disabled={!editable}
               />
             </div>
-            {(formData.transport === 'самолет' || formData.transport === 'поезд') && (
+            {(formData.transport === "самолет" ||
+              formData.transport === "поезд") && (
               <div className={styles.formGroup}>
-                <label className={styles.formLabel}>Номер рейса (обязательно)</label>
+                <label className={styles.formLabel}>
+                  Номер рейса (обязательно)
+                </label>
                 <input
                   type="text"
-                  value={formData.transportInfo?.flightNumber || ''}
+                  value={formData.transportInfo?.flightNumber || ""}
                   onChange={(e) =>
-                    handleTransportInfoChange('flightNumber', e.target.value)
+                    handleTransportInfoChange("flightNumber", e.target.value)
                   }
                   disabled={!editable}
                 />
@@ -216,24 +240,27 @@ export function RoadDetailForm() {
         {/* Даты поездки */}
         <div className={styles.formRow}>
           <div className={styles.formGroup}>
-            <label className={styles.formLabel}>Дата начала путешествия (обязательно)</label>
+            <label className={styles.formLabel}>
+              Дата начала путешествия (обязательно)
+            </label>
             <input
               type="date"
               name="tripStartDate"
               className={styles.formInput}
-              value={formData.tripStartDate || ''}
+              value={formData.tripStartDate || ""}
               onChange={handleChange}
               disabled={!editable}
-              
             />
           </div>
           <div className={styles.formGroup}>
-            <label className={styles.formLabel}>Дата окончания путешествия (обязательно)</label>
+            <label className={styles.formLabel}>
+              Дата окончания путешествия (обязательно)
+            </label>
             <input
               type="date"
               name="tripEndDate"
               className={styles.formInput}
-              value={formData.tripEndDate || ''}
+              value={formData.tripEndDate || ""}
               onChange={handleChange}
               disabled={!editable}
             />
@@ -245,7 +272,7 @@ export function RoadDetailForm() {
           <textarea
             name="routeInfo"
             className={styles.formTextarea}
-            value={formData.routeInfo || ''}
+            value={formData.routeInfo || ""}
             onChange={handleChange}
             disabled={!editable}
             rows={2}
@@ -259,7 +286,7 @@ export function RoadDetailForm() {
               type="text"
               name="accommodation"
               className={styles.formInput}
-              value={formData.accommodation || ''}
+              value={formData.accommodation || ""}
               onChange={handleChange}
               disabled={!editable}
             />
@@ -270,7 +297,7 @@ export function RoadDetailForm() {
               type="date"
               name="checkInDate"
               className={styles.formInput}
-              value={formData.checkInDate || ''}
+              value={formData.checkInDate || ""}
               onChange={handleChange}
               disabled={!editable}
             />
@@ -281,7 +308,7 @@ export function RoadDetailForm() {
               type="date"
               name="checkOutDate"
               className={styles.formInput}
-              value={formData.checkOutDate || ''}
+              value={formData.checkOutDate || ""}
               onChange={handleChange}
               disabled={!editable}
             />
@@ -311,7 +338,7 @@ export function RoadDetailForm() {
           <select
             name="visibility"
             className={styles.formSelect}
-            value={formData.visibility || 'private'}
+            value={formData.visibility || "private"}
             onChange={handleChange}
             disabled={!editable}
           >
@@ -321,6 +348,14 @@ export function RoadDetailForm() {
           </select>
         </div>
       </div>
+
+      {/* про карту, начало */}
+      <div>
+        <h3>Детали маршрута</h3>
+        {/* Остальные поля формы */}
+        {road.id && <MapViewer roadId={road.id} />}
+      </div>
+      {/* про карту, конец */}
 
       <CompanionWidget />
 
@@ -332,7 +367,7 @@ export function RoadDetailForm() {
             className={`${styles.button} ${styles.buttonPrimary}`}
             onClick={() => setEditable(!editable)}
           >
-            {editable ? 'Отменить редактирование' : 'Редактировать'}
+            {editable ? "Отменить редактирование" : "Редактировать"}
           </button>
 
           {editable && (

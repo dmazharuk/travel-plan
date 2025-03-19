@@ -11,12 +11,16 @@ declare const ymaps: typeof import("yandex-maps");
 //   points: { coords: [number, number]; name: string; number: number }[]; // Добавляем поле number
 //   onAddToRoute?: (coords: [number, number], name: string) => void; // Обработчик добавления точки в маршрут
 // }
+//
 
 interface YandexMapProps {
   points: { coords: [number, number]; name: string; number: number ; description?: string; }[];
   onAddToRoute?: (coords: [number, number], name: string) => void;
   pathId: number | null; // Добавляем pathId в пропсы
+  coordinates?: { coords: [number, number]; coordinateNumber: number; coordinateTitle: string ; coordinateBody: string; }[];
 }
+
+// const coordinatesArray = [coordinates.latitude, coordinates.longitude];
 
 const YandexMap: React.FC<YandexMapProps> = ({ points, onAddToRoute, pathId  }) => {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -30,6 +34,9 @@ const YandexMap: React.FC<YandexMapProps> = ({ points, onAddToRoute, pathId  }) 
   const [pointName, setPointName] = useState(""); // Название точки
   const [pointDescription, setpointDescription] = useState(""); // Описание точки
   const tempPlacemarkRef = useRef<ymaps.Placemark | null>(null); // Для хранения временной метки
+
+const coordinatesArray = [coordinates.latitude, coordinates.longitude];
+
 
   // Добавление временной метки
   const addTempPlacemark = (coords: [number, number]) => {

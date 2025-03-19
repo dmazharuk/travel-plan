@@ -1,15 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ArrayPathsType } from "../model";
-import { createPathThunk, getAllPathsThunk, updatePathThunk, deletePathThunk } from "../api";
+import { ArrayPathsType, IPath } from "../model";
+import {
+  createPathThunk,
+  getAllPathsThunk,
+  updatePathThunk,
+  deletePathThunk,
+  getPathByRoadIdThunk,
+} from "../api";
 
 type PathState = {
   paths: ArrayPathsType | [];
+  path: IPath | null; // Добавляем поле для хранения одного path
   error: string | null;
   loading: boolean;
 };
 
 const initialState: PathState = {
   paths: [],
+  path: null, // Инициализируем поле
   error: null,
   loading: false,
 };
@@ -31,6 +39,21 @@ const pathSlice = createSlice({
       .addCase(getAllPathsThunk.rejected, (state, action) => {
         state.loading = false;
         state.paths = [];
+        state.error = action.payload!.error ?? "Unknown error";
+      })
+
+      // Обработка нового thunk
+      .addCase(getPathByRoadIdThunk.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getPathByRoadIdThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.path = action.payload.data; // Сохраняем один path
+        state.error = null;
+      })
+      .addCase(getPathByRoadIdThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.path = null;
         state.error = action.payload!.error ?? "Unknown error";
       })
 
@@ -75,7 +98,7 @@ const pathSlice = createSlice({
       .addCase(deletePathThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload!.error ?? "Unknown error";
-      })
+      });
   },
 });
 

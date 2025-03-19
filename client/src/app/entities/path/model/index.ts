@@ -6,7 +6,7 @@ export interface IRawPathData {
 }
 
 export interface IPath extends IRawPathData {
-  id: number;
+  id: number ;
   roadId: number;
   createdAt: Date;
   updatedAt: Date;

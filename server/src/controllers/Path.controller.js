@@ -1,6 +1,8 @@
 const road = require("../db/models/road");
 const PathService = require("../services/Path.service");
 const formatResponse = require("../utils/formatResponse");
+const { Path } = require('../db/models');
+
 
 class PathController {
   // //вариант 1, максима
@@ -94,6 +96,100 @@ class PathController {
     }
   }
 
+  //получение по айди роуда
+  // static async getPathByRoadId(req, res) {
+
+  //   try {
+  //     const { roadId } = req.params;
+
+  //     // Ищем Path по roadId
+  //     const path = await Path.findOne({ where: { roadId } });
+  //     console.log('>>>>>>>>>>>>>>>>>>>>>>>>', path);
+      
+
+  //     if (!path) {
+  //       return res
+  //         .status(404)
+  //         .json(formatResponse(404, "Path not found for this roadId"));
+  //     }
+
+  //     res.status(200).json(formatResponse(200, "Success", path));
+  //   } catch ({ message }) {
+  //     res
+  //       .status(500)
+  //       .json(formatResponse(500, "Internal server error", null, message));
+  //   }
+  // }
+
+  //получение по айди роуда
+  // static async getPathByRoadId(req, res) {
+  //   const { id } = req.params;
+
+
+  //     const path = await PathService.findById(id);
+  //     console.log(path);
+      
+
+
+  //   try {
+  //     const { roadId } = req.params;
+  //     console.log('>>>>>>>>>>>>>>>>>>>', roadId);
+      
+  
+  //     // Проверяем, что roadId передан и является числом
+  //     if (!roadId || isNaN(roadId)) {
+  //       return res.status(400).json(formatResponse(400, "Invalid roadId"));
+  //     }
+  
+  //     // Ищем Path по roadId
+  //     const path = await Path.findOne({ where: { roadId: Number(roadId) } });
+  //     console.log('Path found:>>>>>>>>>>>>>>>>>>>', path);
+  
+  //     if (!path) {
+  //       return res.status(404).json(formatResponse(404, "Path not found for this roadId"));
+  //     }
+  
+  //     res.status(200).json(formatResponse(200, "Success", path));
+  //   } catch ({ message }) {
+  //     console.error('Error in getPathByRoadId:', message);
+  //     res.status(500).json(formatResponse(500, "Internal server error", null, message));
+  //   }
+  // }
+
+  static async getPathByRoadId(req, res) {
+    try {
+      const { roadId } = req.params;
+      console.log('>>>>>>>>>>>>>>>>>>>>>>>',roadId);
+
+
+      if (!roadId ) {
+        return res.status(400).json({ message: 'roadId is required' });
+      }
+
+      const path = await Path.findOne({
+        where: { roadId },
+      });
+
+      console.log('>>>>>>>>>>>>>>>>>>>>>>>',path);
+      
+
+      if (!path || path.length  === 0) {
+        return res
+        .status(404)
+        .json(formatResponse(404, "No paths found for this roadId"));
+      }
+
+      res.status(200).json(formatResponse(200, "Success", path));
+    } catch (error) {
+      console.error('Error fetching paths by roadId:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  }
+
+
+
+
+
   // //в1, типовой
   // static async updatePath(req, res) {
   //   const { id } = req.params;
@@ -142,7 +238,6 @@ class PathController {
       });
       // console.log("updatedPath", updatedPath);
 
-
       if (!updatedPath) {
         return res.status(404).json(formatResponse(404, "Path not found"));
       }
@@ -177,7 +272,5 @@ class PathController {
 }
 
 module.exports = PathController;
-
-
 
 //

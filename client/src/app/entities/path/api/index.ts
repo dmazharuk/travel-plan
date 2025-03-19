@@ -9,6 +9,7 @@ enum PATH_THUNKS_TYPES {
     CREATE = 'path/create',
     UPDATE = 'path/update',
     DELETE = 'path/delete',
+    GET_BY_ROAD_ID = 'path/getByRoadId', // Новый тип
   }
 
 export const getAllPathsThunk = createAsyncThunk<
@@ -27,6 +28,26 @@ IServerResponse<ArrayPathsType>,
     return rejectWithValue(err.response!.data);
   }
 });
+
+export const getPathByRoadIdThunk = createAsyncThunk<
+  IServerResponse<IPath>,
+  number, // Принимаем roadId
+  { rejectValue: IServerResponse }
+>(
+  PATH_THUNKS_TYPES.GET_BY_ROAD_ID, // Новый тип для thunk
+  async (roadId, { rejectWithValue }) => {
+    try {
+      const { data } = await axiosInstance.get<IServerResponse<IPath>>(
+        `/paths/by-road/${roadId}` // Предполагаемый эндпоинт
+      );
+      console.log('Path data received:', data);
+      return data;
+    } catch (error) {
+      const err = error as AxiosError<IServerResponse>;
+      return rejectWithValue(err.response!.data);
+    }
+  }
+);
 
 export const createPathThunk = createAsyncThunk<
 IServerResponse<IPath>,
