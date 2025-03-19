@@ -33,32 +33,7 @@ export function CreateRoadForm() {
   const isEditMode = Boolean(id);
   const [formData, setFormData] = useState<IRoadRowData>(initialFormData);
 
-  // Загрузка данных для редактирования
-  // useEffect(() => {
-  //   if (isEditMode) {
-  //     const fetchRoadData = async () => {
-  //       const response = await dispatch(getRoadById({ id: Number(id) }));
-  //       if (response.payload?.data) {
-  //         const roadData = response.payload.data;
-  //         setFormData({
-  //           city: roadData.city,
-  //           country: roadData.country,
-  //           transport: roadData.transport,
-  //           transportInfo: roadData.transportInfo,
-  //           routeInfo: roadData.routeInfo,
-  //           visibility: roadData.visibility,
-  //           tripStartDate: roadData.tripStartDate,
-  //           tripEndDate: roadData.tripEndDate,
-  //           accommodation: roadData.accommodation,
-  //           checkInDate: roadData.checkInDate,
-  //           checkOutDate: roadData.checkOutDate,
-  //           visitDates: roadData.visitDates, // Места посещения
-  //         });
-  //       }
-  //     };
-  //     fetchRoadData();
-  //   }
-  // }, [id, dispatch]);
+  
 
   useEffect(() => {
     if (!isEditMode) return;

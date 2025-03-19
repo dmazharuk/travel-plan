@@ -7,7 +7,6 @@ export default function CabinetPage() {
   return (
     <div className={styles.main}>
       <MyRoads />
-      {/* <FriendsRoutes/> */}
     </div>
   )
 }

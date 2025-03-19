@@ -6,6 +6,7 @@ import { useSearchParams } from "react-router";
 import { SignInModal } from "@/features/auth/SignInModal/SignInModal";
 import { useNavigate } from 'react-router';
 import { CLIENT_ROUTES } from '@/shared/enums/clientRoutes';
+import { CalendarWidget } from '@/widgets/CalendarWidget/CalendarWidget';
 
 export function WelcomePage(): JSX.Element {
   const [searchParams] = useSearchParams();
@@ -17,6 +18,17 @@ export function WelcomePage(): JSX.Element {
     hidden: { opacity: 0, x: index % 2 === 0 ? -100 : 100 }, // Четные — слева, нечетные — справа
     visible: { opacity: 1, x: 0 },
   });
+
+
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  
+  const handleDateChange = (dates: [Date | null, Date | null]) => {
+    const [start, end] = dates;
+    setStartDate(start);
+    setEndDate(end);
+  };
 
   useEffect(() => {
     if (searchParams.get('token')) {
@@ -74,13 +86,25 @@ export function WelcomePage(): JSX.Element {
                   whileInView="visible"
                   viewport={{ once: true, amount: 0.5 }}
                   transition={{ duration: 1.5, delay: 2 * 0.2 }} // Задержка зависит от индекса
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => setIsCalendarOpen(true)}
                 >
+                  
                   <div className={styles.linkCard}>
                     {' '}
                     <img className={styles.img} src="/div3.png" />
                   </div>
                   <div className={styles.linkCard}> Календарик путешествий</div>
                 </motion.div>
+                {isCalendarOpen && (
+                  <CalendarWidget
+                    startDate={startDate}
+                    endDate={endDate}
+                    onChange={handleDateChange}
+          onClose={() => setIsCalendarOpen(false)}
+                  />
+                )}
+                
               </div>
 
               <div>
