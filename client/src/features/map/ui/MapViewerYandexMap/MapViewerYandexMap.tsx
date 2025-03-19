@@ -1,36 +1,25 @@
 import React, { useEffect, useRef, useState } from "react";
-import styles from "./YandexMap.module.css";
-import {
-  createCoordinateThunk,
-} from "@/app/entities/coordinate";
+import styles from "./MapViewerYandexMap.module.css";
+import { createCoordinateThunk } from "@/app/entities/coordinate";
 import { useAppDispatch } from "@/shared/hooks/reduxHooks";
 
 declare const ymaps: typeof import("yandex-maps");
 
-interface YandexMapProps {
-  points: { coords: [number, number]; name: string; number: number ; description?: string; }[];
+interface MapViewerYandexMapProps {
+  points: { coords: [number, number]; name: string; number: number; description?: string }[];
   onAddToRoute?: (coords: [number, number], name: string) => void;
-  pathId: number | null | undefined; // Добавляем pathId в пропсы
-  // coordinates?: { coords: [number, number]; coordinateNumber: number; coordinateTitle: string ; coordinateBody: string; }[];
+  pathId: number | null | undefined;
+  initialCenter: [number, number]; // Новый пропс для начального центра карты
 }
 
-// const coordinatesArray = [coordinates.latitude, coordinates.longitude];
-
-const YandexMap: React.FC<YandexMapProps> = ({ points, onAddToRoute, pathId  }) => {
+const MapViewerYandexMap: React.FC<MapViewerYandexMapProps> = ({ points, onAddToRoute, pathId, initialCenter }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<ymaps.Map | null>(null); // Для хранения экземпляра карты
-  const placemarksRef = useRef<ymaps.GeoObjectCollection>(
-    new ymaps.GeoObjectCollection()
-  ); // Для хранения постоянных меток
-  const [selectedCoords, setSelectedCoords] = useState<[number, number] | null>(
-    null
-  ); // Выбранные координаты
+  const placemarksRef = useRef<ymaps.GeoObjectCollection>(new ymaps.GeoObjectCollection()); // Для хранения постоянных меток
+  const [selectedCoords, setSelectedCoords] = useState<[number, number] | null>(null); // Выбранные координаты
   const [pointName, setPointName] = useState(""); // Название точки
   const [pointDescription, setpointDescription] = useState(""); // Описание точки
   const tempPlacemarkRef = useRef<ymaps.Placemark | null>(null); // Для хранения временной метки
-
-// const coordinatesArray = [coordinates.latitude, coordinates.longitude];
-
 
   // Добавление временной метки
   const addTempPlacemark = (coords: [number, number]) => {
@@ -51,14 +40,51 @@ const YandexMap: React.FC<YandexMapProps> = ({ points, onAddToRoute, pathId  }) 
     mapInstance.current?.geoObjects.add(tempPlacemarkRef.current);
   };
 
+  // Функция для вычисления границ, включающих все точки
+  const calculateBounds = (points: [number, number][]) => {
+    if (points.length === 0) return null;
+
+    const latitudes = points.map((point) => point[0]);
+    const longitudes = points.map((point) => point[1]);
+
+    const minLat = Math.min(...latitudes);
+    const maxLat = Math.max(...latitudes);
+    const minLon = Math.min(...longitudes);
+    const maxLon = Math.max(...longitudes);
+
+    return [
+      [minLat, minLon], // Юго-западная точка
+      [maxLat, maxLon], // Северо-восточная точка
+    ] as [[number, number], [number, number]];
+  };
+
+  // Функция для расширения границ на заданный процент
+  const expandBounds = (bounds: [[number, number], [number, number]], percent: number) => {
+    const [[minLat, minLon], [maxLat, maxLon]] = bounds;
+
+    const latDiff = (maxLat - minLat) * percent;
+    const lonDiff = (maxLon - minLon) * percent;
+
+    return [
+      [minLat - latDiff, minLon - lonDiff], // Расширяем юго-западную точку
+      [maxLat + latDiff, maxLon + lonDiff], // Расширяем северо-восточную точку
+    ] as [[number, number], [number, number]];
+  };
+
   useEffect(() => {
     // Загрузка API Яндекс Карт
     ymaps.ready(() => {
-      if (!mapRef.current || mapInstance.current) return; // Если карта уже создана, выходим
+      if (!mapRef.current) return;
 
-      // Создание карты
+      // Очищаем старую карту, если она существует
+      if (mapInstance.current) {
+        mapInstance.current.destroy();
+        mapInstance.current = null;
+      }
+
+      // Создание карты с начальным центром
       mapInstance.current = new ymaps.Map(mapRef.current, {
-        center: points[0]?.coords || [55.76, 37.64], // Центр карты (первая точка или Москва)
+        center: initialCenter, // Используем переданный центр
         zoom: 10,
         controls: [], // Отключаем все стандартные элементы управления
       });
@@ -77,9 +103,9 @@ const YandexMap: React.FC<YandexMapProps> = ({ points, onAddToRoute, pathId  }) 
       searchControl.events.add("resultselect", (e: any) => {
         const results = searchControl.getResultsArray();
         const selectedResult = results[e.get("index")];
-        // @ts-expect-error: Тип функции не совпадает с ожидаемым
+        // @ts-expect-error: Type is not ts
         const coords = selectedResult.geometry.getCoordinates();
-        // @ts-expect-error: Тип функции не совпадает с ожидаемым
+        // @ts-expect-error: Type is not ts
         const name = selectedResult.properties.get("name"); // Получаем название организации
 
         setSelectedCoords(coords); // Сохраняем выбранные координаты
@@ -98,8 +124,18 @@ const YandexMap: React.FC<YandexMapProps> = ({ points, onAddToRoute, pathId  }) 
 
       // Добавляем коллекцию постоянных меток на карту
       mapInstance.current.geoObjects.add(placemarksRef.current);
+
+      // Вычисляем границы для всех точек
+      const coords = points.map((point) => point.coords);
+      const bounds = calculateBounds(coords);
+
+      // Устанавливаем границы карты, если они есть
+      if (bounds) {
+        const expandedBounds = expandBounds(bounds, 0.1); // Расширяем границы на 10%
+        mapInstance.current.setBounds(expandedBounds, { checkZoomRange: true });
+      }
     });
-  }, [addTempPlacemark, points]);
+  }, [initialCenter, points]); // Зависимость от initialCenter и points
 
   // Обновление постоянных меток при изменении points
   useEffect(() => {
@@ -113,51 +149,15 @@ const YandexMap: React.FC<YandexMapProps> = ({ points, onAddToRoute, pathId  }) 
       const placemark = new ymaps.Placemark(point.coords, {
         hintContent: `${point.number}. ${point.name}`, // Добавляем номер в подпись
         balloonContent: `Название: ${point.name}<br>Описание: ${
-          point.description
+          point.description || "Нет описания"
         }<br>Координаты: ${point.coords.join(", ")}`,
       });
       placemarksRef.current.add(placemark);
     });
   }, [points]);
 
-
-
-
-
-
-
-
-  // Обновление постоянных меток при изменении points
-useEffect(() => {
-  if (!mapInstance.current) return;
-
-  // Очищаем старые метки
-  placemarksRef.current.removeAll();
-
-  // Добавляем новые метки
-  points.forEach((point) => {
-    const placemark = new ymaps.Placemark(point.coords, {
-      hintContent: `${point.number}. ${point.name}`, // Добавляем номер в подпись
-      balloonContent: `Название: ${point.name}<br>Описание: ${
-        point.description || "Нет описания"
-      }<br>Координаты: ${point.coords.join(", ")}`,
-    });
-    placemarksRef.current.add(placemark);
-  });
-}, [points]);
-
-
-
-
-
-
-
-
-
-
   // Обработка добавления точки в маршрут
   const dispatch = useAppDispatch();
-  
   const handleAddToRoute = async () => {
     if (selectedCoords && onAddToRoute) {
       onAddToRoute(selectedCoords, pointName);
@@ -167,15 +167,15 @@ useEffect(() => {
         tempPlacemarkRef.current = null;
       }
 
-      if (pathId) { // Проверяем, что pathId существует
+      if (pathId) {
         await dispatch(
           createCoordinateThunk({
             latitude: selectedCoords[0],
             longitude: selectedCoords[1],
             coordinateTitle: pointName,
             coordinateBody: pointDescription,
-            coordinateNumber: points.length + 1, // Номер точки
-            pathId: pathId, // Используем pathId
+            coordinateNumber: points.length + 1,
+            pathId: pathId,
           })
         );
 
@@ -235,4 +235,4 @@ useEffect(() => {
   );
 };
 
-export default YandexMap;
+export default MapViewerYandexMap;

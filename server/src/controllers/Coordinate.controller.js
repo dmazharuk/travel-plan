@@ -123,7 +123,7 @@ class CoordinateController {
 
     try {
       const { pathId } = req.params;
-      console.log('........................',pathId);
+      // console.log('........................',pathId);
 
       if (!pathId) {
         return res.status(400).json({ message: "pathId is required" });
@@ -133,7 +133,7 @@ class CoordinateController {
         where: { pathId } 
       });
 
-      console.log('........................',coordinates);
+      // console.log('........................',coordinates);
 
 
       if (!coordinates || coordinates.length === 0) {

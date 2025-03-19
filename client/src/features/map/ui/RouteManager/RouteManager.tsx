@@ -20,13 +20,13 @@ const RouteManager: React.FC<RouteManagerProps> = ({ pathId }) => {
   };
 
   return (
-    <div className={styles.main}>
+    <div className={styles.container}>
       <YandexMap points={points} onAddToRoute={handleAddToRoute} pathId={pathId} />
-      <div>
-        <h2>Точки маршрута:</h2>
-        <ul>
+      <div className={styles.formGroup}>
+        <h2 className={styles.title}>Точки маршрута:</h2>
+        <ul className={styles.coordinatesList}>
           {points.map((point, index) => (
-            <li key={index}>
+            <li key={index} className={styles.coordinateItem}>
               <strong>{point.number}. {point.name}</strong>: {point.coords.join(', ')}
             </li>
           ))}

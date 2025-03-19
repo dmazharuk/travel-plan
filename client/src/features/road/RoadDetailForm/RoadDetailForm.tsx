@@ -12,7 +12,6 @@ import { useNavigate, useParams } from "react-router";
 import styles from "./RoadDetailForm.module.css";
 import CompanionWidget from "@/widgets/CompanionWidget/CompanionWidget";
 import { showAlert } from "@/features/alert/slice/alertsSlice";
-
 import MapViewer from "@/features/map/ui/MapViewer/MapViewer";
 
 export function RoadDetailForm() {
@@ -351,7 +350,7 @@ export function RoadDetailForm() {
 
       {/* про карту, начало */}
       <div>
-        <h3>Детали маршрута</h3>
+        {/* <h3>Детали маршрута</h3> */}
         {/* Остальные поля формы */}
         {road.id && <MapViewer roadId={road.id} />}
       </div>
