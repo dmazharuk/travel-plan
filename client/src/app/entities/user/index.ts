@@ -5,6 +5,8 @@ export {
   signInThunk,
   signUpThunk,
   signOutThunk,
+  recoverPasswordThunk,
+  resetPasswordThunk,
 } from './api';
 
 export type {
@@ -13,4 +15,3 @@ export type {
   IUserSignUpData,
   IAuthResponseData,
 } from './model';
-

@@ -1,18 +1,24 @@
-import { JSX, useState } from 'react';
-import { motion } from 'framer-motion';
-import Parallax from '@/widgets/Parallax/Parallax';
-import styles from './WelcomePage.module.css';
+import { JSX, useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import Parallax from "@/widgets/Parallax/Parallax";
+import styles from "./WelcomePage.module.css";
+import { useSearchParams } from "react-router";
+import { SignInModal } from "@/features/auth/SignInModal/SignInModal";
 import { useNavigate } from 'react-router';
 import { CLIENT_ROUTES } from '@/shared/enums/clientRoutes';
 import { CalendarWidget } from '@/widgets/CalendarWidget/CalendarWidget';
 
 export function WelcomePage(): JSX.Element {
-  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+    const navigate = useNavigate();
+
 
   const linkVariants = (index: number) => ({
     hidden: { opacity: 0, x: index % 2 === 0 ? -100 : 100 }, // Четные — слева, нечетные — справа
     visible: { opacity: 1, x: 0 },
   });
+
 
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
@@ -23,6 +29,13 @@ export function WelcomePage(): JSX.Element {
     setStartDate(start);
     setEndDate(end);
   };
+
+  useEffect(() => {
+    if (searchParams.get('token')) {
+      setIsModalOpen(true);
+    }
+  }, [searchParams]);
+
   return (
     <>
       <div>
@@ -133,6 +146,9 @@ export function WelcomePage(): JSX.Element {
             </div>
           </div>
         </div>
+        </div>
+        <div>
+        {isModalOpen && <SignInModal closeModal={() => setIsModalOpen(false)} />}
       </div>
     </>
   );

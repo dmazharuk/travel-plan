@@ -50,10 +50,6 @@
   background-color: #ccc;
 }
 
-.modalText {
-  margin-top: 10px;
-}
-
 .registerLink {
   color: #007bff;
   text-decoration: underline;
@@ -62,4 +58,10 @@
 
 .registerLink:hover {
   text-decoration: none;
+}
+
+.modalText {
+  margin-top: 15px;
+  font-size: 0.9rem;
+  color: #666;
 }

@@ -9,6 +9,16 @@ class UserService {
     return await User.create({ ...userData, isEmailConfirmed: false });
   }
 
+  static async updatePass(id, data) {
+    const user = await User.findByPk(id);
+    if (!user) {
+      return null;
+    }
+    user.password = data.password;
+    await user.save();
+    return user;
+  }
+
   static async confirmEmail(id) {
     const user = await User.findByPk(id);
     if (!user) {
