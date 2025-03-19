@@ -3,17 +3,22 @@ import { useAppDispatch, useAppSelector } from "@/shared/hooks/reduxHooks";
 import { useState } from "react";
 import { showAlert } from "@/features/alert/slice/alertsSlice";
 
+
+
+
+
 export default function CompanionWidget() {
-  const { road, isLoading, error } = useAppSelector((state) => state.road);
+
+  const { road, isLoading } = useAppSelector((state) => state.road);
   const dispatch = useAppDispatch();
   const [newCompanionEmail, setNewCompanionEmail] = useState<string>("");
-  const [localError, setLocalError] = useState<string | null>(null);
+ 
   const { user } = useAppSelector((state) => state.user);
 
-  // Проверка, является ли текущий пользователь хозяином маршрута
+  // Проверка на хозяина
   const isOwner = road?.author?.id === user?.id;
 
-  // Проверка, является ли текущий пользователь попутчиком
+  // Проверка на попутчика
   const isCompanion = road?.companions?.some((c) => c.id === user?.id);
 
   // Обработчик добавления попутчика
@@ -32,16 +37,17 @@ export default function CompanionWidget() {
       );
 
       if (addCompanionToRoad.fulfilled.match(result)) {
+
         setNewCompanionEmail("");
-        setLocalError(null);
+       
         dispatch(getCompanionsForRoad({ roadId: road.id })); // Обновляем список попутчиков
         dispatch(showAlert({ message: "Попутчик добавлен", status: "success" }));
       } else {
-        setLocalError(result.payload?.error ?? "Ошибка при добавлении попутчика");
-        dispatch(showAlert({ message: "Ошибка при добавлении попутчика", status: "mistake" }));
+       
+        dispatch(showAlert({ message: "такой пользователь не зарегистрирован ", status: "mistake" }));
       }
     } catch (error) {
-      setLocalError("Ошибка при добавлении попутчика");
+      dispatch(showAlert({ message: "такой пользователь не зарегистрирован ", status: "mistake" }));
       console.error(error);
     }
   };
@@ -59,78 +65,99 @@ export default function CompanionWidget() {
         dispatch(getCompanionsForRoad({ roadId: road.id })); // Обновляем список попутчиков
         dispatch(showAlert({ message: "Попутчик удален", status: "success" }));
       } else {
-        setLocalError(result.payload?.error ?? "Ошибка при удалении попутчика");
+       
         dispatch(showAlert({ message: "Ошибка при удалении попутчика", status: "mistake" }));
       }
     } catch (error) {
-      setLocalError("Ошибка при удалении попутчика");
+      
       console.error(error);
     }
   };
 
   return (
-    <div className="companion-widget">
-      <h3>Компаньоны в маршруте</h3>
-
-      {/* Отображение ошибок */}
-      {(error || localError) && (
-        <div className="error-message">{error || localError}</div>
-      )}
-
-      {/* Форма добавления попутчика (только для хозяина) */}
+    <div >
+      {/* Заголовок с названием города */}
+      <h3>Компаньоны в маршруте в город {road?.city}</h3>
+  
+      
+  
+      {/* Сообщение для хозяина маршрута */}
       {isOwner && (
-        <div className="add-companion-form">
+        <div className="companionItem">
+          <span className="ownerLabel">Вы являетесь хозяином маршрута.</span>
+        </div>
+      )}
+  
+      {/* Сообщение для компаньона маршрута */}
+      {isCompanion && !isOwner && (
+        <div className="companionItem">
+          <span className="ownerLabel">Вы являетесь компаньоном этого маршрута.</span>
+        </div>
+      )}
+  
+      {/* Информация о хозяине маршрута (только если пользователь не хозяин) */}
+      {!isOwner && road?.author && (
+        <div className="companionItem">
+          <span className="ownerLabel">Хозяином этого маршрута является:</span>
+          <div className="companionInfo">
+            <span>{`Имя: ${road.author.username}`}</span>
+            <br />
+            <span>{`Email: ${road.author.email}`}</span>
+          </div>
+        </div>
+      )}
+  
+      {/* Форма добавления компаньона (доступна только хозяину) */}
+      {isOwner && (
+        <div className="addCompanionForm">
           <input
             type="email"
             value={newCompanionEmail}
             onChange={(e) => {
               setNewCompanionEmail(e.target.value);
-              setLocalError(null);
+             
             }}
             placeholder="Введите email пользователя"
             disabled={isLoading}
           />
           <button onClick={handleAddCompanion} disabled={isLoading}>
-            {isLoading ? "Добавление..." : "Добавить"}
+            {isLoading ? "Добавление..." : "Добавить компаньона"}
           </button>
         </div>
       )}
-
+  
       {/* Список попутчиков */}
       {isLoading ? (
         <div>Загрузка списка компаньонов...</div>
       ) : (
-        <ul className="companion-list">
-          {/* Отображение хозяина маршрута */}
-          {road?.author && (
-            <li key={road.author.id} className="companion-item">
-              <div className="companion-info">
-                <span>{road.author.username}</span>
-                <br />
-                <span>{road.author.email}</span>
-              </div>
-              <span className="owner-label">Хозяин маршрута</span>
-            </li>
-          )}
-
-          {/* Отображение попутчиков */}
+        <ul className="companionList">
           {road?.companions?.map((companion) => (
-            <li key={companion.id} className="companion-item">
-              <div className="companion-info">
-                <span>{companion.username}</span>
-                <br />
-                <span>{companion.email}</span>
-              </div>
-
-              {/* Кнопка удаления (для хозяина или для себя) */}
+            <li key={companion.id} className="companionItem">
+              {/* Если пользователь - компаньон, он видит только строку без имени и почты */}
+              {companion.id === user?.id ? (
+                <span className="ownerLabel">Вы можете  </span>
+              ) : (
+                <>
+                  <span className="ownerLabel">Компаньон этого маршрута:</span>
+                  <div className="companionInfo">
+                    <span>{`Имя: ${companion.username}`}</span>
+                    <br />
+                    <span>{`Email: ${companion.email}`}</span>
+                  </div>
+                </>
+              )}
+  
+              {/* Кнопка удаления */}
               {(isOwner || companion.id === user?.id) && (
+                <div>Вы можете:   
                 <button
                   onClick={() => handleRemoveCompanion(companion.id)}
                   disabled={isLoading}
-                  className="remove-button"
+                  className="removeButton"
                 >
-                  Удалить
+                  {companion.id === user?.id ? "Удалить себя из маршрута" : `Удалить ${companion.username} из компаньонов`}
                 </button>
+                </div>
               )}
             </li>
           ))}
