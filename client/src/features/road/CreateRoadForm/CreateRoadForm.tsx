@@ -113,11 +113,14 @@ export function CreateRoadForm() {
     }));
   };
 
+  //
+
   // логика карты тут
   const [isMapVisible, setIsMapVisible] = useState(false); // Создаем состояние для видимости карты
   const { createNewPath } = useCreateNewPath();
   const [pathId, setPathId] = useState<number | null>(null); // Состояние для хранения pathId
-  const [roadIdState, setRadIdState] = useState<number | null>(null); // Состояние для хранения roadId
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_roadIdState, setRadIdState] = useState<number | null>(null); // Состояние для хранения roadId
 
   const handleToggleMap = async () => {
     if (isMapVisible === true) {
@@ -151,7 +154,7 @@ export function CreateRoadForm() {
         //получение roadId и обновление path
         const roadId = createdRoad.data.id; // Получаем roadId
         setRadIdState(roadId); // Сохраняем roadId в состоянии
-        console.log(roadIdState);
+        // console.log(roadIdState);
   
         if (pathId) {
           try {
@@ -161,7 +164,7 @@ export function CreateRoadForm() {
                 updatedPath: { roadId }, // Обновляем только roadId
               })
             ).unwrap();
-            console.log("Path updated with roadId:", roadId);
+            // console.log("Path updated with roadId:", roadId);
           } catch (error) {
             console.error("Ошибка при обновлении path:", error);
           }

@@ -1,3 +1,58 @@
-.main {
-    color: black;
+.container {
+  max-width: 800px;
+
+  /* padding: 1rem; */
+  padding-top: 1rem;  
+  margin: 0 auto;
+  background-color: #f5f5f5;
+  border-radius: 12px;
+
+  /* box-shadow: 0 4px 12px rgb(0 0 0 / 10%); */
+}
+
+.title {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #3d2c2e;
+  text-align: center;
+}
+
+.formGroup {
+  margin-top: 1rem;
+}
+
+.coordinatesList {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+.coordinateItem {
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.coordinateItem strong {
+  font-weight: 600;
+  color: #3d2c2e;
+}
+
+@media (width <= 768px) {
+  .container {
+    padding: 0.5rem;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  .coordinateItem {
+    font-size: 0.8rem;
+  }
 }

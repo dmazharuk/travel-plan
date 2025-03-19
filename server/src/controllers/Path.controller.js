@@ -159,7 +159,7 @@ class PathController {
   static async getPathByRoadId(req, res) {
     try {
       const { roadId } = req.params;
-      console.log('>>>>>>>>>>>>>>>>>>>>>>>',roadId);
+      // console.log('>>>>>>>>>>>>>>>>>>>>>>>',roadId);
 
 
       if (!roadId ) {
@@ -170,7 +170,7 @@ class PathController {
         where: { roadId },
       });
 
-      console.log('>>>>>>>>>>>>>>>>>>>>>>>',path);
+      // console.log('>>>>>>>>>>>>>>>>>>>>>>>',path);
       
 
       if (!path || path.length  === 0) {
