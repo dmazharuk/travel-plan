@@ -35,7 +35,7 @@ export function WelcomePage(): JSX.Element {
   // история с календарем
 
   const handleConfirmDates = () => {
-    // console.log("выбрали даты", {startDate, endDate});
+ 
     if (user) {
       navigate(CLIENT_ROUTES.CREATE_ROAD_PAGE, {
         state: {
