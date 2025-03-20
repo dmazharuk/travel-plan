@@ -177,11 +177,10 @@ if(startDate && endDate){
   const handleGetRecommendation = async () => {
     try {
       const recomendation = await axiosInstance.post(
-        'http://localhost:3000/api/gigachat/recommendations',
+        '/gigachat/recommendations',
         { city: formData.city },
       );
-      // console.log(recomendation.data, '<========recomendation');
-
+     
       setFormData((prevState) => ({
         ...prevState,
         routeInfo: recomendation.data.data, 
@@ -200,7 +199,7 @@ if(startDate && endDate){
     
     try {
       const recomendation = await axiosInstance.post(
-        'http://localhost:3000/api/gigachat/recommendations',
+        '/gigachat/recommendations',
         { city: formData.city,
           type:'items'
          },
