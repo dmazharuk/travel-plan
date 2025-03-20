@@ -68,12 +68,11 @@
   box-shadow: 0 0 0 2px rgb(90 61 63 / 10%);
 }
 
-
-
 /* Стили для кнопок */
 .buttonGroup {
   display: flex;
   gap: 0.5rem;
+  justify-content: space-between;
   margin-top: 1rem;
 }
 
@@ -89,29 +88,29 @@
 
 .buttonPrimary {
   color: #fff;
-  background-color: #374151;
+  background-color: #0062ff;
 }
 
 .buttonPrimary:hover {
-  background-color: #3d2c2e;
+  background-color: #1a00b0;
 }
 
 .buttonSuccess {
   color: #fff;
-  background-color: #4caf50;
+  background-color: #005504;
 }
 
 .buttonSuccess:hover {
-  background-color: #388e3c;
+  background-color: #517752;
 }
 
 .buttonDanger {
   color: #fff;
-  background-color: #f44336;
+  background-color: #181818;
 }
 
 .buttonDanger:hover {
-  background-color: #d32f2f;
+  background-color: #f00;
 }
 
 /* Адаптивность */

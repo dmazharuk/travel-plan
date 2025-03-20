@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./MapViewerYandexMap.module.css";
 import { createCoordinateThunk } from "@/app/entities/coordinate";
-import { useAppDispatch } from "@/shared/hooks/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/shared/hooks/reduxHooks";
+import { IPath } from "@/app/entities/path";
 
 declare const ymaps: typeof import("yandex-maps");
 
@@ -9,10 +10,11 @@ interface MapViewerYandexMapProps {
   points: { coords: [number, number]; name: string; number: number; description?: string }[];
   onAddToRoute?: (coords: [number, number], name: string) => void;
   pathId: number | null | undefined;
+  path: IPath | null ;
   initialCenter: [number, number]; // Новый пропс для начального центра карты
 }
 
-const MapViewerYandexMap: React.FC<MapViewerYandexMapProps> = ({ points, onAddToRoute, pathId, initialCenter }) => {
+const MapViewerYandexMap: React.FC<MapViewerYandexMapProps> = ({ points, onAddToRoute, pathId, path, initialCenter }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<ymaps.Map | null>(null); // Для хранения экземпляра карты
   const placemarksRef = useRef<ymaps.GeoObjectCollection>(new ymaps.GeoObjectCollection()); // Для хранения постоянных меток
@@ -20,6 +22,8 @@ const MapViewerYandexMap: React.FC<MapViewerYandexMapProps> = ({ points, onAddTo
   const [pointName, setPointName] = useState(""); // Название точки
   const [pointDescription, setpointDescription] = useState(""); // Описание точки
   const tempPlacemarkRef = useRef<ymaps.Placemark | null>(null); // Для хранения временной метки
+  const { user } = useAppSelector((state) => state.user);
+  
 
   // Добавление временной метки
   const addTempPlacemark = (coords: [number, number]) => {
@@ -139,7 +143,7 @@ const MapViewerYandexMap: React.FC<MapViewerYandexMapProps> = ({ points, onAddTo
 
   // Обновление постоянных меток при изменении points
   useEffect(() => {
-    if (!mapInstance.current) return;
+    // if (!mapInstance.current) return;
 
     // Очищаем старые метки
     placemarksRef.current.removeAll();
@@ -147,10 +151,10 @@ const MapViewerYandexMap: React.FC<MapViewerYandexMapProps> = ({ points, onAddTo
     // Добавляем новые метки
     points.forEach((point) => {
       const placemark = new ymaps.Placemark(point.coords, {
-        hintContent: `${point.number}. ${point.name}`, // Добавляем номер в подпись
-        balloonContent: `Название: ${point.name}<br>Описание: ${
+        hintContent: `${point.name}`, 
+        balloonContent: `Номер: ${point.number} <br> Название: ${point.name}<br>Описание: ${
           point.description || "Нет описания"
-        }<br>Координаты: ${point.coords.join(", ")}`,
+        }`,
       });
       placemarksRef.current.add(placemark);
     });
@@ -191,7 +195,9 @@ const MapViewerYandexMap: React.FC<MapViewerYandexMapProps> = ({ points, onAddTo
   return (
     <div className={styles.container}>
       <div ref={mapRef} className={styles.mapContainer} />
-      {selectedCoords && (
+
+      {path?.userId === user?.id && selectedCoords && (
+        // <div>lol<div/>
         <div className={styles.formGroup}>
           <div className={styles.formRow}>
             <div className={styles.inputGroup}>
@@ -231,8 +237,19 @@ const MapViewerYandexMap: React.FC<MapViewerYandexMapProps> = ({ points, onAddTo
           </div>
         </div>
       )}
+      
+
     </div>
   );
 };
 
 export default MapViewerYandexMap;
+
+
+
+
+
+
+
+
+

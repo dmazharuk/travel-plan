@@ -8,8 +8,8 @@ import { useAppDispatch } from "@/shared/hooks/reduxHooks";
 declare const ymaps: typeof import("yandex-maps");
 
 interface YandexMapProps {
-  points: { coords: [number, number]; name: string; number: number ; description?: string; }[];
-  onAddToRoute?: (coords: [number, number], name: string) => void;
+  points: { coords: [number, number]; name: string; number: number ; description?: string | undefined }[];
+  onAddToRoute?: (coords: [number, number], name: string, description: string | undefined) => void;
   pathId: number | null | undefined; // Добавляем pathId в пропсы
   // coordinates?: { coords: [number, number]; coordinateNumber: number; coordinateTitle: string ; coordinateBody: string; }[];
 }
@@ -101,6 +101,8 @@ const YandexMap: React.FC<YandexMapProps> = ({ points, onAddToRoute, pathId  }) 
     });
   }, [addTempPlacemark, points]);
 
+
+
   // Обновление постоянных меток при изменении points
   useEffect(() => {
     if (!mapInstance.current) return;
@@ -122,45 +124,12 @@ const YandexMap: React.FC<YandexMapProps> = ({ points, onAddToRoute, pathId  }) 
 
 
 
-
-
-
-
-
-  // Обновление постоянных меток при изменении points
-useEffect(() => {
-  if (!mapInstance.current) return;
-
-  // Очищаем старые метки
-  placemarksRef.current.removeAll();
-
-  // Добавляем новые метки
-  points.forEach((point) => {
-    const placemark = new ymaps.Placemark(point.coords, {
-      hintContent: `${point.number}. ${point.name}`, // Добавляем номер в подпись
-      balloonContent: `Название: ${point.name}<br>Описание: ${
-        point.description || "Нет описания"
-      }<br>Координаты: ${point.coords.join(", ")}`,
-    });
-    placemarksRef.current.add(placemark);
-  });
-}, [points]);
-
-
-
-
-
-
-
-
-
-
   // Обработка добавления точки в маршрут
   const dispatch = useAppDispatch();
   
   const handleAddToRoute = async () => {
     if (selectedCoords && onAddToRoute) {
-      onAddToRoute(selectedCoords, pointName);
+      onAddToRoute(selectedCoords, pointName, pointDescription);
 
       if (tempPlacemarkRef.current) {
         mapInstance.current?.geoObjects.remove(tempPlacemarkRef.current);
@@ -187,6 +156,7 @@ useEffect(() => {
       }
     }
   };
+  
 
   return (
     <div className={styles.container}>

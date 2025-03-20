@@ -1,0 +1,166 @@
+.container {
+  max-width: 800px;
+  padding-top: 1.5rem;
+  padding-bottom: 2rem;
+  margin: 0 auto;
+  background-color: #f5f5f5;
+  border-radius: 12px;
+}
+
+.title {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #3d2c2e;
+  text-align: center;
+}
+
+.companionItemMain {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+}
+
+.companionItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+}
+
+.ownerLabel {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #384c39;
+}
+
+.companionInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem; /* Настройте это значение по своему вкусу */
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.companionMain {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #384c39;
+}
+
+.visitLabel {
+  padding: 0; /* Убедитесь, что padding сброшен */
+  margin: 0; /* Убедитесь, что margin сброшен */
+  font-size: 1rem;
+  font-weight: 500;
+  color: #384c39;
+}
+
+.emailLabel {
+  padding: 0; /* Убедитесь, что padding сброшен */
+  margin: 0; /* Убедитесь, что margin сброшен */
+}
+
+.addCompanionForm {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.addCompanionForm input {
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.addCompanionForm input:focus {
+  outline: none;
+  border-color: #5a3d3f;
+  box-shadow: 0 0 0 2px rgb(90 61 63 / 10%);
+}
+
+.addCompanionForm button {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+  background-color: #1c278a;
+  border: none;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.addCompanionForm button:hover {
+  background-color: #00005e;
+}
+
+.companionList {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.companionList li {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: #fff;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+}
+
+.removeButton {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+  background-color: #808080;
+  border: none;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.removeButton:hover {
+  background-color: #535353;
+}
+
+.loadingMessage {
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: #555;
+  text-align: center;
+}
+
+@media (width <= 768px) {
+  .addCompanionForm {
+    flex-direction: column;
+  }
+
+  .addCompanionForm button {
+    width: 100%;
+  }
+
+  .container {
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+}

@@ -33,7 +33,7 @@ class PathController {
   //вариант 2 от чата
   static async createPath(req, res) {
     const { pathName, roadId } = req.body; // Получаем roadId из тела запроса
-    const { road } = res.locals; // Получаем road из res.locals (если он есть)
+    const { road,  user  } = res.locals; // Получаем road из res.locals (если он есть)
 
     try {
       // Если roadId не передан в запросе, используем road.id из res.locals
@@ -48,6 +48,7 @@ class PathController {
       const newPath = await PathService.create({
         pathName: pathName,
         roadId: finalRoadId, // Используем finalRoadId
+        userId: user.id,
       });
 
       if (!newPath) {
@@ -222,9 +223,28 @@ class PathController {
     const { pathName, roadId } = req.body;
     // console.log("roadId", roadId);
 
-    const { road } = res.locals;
+    const { road, user } = res.locals;
 
     try {
+
+      //? Проверяем существование в БД
+      const existingPath = await PathService.getById(id);
+
+      if (!existingPath) {
+        return res.status(404).json(formatResponse(404, 'Task not found'));
+      }
+
+      //? Проверяем права доступа: только автор может редактировать задачу
+      if (existingPath.userId !== user.id) {
+        return res
+          .status(400)
+          .json(
+            formatResponse(400, "You don't have permission to update this task")
+          );
+      }
+
+
+
       const finalRoadId = roadId || road?.id;
       // console.log("finalRoadId", finalRoadId);
 
@@ -254,8 +274,28 @@ class PathController {
 
   static async deletePath(req, res) {
     const { id } = req.params;
+    const { user } = res.locals;
 
     try {
+
+       //? Проверяем существование задачи и права доступа
+       const existingPath = await PathService.getById(+id);
+
+       //? Проверяем существование задачи
+       if (!existingPath) {
+         return res.status(404).json(formatResponse(404, 'Path not found'));
+       }
+ 
+       //? Проверяем права доступа: только автор может удалить задачу
+       if (existingPath.userId !== user.id) {
+         return res
+           .status(400)
+           .json(
+             formatResponse(400, "You don't have permission to delete this path")
+           );
+       }
+
+      
       const deletedPath = await PathService.delete(id);
 
       if (!deletedPath) {

@@ -32,6 +32,11 @@
   margin-bottom: 0.5rem;
 }
 
+.mapReview {
+  display: flex;
+  justify-content: space-between;
+}
+
 .formLabel {
   display: block;
   margin-bottom: 0.25rem;
