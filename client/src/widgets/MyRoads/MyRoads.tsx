@@ -1,12 +1,13 @@
 import { getAllRoads, updateRoad } from '@/app/entities/road';
 import { useAppDispatch, useAppSelector } from '@/shared/hooks/reduxHooks';
-import { useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import styles from './MyRoads.module.css';
 
 export function MyRoads() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [cityImages, setCityImages] = useState<{ [key: string]: string }>({});
 
   const { roads, isLoading, error } = useAppSelector((state) => state.road);
   const { user } = useAppSelector((state) => state.user);
@@ -21,12 +22,64 @@ export function MyRoads() {
   }, [dispatch]);
 
   // Проверка на наличие author
-  const userRoads = roads.filter(
-    (road) =>
-      road.author?.id === user?.id ||
-      (road.companions?.some((companion) => companion.id === user?.id) &&
-        (road.visibility === 'public' || road.visibility === 'friends'))
+  const userRoads = useMemo(
+    () =>
+      roads.filter(
+        (road) =>
+          road.author?.id === user?.id ||
+          (road.companions?.some((companion) => companion.id === user?.id) &&
+            (road.visibility === 'public' || road.visibility === 'friends')),
+        [roads, user?.id]
+      ),
+    [roads, user?.id]
   );
+
+  useEffect(() => {
+    const fetchCityImages = async () => {
+      const uniqueCities = Array.from(
+        new Set(userRoads.map((road) => road.city))
+      );
+      const newImages: { [key: string]: string } = {};
+
+      await Promise.all(
+        uniqueCities.map(async (city) => {
+          if (!cityImages[city]) {
+            try {
+              // Пробуем найти изображение города
+              let response = await fetch(
+                `https://api.unsplash.com/search/photos?query=${encodeURIComponent(
+                  city
+                )}&client_id=${
+                  import.meta.env.VITE_UNSPLASH_ACCESS_KEY
+                }&per_page=1`
+              );
+              let data = await response.json();
+
+              // Если не нашли - ищем по общему запросу "travel"
+              if (!data.results?.[0]?.urls?.regular) {
+                response = await fetch(
+                  `https://api.unsplash.com/search/photos?query=travel&client_id=${
+                    import.meta.env.VITE_UNSPLASH_ACCESS_KEY
+                  }&per_page=1`
+                );
+                data = await response.json();
+              }
+
+              if (data.results?.[0]?.urls?.regular) {
+                newImages[city] = data.results[0].urls.regular;
+              }
+            } catch (error) {
+              console.error('Error fetching image for', city, error);
+            }
+          }
+        })
+      );
+
+      setCityImages((prev) => ({ ...prev, ...newImages }));
+    };
+
+    if (userRoads.length > 0) fetchCityImages();
+  }, [userRoads]);
 
   // Функция для генерации пастельного цвета и его более темного варианта
   const getPastelColorPair = () => {
@@ -36,7 +89,7 @@ export function MyRoads() {
     const pastelColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 
     const darkerSaturation = saturation + 20;
-    const darkerLightness = lightness - 8;
+    const darkerLightness = Math.max(lightness - 15, 20);
     const darkerColor = `hsl(${hue}, ${darkerSaturation}%, ${darkerLightness}%)`;
 
     return { pastelColor, darkerColor };
@@ -88,15 +141,13 @@ export function MyRoads() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Мой кабинет</h1>
+        <h1 className={styles.title}>Мои маршруты</h1>
         <div className={styles.conteinerForTitle}>
-          <h3>Мои маршруты</h3>
           <button
             onClick={handleCreateRoadClick}
             className={styles.createButton}
           >
-            <span>+</span>
-            <span className={styles.tooltip}>Создать маршрут</span>
+            Создать маршрут
           </button>
         </div>
       </div>
@@ -120,39 +171,62 @@ export function MyRoads() {
                 }}
               >
                 <div className={styles.roadHeader}>
-                  <div>
-                    <h3 className={styles.roadTitle}>
-                      {road.city}, {road.country}
-                    </h3>
-                    <p className={styles.roadDate}>
-                      Создан: {new Date(road.createdAt).toLocaleDateString()}
-                      <br />
-                      Создатель: {road.author?.username}
-                    </p>
-                    <p className={styles.tripDate}>
-                      Даты путешествия:{' '}
-                      {`${new Date(
-                        road.tripStartDate
-                      ).toLocaleDateString()} - ${new Date(
-                        road.tripEndDate
-                      ).toLocaleDateString()}`}
-                    </p>
+                  <div className={styles.roadImageContainer}>
+                    {cityImages[road.city] ? (
+                      <img
+                        src={cityImages[road.city]}
+                        alt={road.city}
+                        className={styles.roadImage}
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className={styles.imagePlaceholder} />
+                    )}
                   </div>
-                  {road.author?.id === user?.id && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleToggleVisibility(road.id, road.visibility);
-                      }}
-                      className={`${styles.visibilityButton}`}
-                    >
-                      {road.visibility === 'public'
-                        ? 'Публичный'
-                        : road.visibility === 'friends'
-                        ? 'Для друзей'
-                        : 'Приватный'}
-                    </button>
-                  )}
+                  <div className={styles.roadInfo}>
+                    <div className={styles.titleBlock}>
+                      <h3 className={styles.roadTitle}>
+                        {road.city}, {road.country}
+                      </h3>
+                      <div className={styles.controls}>
+                        {road.author?.id === user?.id && (
+                          <span
+                            className={styles.ownerBadge}
+                            style={{ backgroundColor: darkerColor }}
+                          >
+                            Мой маршрут
+                          </span>
+                        )}
+                        {road.author?.id === user?.id && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleToggleVisibility(road.id, road.visibility);
+                            }}
+                            className={styles.visibilityButton}
+                          >
+                            {road.visibility === 'public'
+                              ? 'Публичный'
+                              : road.visibility === 'friends'
+                              ? 'Для друзей'
+                              : 'Приватный'}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    <div className={styles.details}>
+                      <p className={styles.organizer}>
+                        Организатор: {road.author?.username}
+                      </p>
+                      <p className={styles.tripDate}>
+                        {`${new Date(
+                          road.tripStartDate
+                        ).toLocaleDateString()} - ${new Date(
+                          road.tripEndDate
+                        ).toLocaleDateString()}`}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             );
