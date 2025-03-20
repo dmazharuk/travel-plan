@@ -1,46 +1,82 @@
 .parallaxcontainer {
-    position: relative;
-    height: 100vh; /* Высота контейнера для прокрутки */
-    overflow: hidden;
-  }
-  
-  .parallaxbackground {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -1;
-    width: 100%;
-    height: 100%;
-    background: url('/phonepic.jpg') center/cover; /* Фоновое изображение */
-    will-change: transform; /* Оптимизация анимации */
-  }
-  
-  .parallaxforeground {
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    color: white;
-    text-align: center;
-    background: rgb(0 0 0 / 50%); /* Полупрозрачный фон */
-    will-change: transform; /* Оптимизация анимации */
-  }
-  
-  .parallaxname {
-    max-width: 800px; /* Ограничение ширины текста */
-  }
-  
+  position: relative;
+  height: 100vh; /* Высота контейнера для прокрутки */
+  overflow: hidden;
+}
+
+.parallaxbackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: url('/phonepic.jpg') center/cover; /* Фоновое изображение */
+  will-change: transform; /* Оптимизация анимации */
+}
+
+video {
+  width: 100%;
+}
+
+.parallaxforeground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: white;
+  text-align: center;
+  background: rgb(0 0 0 / 50%); /* Полупрозрачный фон */
+  will-change: transform; /* Оптимизация анимации */
+}
+
+.parallaxname {
+  max-width: 800px; /* Ограничение ширины текста */
+}
+
+.title {
+  margin-bottom: 0.2rem;
+  font-size: 5rem;
+  font-weight: bold;
+}
+
+.subtitle {
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+}
+
+.button {
+  padding: 12px 30px;
+  font-size: 1.2rem;
+  color: white;
+  cursor: pointer;
+  background-color: #3c4b3b;
+  border: none;
+  border-radius: 15px;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: #3e583c;
+}
+
+/* Мобильная версия */
+@media (width <= 768px) {
   .title {
-    margin-bottom: 1rem;
     font-size: 3rem;
-    font-weight: bold;
   }
-  
+
   .subtitle {
     margin-bottom: 2rem;
-    font-size: 1.5rem;
+    font-size: 1rem;
   }
+
+  .button {
+    font-size: 0.8rem;
+  }
+}

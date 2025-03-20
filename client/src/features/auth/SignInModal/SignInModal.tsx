@@ -33,6 +33,8 @@ export function SignInModal({ closeModal }: SignInModalProps) {
     useState<typeof INITIAL_INPUTS_DATA>(INITIAL_INPUTS_DATA);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showRepeatPassword, setShowRepeatPassword] = useState(false);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -209,7 +211,6 @@ export function SignInModal({ closeModal }: SignInModalProps) {
   };
 
   const handleCloseModal = () => {
-    // Очищаем токен при закрытии модалки
     if (resetToken) {
       searchParams.delete('token');
       setSearchParams(searchParams);
@@ -247,26 +248,44 @@ export function SignInModal({ closeModal }: SignInModalProps) {
               />
 
               <label htmlFor={passwordInputId}>Пароль:</label>
-              <input
-                type="password"
-                name="password"
-                placeholder="Введите пароль"
-                onChange={onChangeHandler}
-                value={inputs.password}
-                id={passwordInputId}
-                className={styles.modalInput}
-              />
+              <div className={styles.passwordContainer}>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  placeholder="Введите пароль"
+                  onChange={onChangeHandler}
+                  value={inputs.password}
+                  id={passwordInputId}
+                  className={styles.modalInput}
+                />
+                <button
+                  type="button"
+                  className={styles.eyeButton}
+                  onClick={() => setShowPassword((prev) => !prev)}
+                >
+                  {showPassword ? '🙈' : '👁️'}
+                </button>
+              </div>
 
               <label htmlFor={repeatPasswordInputId}>Повторите пароль:</label>
-              <input
-                type="password"
-                name="repeatPassword"
-                placeholder="Повторите пароль"
-                onChange={onChangeHandler}
-                value={inputs.repeatPassword}
-                id={repeatPasswordInputId}
-                className={styles.modalInput}
-              />
+              <div className={styles.passwordContainer}>
+                <input
+                  type={showRepeatPassword ? 'text' : 'password'}
+                  name="repeatPassword"
+                  placeholder="Повторите пароль"
+                  onChange={onChangeHandler}
+                  value={inputs.repeatPassword}
+                  id={repeatPasswordInputId}
+                  className={styles.modalInput}
+                />
+                <button
+                  type="button"
+                  className={styles.eyeButton}
+                  onClick={() => setShowRepeatPassword((prev) => !prev)}
+                >
+                  {showRepeatPassword ? '🙈' : '👁️'}
+                </button>
+              </div>
 
               <button
                 className={styles.modalButton}
@@ -318,26 +337,44 @@ export function SignInModal({ closeModal }: SignInModalProps) {
             <h2>Сброс пароля</h2>
             <form className={styles.modalForm} onSubmit={handlePasswordReset}>
               <label htmlFor={newPasswordInputId}>Новый пароль:</label>
-              <input
-                type="password"
-                name="newPassword"
-                placeholder="Введите новый пароль"
-                onChange={onChangeHandler}
-                value={inputs.newPassword}
-                id={newPasswordInputId}
-                className={styles.modalInput}
-              />
+              <div className={styles.passwordContainer}>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  placeholder="Введите пароль"
+                  onChange={onChangeHandler}
+                  value={inputs.password}
+                  id={newPasswordInputId}
+                  className={styles.modalInput}
+                />
+                <button
+                  type="button"
+                  className={styles.eyeButton}
+                  onClick={() => setShowPassword((prev) => !prev)}
+                >
+                  {showPassword ? '🙈' : '👁️'}
+                </button>
+              </div>
 
               <label htmlFor={repeatPasswordInputId}>Повторите пароль:</label>
-              <input
-                type="password"
-                name="repeatPassword"
-                placeholder="Повторите новый пароль"
-                onChange={onChangeHandler}
-                value={inputs.repeatPassword}
-                id={repeatPasswordInputId}
-                className={styles.modalInput}
-              />
+              <div className={styles.passwordContainer}>
+                <input
+                  type={showRepeatPassword ? 'text' : 'password'}
+                  name="repeatPassword"
+                  placeholder="Повторите пароль"
+                  onChange={onChangeHandler}
+                  value={inputs.repeatPassword}
+                  id={repeatPasswordInputId}
+                  className={styles.modalInput}
+                />
+                <button
+                  type="button"
+                  className={styles.eyeButton}
+                  onClick={() => setShowRepeatPassword((prev) => !prev)}
+                >
+                  {showRepeatPassword ? '🙈' : '👁️'}
+                </button>
+              </div>
 
               <button
                 className={styles.modalButton}
@@ -371,15 +408,24 @@ export function SignInModal({ closeModal }: SignInModalProps) {
               />
 
               <label htmlFor={passwordInputId}>Пароль:</label>
-              <input
-                type="password"
-                name="password"
-                placeholder="Введите пароль"
-                onChange={onChangeHandler}
-                value={inputs.password}
-                id={passwordInputId}
-                className={styles.modalInput}
-              />
+              <div className={styles.passwordContainer}>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  placeholder="Введите пароль"
+                  onChange={onChangeHandler}
+                  value={inputs.password}
+                  id={passwordInputId}
+                  className={styles.modalInput}
+                />
+                <button
+                  type="button"
+                  className={styles.eyeButton}
+                  onClick={() => setShowPassword((prev) => !prev)}
+                >
+                  {showPassword ? '🙈' : '👁️'}
+                </button>
+              </div>
 
               <button
                 className={styles.modalButton}
