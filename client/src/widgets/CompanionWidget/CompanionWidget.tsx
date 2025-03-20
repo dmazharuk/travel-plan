@@ -337,7 +337,7 @@ export default function CompanionWidget() {
                     className={styles.removeButton}
                   >
                     {companion.id === user?.id
-                      ? "Удалить себя из маршрута"
+                      ? "Удалить себя из маршрута :("
                       // : `Удалить ${companion.username} из компаньонов`}
                       : `Удалить`}
                   </button>

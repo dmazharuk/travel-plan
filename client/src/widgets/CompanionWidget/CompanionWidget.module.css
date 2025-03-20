@@ -8,53 +8,54 @@
 }
 
 .title {
+  margin-bottom: 1.5rem;
   font-size: 1.5rem;
   font-weight: 600;
   color: #3d2c2e;
-  margin-bottom: 1.5rem;
   text-align: center;
 }
 
 .companionItemMain {
-
-
-  border: 1px solid #ccc;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  background-color: #fff;
+  justify-content: space-between;
   padding: 1rem;
-  border-radius: 6px;
   margin-bottom: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
 }
 
 .companionItem {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+
   /* background-color: #fff; */
+
   /* padding: 1rem; */
   border-radius: 6px;
-  margin-bottom: 1rem;
+
   /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
 }
 
 .ownerLabel {
+  margin-bottom: 0.5rem;
   font-size: 1rem;
   font-weight: 500;
   color: #384c39;
-  margin-bottom: 0.5rem;
 }
 
 .companionInfo {
   display: flex;
   flex-direction: column;
   gap: 0.2rem; /* Настройте это значение по своему вкусу */
-  font-size: 0.9rem;
-  color: #555;
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #555;
 }
 
 .companionMain {
@@ -65,16 +66,16 @@
 }
 
 .visitLabel {
+  padding: 0; /* Убедитесь, что padding сброшен */
+  margin: 0; /* Убедитесь, что margin сброшен */
   font-size: 1rem;
   font-weight: 500;
   color: #384c39;
-  margin: 0; /* Убедитесь, что margin сброшен */
-  padding: 0; /* Убедитесь, что padding сброшен */
 }
 
 .emailLabel {
-  margin: 0; /* Убедитесь, что margin сброшен */
   padding: 0; /* Убедитесь, что padding сброшен */
+  margin: 0; /* Убедитесь, что margin сброшен */
 }
 
 .addCompanionForm {
@@ -97,7 +98,7 @@
 .addCompanionForm input:focus {
   outline: none;
   border-color: #5a3d3f;
-  box-shadow: 0 0 0 2px rgba(90, 61, 63, 0.1);
+  box-shadow: 0 0 0 2px rgb(90 61 63 / 10%);
 }
 
 .addCompanionForm button {
@@ -105,10 +106,10 @@
   font-size: 0.9rem;
   font-weight: 500;
   color: #fff;
+  cursor: pointer;
   background-color: #1c278a;
   border: none;
   border-radius: 6px;
-  cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
@@ -117,17 +118,17 @@
 }
 
 .companionList {
-  list-style: none;
   padding: 0;
   margin: 0;
+  list-style: none;
 }
 
 .companionList li {
-  background-color: #fff;
   padding: 1rem;
-  border-radius: 6px;
   margin-bottom: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
 }
 
 .removeButton {
@@ -135,10 +136,10 @@
   font-size: 0.9rem;
   font-weight: 500;
   color: #fff;
+  cursor: pointer;
   background-color: #808080;
   border: none;
   border-radius: 6px;
-  cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
@@ -147,13 +148,13 @@
 }
 
 .loadingMessage {
+  margin-top: 1rem;
   font-size: 1rem;
   color: #555;
   text-align: center;
-  margin-top: 1rem;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .addCompanionForm {
     flex-direction: column;
   }

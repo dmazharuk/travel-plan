@@ -71,8 +71,8 @@
 /* Стили для кнопок */
 .buttonGroup {
   display: flex;
-  justify-content: space-between;
   gap: 0.5rem;
+  justify-content: space-between;
   margin-top: 1rem;
 }
 
@@ -110,7 +110,7 @@
 }
 
 .buttonDanger:hover {
-  background-color: #ff0000;
+  background-color: #f00;
 }
 
 /* Адаптивность */
