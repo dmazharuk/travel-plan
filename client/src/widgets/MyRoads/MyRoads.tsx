@@ -159,6 +159,12 @@ export function MyRoads() {
   const { roads, isLoading, error } = useAppSelector((state) => state.road);
   const { user } = useAppSelector((state) => state.user);
 
+// лечим всратую разметку=)
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+
   useEffect(() => {
     dispatch(getAllRoads());
   }, [dispatch]);
