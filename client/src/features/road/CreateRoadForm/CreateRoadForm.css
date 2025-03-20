@@ -1,0 +1,48 @@
+/* stylelint-disable selector-class-pattern */
+
+.geoapify-autocomplete-wrapper {
+  width: 100%;
+}
+
+/* Переопределение стандартных стилей */
+.geoapify-autocomplete-input {
+  width: 100%;
+  padding: 1.422rem 0.75rem;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #2d3748;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.geoapify-autocomplete-input:focus {
+  outline: none;
+  border-color: #cbd5e0;
+  box-shadow: 0 0 0 3px rgb(66 153 225 / 10%);
+}
+
+/* Скрыть крестик */
+.geoapify-close-button {
+  display: none !important;
+}
+
+/* Стили для выпадающего списка */
+.geoapify-autocomplete-items {
+  margin-top: 0.5rem !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 10%) !important;
+}
+
+.geoapify-autocomplete-item {
+  padding: 0.75rem !important;
+  font-size: 1rem !important;
+  color: #2d3748 !important;
+}
+
+.geoapify-autocomplete-item:hover {
+  background-color: #f8fafc !important;
+}

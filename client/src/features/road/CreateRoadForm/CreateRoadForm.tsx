@@ -1,21 +1,30 @@
 import { useState, useEffect } from 'react';
 import { useAppDispatch } from '@/shared/hooks/reduxHooks';
 import { useLocation, useNavigate, useParams } from 'react-router';
-import { createRoad, updateRoad, IRoadRowData, getRoadById } from '@/app/entities/road';
+import {
+  createRoad,
+  updateRoad,
+  IRoadRowData,
+  getRoadById,
+} from '@/app/entities/road';
 import styles from './CreateRoadForm.module.css';
 import { axiosInstance } from '@/shared/lib/axiosInstance';
 
 import { showAlert } from '@/features/alert/slice/alertsSlice';
 import { updatePathThunk, useCreateNewPath } from '@/app/entities/path';
 import RouteManager from '@/features/map/ui/RouteManager/RouteManager';
-
-
+import {
+  GeoapifyGeocoderAutocomplete,
+  GeoapifyContext,
+} from '@geoapify/react-geocoder-autocomplete';
+import '@geoapify/geocoder-autocomplete/styles/minimal.css';
+import './CreateRoadForm.css';
 
 const initialFormData: IRoadRowData = {
   country: '',
   city: '',
-  transport: 'машина', 
-  transportInfo: null, 
+  transport: 'машина',
+  transportInfo: null,
   routeInfo: '',
   visibility: 'private',
   tripStartDate: '',
@@ -35,52 +44,65 @@ export function CreateRoadForm() {
 
   //история с датами из welcomePage
   const location = useLocation();
-  const {startDate, endDate} = location.state ||{startDate: null, endDate: null};
-
-  
+  const { startDate, endDate } = location.state || {
+    startDate: null,
+    endDate: null,
+  };
 
   useEffect(() => {
     // console.log('полченные даты из welcomePage',{startDate, endDate});
-    
-if(startDate && endDate){
-  const newStartDate = new Date(startDate);
-  newStartDate.setDate(newStartDate.getDate() + 1);
-  const startDateString = newStartDate.toISOString().split('T')[0];
-  // console.log('startDateString', startDateString);
-  const newEndDate = new Date(endDate);
-  newEndDate.setDate(newEndDate.getDate() + 1);
-  const endDateString = newEndDate.toISOString().split('T')[0];
-  
-  setFormData((prev) => ({ ...prev, tripStartDate: startDateString, tripEndDate: endDateString }));
-}
+
+    if (startDate && endDate) {
+      const newStartDate = new Date(startDate);
+      newStartDate.setDate(newStartDate.getDate() + 1);
+      const startDateString = newStartDate.toISOString().split('T')[0];
+      // console.log('startDateString', startDateString);
+      const newEndDate = new Date(endDate);
+      newEndDate.setDate(newEndDate.getDate() + 1);
+      const endDateString = newEndDate.toISOString().split('T')[0];
+
+      setFormData((prev) => ({
+        ...prev,
+        tripStartDate: startDateString,
+        tripEndDate: endDateString,
+      }));
+    }
 
     if (!isEditMode) return;
-  
+
     const fetchRoadData = async () => {
       try {
-        const response = await dispatch(getRoadById({ id: Number(id) })).unwrap();
+        const response = await dispatch(
+          getRoadById({ id: Number(id) })
+        ).unwrap();
         if (response?.data) {
           setFormData((prev) => ({ ...prev, ...response.data }));
         }
         // dispatch(resetRoad());
       } catch (error) {
         console.error('Ошибка загрузки маршрута', error);
-        dispatch(showAlert({ message: 'Ошибка загрузки маршрута', status: 'mistake' }));
+        dispatch(
+          showAlert({ message: 'Ошибка загрузки маршрута', status: 'mistake' })
+        );
       }
     };
-  
+
     fetchRoadData();
   }, [isEditMode, id, dispatch, startDate, endDate]);
 
   const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = event.target;
     setFormData((prevState) => ({ ...prevState, [name]: value }));
   };
 
   // Обработчик изменений для выбора транспорта
-  const handleTransportChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleTransportChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const { value } = event.target;
     setFormData((prevState) => ({
       ...prevState,
@@ -126,7 +148,7 @@ if(startDate && endDate){
         setIsMapVisible((prev) => !prev); // Меняем состояние по клику на кнопку
         setPathId(isPathCreated?.id); // Сохраняем pathId
       } else {
-        console.error("Ошибка при добавлении карты");
+        console.error('Ошибка при добавлении карты');
       }
     }
   };
@@ -139,16 +161,18 @@ if(startDate && endDate){
     try {
       if (isEditMode) {
         // Обновление маршрута
-        await dispatch(updateRoad({ id: Number(id), roadData: formData })).unwrap();
+        await dispatch(
+          updateRoad({ id: Number(id), roadData: formData })
+        ).unwrap();
       } else {
         // Создание нового маршрута
         const createdRoad = await dispatch(createRoad(formData)).unwrap();
-        
+
         //получение roadId и обновление path
         const roadId = createdRoad.data.id; // Получаем roadId
         setRadIdState(roadId); // Сохраняем roadId в состоянии
         // console.log(roadIdState);
-  
+
         if (pathId) {
           try {
             await dispatch(
@@ -159,17 +183,21 @@ if(startDate && endDate){
             ).unwrap();
             // console.log("Path updated with roadId:", roadId);
           } catch (error) {
-            console.error("Ошибка при обновлении path:", error);
+            console.error('Ошибка при обновлении path:', error);
           }
         } else {
-          console.error("pathId не определен");
+          console.error('pathId не определен');
         }
-
       }
       navigate('/cabinet');
     } catch (error) {
       console.error('Ошибка при сохранении маршрута', error);
-      dispatch(showAlert({ message: 'Необходимо заполнить обязательные поля', status: 'mistake' }));
+      dispatch(
+        showAlert({
+          message: 'Необходимо заполнить обязательные поля',
+          status: 'mistake',
+        })
+      );
     }
   };
 
@@ -178,32 +206,36 @@ if(startDate && endDate){
     try {
       const recomendation = await axiosInstance.post(
         'http://localhost:3000/api/gigachat/recommendations',
-        { city: formData.city },
+        { city: formData.city }
       );
       // console.log(recomendation.data, '<========recomendation');
 
       setFormData((prevState) => ({
         ...prevState,
-        routeInfo: recomendation.data.data, 
+        routeInfo: recomendation.data.data,
       }));
-      dispatch(showAlert({ message: 'Рекомендации получены', status: 'success' }));
+      dispatch(
+        showAlert({ message: 'Рекомендации получены', status: 'success' })
+      );
     } catch (error) {
       console.error(`Ошибка при получении рекомендаций ${error}`, error);
-      dispatch(showAlert({ message: `Ошибка при получении рекомендаций:${error}`, status: 'mistake' }));
-
+      dispatch(
+        showAlert({
+          message: `Ошибка при получении рекомендаций:${error}`,
+          status: 'mistake',
+        })
+      );
+    }
   };
-  }
 
   // Обработчик для получения рекомендаций по вещам
   const handleRecomImportantThings = async () => {
     console.log(formData.city, 'formData.city');
-    
+
     try {
       const recomendation = await axiosInstance.post(
         'http://localhost:3000/api/gigachat/recommendations',
-        { city: formData.city,
-          type:'items'
-         },
+        { city: formData.city, type: 'items' }
       );
       console.log(recomendation.data, '<========recomendation');
       setFormData((prevState) => ({
@@ -212,43 +244,62 @@ if(startDate && endDate){
       }));
     } catch (error) {
       console.error(`Ошибка при получении рекомендаций:${error}`, error);
-      dispatch(showAlert({ message: `Ошибка при получении рекомендаций:${error}`, status: 'mistake' }));
+      dispatch(
+        showAlert({
+          message: `Ошибка при получении рекомендаций:${error}`,
+          status: 'mistake',
+        })
+      );
     }
   };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleCitySelect = (value: any) => {
+    if (value) {
+      const city = value.properties.city || value.properties.name;
+      const country = value.properties.country;
+
+      setFormData((prev) => ({
+        ...prev,
+        city: city,
+        country: country,
+      }));
+    }
+  };
+
   return (
     <div className={styles.formContainer}>
-      <h1 className={styles.formTitle}>Создать новый маршрут</h1>
+      <h1 className={styles.formTitle}>Создание нового маршрута</h1>
       <form onSubmit={handleSubmit} className={styles.formGrid}>
         {/* Город и страна в одной строке */}
         <div className={styles.formRow}>
           <div className={styles.formGroup}>
-            <label htmlFor="city" className={styles.formLabel}>
-              Город
+            <label className={styles.formLabel}>
+              Город <span className={styles.required}>*</span>
             </label>
-            <input
-              type="text"
-              id="city"
-              name="city"
-              value={formData.city}
-              onChange={handleChange}
-              className={styles.formInput}
-              required
-              placeholder="обязательно укажите город"
-            />
+            <GeoapifyContext apiKey={import.meta.env.VITE_GEOAPIFY_KEY}>
+              <GeoapifyGeocoderAutocomplete
+                placeholder="Куда едем?"
+                type="city"
+                lang="ru"
+                value={formData.city}
+                placeSelect={handleCitySelect}
+              />
+            </GeoapifyContext>
           </div>
           <div className={styles.formGroup}>
             <label htmlFor="country" className={styles.formLabel}>
-              Страна
+              Страна <span className={styles.required}>*</span>
             </label>
             <input
               type="text"
               id="country"
               name="country"
               value={formData.country}
-              onChange={handleChange}
+              readOnly
               className={styles.formInput}
               required
-              placeholder="обязательно укажите страну"
+              placeholder="Автоматически заполнится при выборе города"
             />
           </div>
         </div>
@@ -256,7 +307,7 @@ if(startDate && endDate){
         {/* Транспорт */}
         <div className={styles.formGroup}>
           <label htmlFor="transport" className={styles.formLabel}>
-            Транспорт
+            Тип транспорта <span className={styles.required}>*</span>
           </label>
           <select
             id="transport"
@@ -274,10 +325,13 @@ if(startDate && endDate){
 
         {/* Дополнительные поля для транспорта */}
 
-        {(formData.transport === 'самолет' || formData.transport === 'поезд') && (
+        {(formData.transport === 'самолет' ||
+          formData.transport === 'поезд') && (
           <div className={styles.formRow}>
             <div className={styles.formGroup}>
-              <label htmlFor="departureTime">Дата отправления (обязательно)</label>
+              <label htmlFor="departureTime" className={styles.formLabel}>
+                Дата отправления <span className={styles.required}>*</span>
+              </label>
               <input
                 type="datetime-local"
                 id="departureTime"
@@ -289,18 +343,25 @@ if(startDate && endDate){
               />
             </div>
             <div className={styles.formGroup}>
-              <label htmlFor="arrivalTime">Дата прибытия (обязательно)</label>
+              <label htmlFor="arrivalTime" className={styles.formLabel}>
+                Дата прибытия <span className={styles.required}>*</span>
+              </label>
               <input
                 type="datetime-local"
                 id="arrivalTime"
                 value={formData.transportInfo?.arrivalTime || ''}
-                onChange={(e) => handleTransportInfoChange('arrivalTime', e.target.value)}
+                onChange={(e) =>
+                  handleTransportInfoChange('arrivalTime', e.target.value)
+                }
                 required
               />
             </div>
-            {(formData.transport === 'самолет' || formData.transport === 'поезд') && (
+            {(formData.transport === 'самолет' ||
+              formData.transport === 'поезд') && (
               <div className={styles.formGroup}>
-                <label htmlFor="flightNumber">Номер рейса (обязательно)</label>
+                <label htmlFor="flightNumber" className={styles.formLabel}>
+                  Номер рейса <span className={styles.required}>*</span>
+                </label>
                 <input
                   type="text"
                   id="flightNumber"
@@ -308,7 +369,10 @@ if(startDate && endDate){
                   onChange={(e) =>
                     handleTransportInfoChange('flightNumber', e.target.value)
                   }
+                  className={styles.formInput}
+                  placeholder="Например: SU 1442"
                   required
+                  style={{ textTransform: 'uppercase' }}
                 />
               </div>
             )}
@@ -320,7 +384,7 @@ if(startDate && endDate){
         <div className={styles.formRow}>
           <div className={styles.formGroup}>
             <label htmlFor="tripStartDate" className={styles.formLabel}>
-              Дата начала путешествия(обязательное поле)
+              Дата начала путешествия <span className={styles.required}>*</span>
             </label>
             <input
               type="date"
@@ -332,7 +396,8 @@ if(startDate && endDate){
           </div>
           <div className={styles.formGroup}>
             <label htmlFor="tripEndDate" className={styles.formLabel}>
-              Дата окончания путешествия(обязательное поле)
+              Дата окончания путешествия{' '}
+              <span className={styles.required}>*</span>
             </label>
             <input
               type="date"
@@ -364,9 +429,19 @@ if(startDate && endDate){
             type="button"
             disabled={!formData.city}
             onClick={handleGetRecommendation}
-            className={styles.submitButton}
+            className={styles.aiButton}
+            title={!formData.city ? 'Сначала введите город' : ''}
           >
-            спроси меня об интересных метах
+            <span
+              className={
+                !formData.city ? styles.aiBadge : styles.aiBadgeNoBlock
+              }
+            >
+              AI
+            </span>
+            {!formData.city
+              ? 'Сначала введите город'
+              : 'Спросить об интересных местах'}
           </button>
         </div>
 
@@ -421,31 +496,30 @@ if(startDate && endDate){
           <textarea
             id="visitDates"
             name="visitDates"
-            // value={formData.visitDates}
             value={formData.visitDates || ''}
-            // onChange={(e) =>
-            //   setFormData({
-            //     ...formData,
-            //     visitDates: e.target.value,
-            //   })
-            // }
-           
             onChange={handleChange}
             className={styles.formInput}
             rows={2}
-           
           />
         </div>
-       
+
         {/* Кнопка получения рекомендации */}
         <div className={styles.formGroup}>
           <button
             type="button"
-          // disabled={!formData.visitDates}
+            disabled={!formData.city}
             onClick={handleRecomImportantThings}
-            className={styles.submitButton}
+            className={styles.aiButton}
+            title={!formData.city ? 'Сначала введите город' : ''}
           >
-            спроси меня что взять с собой
+            <span
+              className={
+                !formData.city ? styles.aiBadge : styles.aiBadgeNoBlock
+              }
+            >
+              AI
+            </span>
+            {!formData.city ? 'Сначала введите город' : 'Что взять с собой?'}
           </button>
         </div>
 
@@ -459,23 +533,23 @@ if(startDate && endDate){
             name="visibility"
             value={formData.visibility}
             onChange={handleChange}
-            className={styles.formInput} 
+            className={styles.formInput}
           >
             <option value="private">Приватный</option>
             <option value="friends">Для друзей</option>
             <option value="public">Публичный</option>
           </select>
-        </div> 
-         {/* КАРТА */}
+        </div>
+        {/* КАРТА */}
         <div className={styles.main}>
           <h3 className={styles.title}>Карта путешествия 📌</h3>
           {/* {isMapVisible ? "Скрыть карту" 
           :
            "Добавим карту?" } */}
           <button type="button" onClick={handleToggleMap}>
-            {isMapVisible ? "Скрыть карту" : "Добавим карту?"}
+            {isMapVisible ? 'Скрыть карту' : 'Добавим карту?'}
           </button>
-          {isMapVisible && <RouteManager pathId={pathId} />}{" "}
+          {isMapVisible && <RouteManager pathId={pathId} />}{' '}
         </div>
         {/* Кнопка отправки */}
         <div className={styles.formGroup}>
