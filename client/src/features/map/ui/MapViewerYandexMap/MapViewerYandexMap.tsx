@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./MapViewerYandexMap.module.css";
 import { createCoordinateThunk } from "@/app/entities/coordinate";
-import { useAppDispatch } from "@/shared/hooks/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/shared/hooks/reduxHooks";
+import { IPath } from "@/app/entities/path";
 
 declare const ymaps: typeof import("yandex-maps");
 
@@ -9,10 +10,11 @@ interface MapViewerYandexMapProps {
   points: { coords: [number, number]; name: string; number: number; description?: string }[];
   onAddToRoute?: (coords: [number, number], name: string) => void;
   pathId: number | null | undefined;
+  path: IPath | null ;
   initialCenter: [number, number]; // Новый пропс для начального центра карты
 }
 
-const MapViewerYandexMap: React.FC<MapViewerYandexMapProps> = ({ points, onAddToRoute, pathId, initialCenter }) => {
+const MapViewerYandexMap: React.FC<MapViewerYandexMapProps> = ({ points, onAddToRoute, pathId, path, initialCenter }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<ymaps.Map | null>(null); // Для хранения экземпляра карты
   const placemarksRef = useRef<ymaps.GeoObjectCollection>(new ymaps.GeoObjectCollection()); // Для хранения постоянных меток
@@ -20,6 +22,8 @@ const MapViewerYandexMap: React.FC<MapViewerYandexMapProps> = ({ points, onAddTo
   const [pointName, setPointName] = useState(""); // Название точки
   const [pointDescription, setpointDescription] = useState(""); // Описание точки
   const tempPlacemarkRef = useRef<ymaps.Placemark | null>(null); // Для хранения временной метки
+  const { user } = useAppSelector((state) => state.user);
+  
 
   // Добавление временной метки
   const addTempPlacemark = (coords: [number, number]) => {
@@ -192,8 +196,8 @@ const MapViewerYandexMap: React.FC<MapViewerYandexMapProps> = ({ points, onAddTo
     <div className={styles.container}>
       <div ref={mapRef} className={styles.mapContainer} />
 
-      {/* вот тут начинается часть которую мне нужно показать только если он поршел проверку на идора */}
-      {selectedCoords && (
+      {path?.userId === user?.id && selectedCoords && (
+        // <div>lol<div/>
         <div className={styles.formGroup}>
           <div className={styles.formRow}>
             <div className={styles.inputGroup}>
@@ -233,6 +237,8 @@ const MapViewerYandexMap: React.FC<MapViewerYandexMapProps> = ({ points, onAddTo
           </div>
         </div>
       )}
+      
+
     </div>
   );
 };

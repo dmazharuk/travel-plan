@@ -78,6 +78,7 @@ const MapViewer: React.FC<MapManagerProps> = ({ roadId }) => {
             key={initialCenter.join(",")} // Принудительно пересоздаем карту при изменении initialCenter
             points={points}
             onAddToRoute={handleAddToRoute}
+            path ={path}
             pathId={path?.id}
             initialCenter={initialCenter}
           />
