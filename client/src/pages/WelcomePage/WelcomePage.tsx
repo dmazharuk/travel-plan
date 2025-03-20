@@ -10,6 +10,7 @@ import { CalendarWidget } from '@/widgets/CalendarWidget/CalendarWidget';
 import { useAppSelector } from '@/shared/hooks/reduxHooks';
 
 export function WelcomePage(): JSX.Element {
+
   const [searchParams] = useSearchParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const user = useAppSelector((state) => state.user.user);
@@ -31,6 +32,23 @@ export function WelcomePage(): JSX.Element {
       },
     },
   });
+
+  // история с календарем
+
+  const { user } = useAppSelector((state) => state.user);
+  const handleConfirmDates = () => {
+    // console.log("выбрали даты", {startDate, endDate});
+    if (user) {
+      navigate(CLIENT_ROUTES.CREATE_ROAD_PAGE, {
+        state: {
+          startDate,
+          endDate,
+        },
+      });
+    } else {
+      setIsModalOpen(true);
+    }
+  };
 
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
@@ -93,6 +111,7 @@ export function WelcomePage(): JSX.Element {
               <div className={styles.linkCard}>
                 {' '}
                 <img className={styles.img} src="/div2.png" />
+
               </div>
               <div className={styles.linkCard}> Построить свой маршрут</div>
             </motion.div>
@@ -120,6 +139,7 @@ export function WelcomePage(): JSX.Element {
                 endDate={endDate}
                 onChange={handleDateChange}
                 onClose={() => setIsCalendarOpen(false)}
+                onConfirm={handleConfirmDates}
               />
             )}
 

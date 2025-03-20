@@ -8,6 +8,7 @@ interface CalendarWidgetProps {
   endDate: Date | null;
   onChange: (dates: [Date | null, Date | null]) => void;
   onClose: () => void;
+  onConfirm: () => void;
 }
 
 export function CalendarWidget({
@@ -15,6 +16,7 @@ export function CalendarWidget({
   endDate,
   onChange,
   onClose,
+  onConfirm,
 }: CalendarWidgetProps) {
   return (
     <div className={styles.overlay} onClick={onClose}>
@@ -37,6 +39,9 @@ export function CalendarWidget({
         </div>
         <button onClick={onClose} className={styles.closeButton}>
           Закрыть
+        </button>
+        <button onClick={onConfirm} className={styles.closeButton}>
+          создать маршрут
         </button>
       </div>
     </div>
