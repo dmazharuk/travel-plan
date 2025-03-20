@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import YandexMap from "../YandexMap/YandexMap";
 import styles from "./RouteManager.module.css";
 import { deleteCoordinateThunk } from "@/app/entities/coordinate";
+import { useAppDispatch } from "@/shared/hooks/reduxHooks";
 // import { useAppSelector } from '@/shared/hooks/reduxHooks';
 
 interface RouteManagerProps {
@@ -18,6 +19,7 @@ const RouteManager: React.FC<RouteManagerProps> = ({ pathId }) => {
     }[]
   >([]);
   // const coordinate = useAppSelector((state) => state.road.road);
+  const dispatch = useAppDispatch();
 
   const handleAddToRoute = (
     coords: [number, number],
@@ -35,11 +37,18 @@ const RouteManager: React.FC<RouteManagerProps> = ({ pathId }) => {
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const deleteCoordinate = async (coordinate: any) => {
-    console.log(coordinate?.id);
+  const deleteCoordinate = (point: any) => {
+    // console.log(coordinate?.id);
 
-    await deleteCoordinateThunk(12);
-    return console.log("succes");
+    // await deleteCoordinateThunk(12);
+    // return console.log('succes');
+
+    dispatch(deleteCoordinateThunk(point.number))
+      .unwrap()
+      .then(() => {})
+      .catch((error) => {
+        console.error("Ошибка при удалении координаты:", error);
+      });
   };
 
   return (
@@ -58,9 +67,13 @@ const RouteManager: React.FC<RouteManagerProps> = ({ pathId }) => {
                 <div>
                   {point.number}. {point.name}, {point.description}
                 </div>
-                {/* <div>{point.coords.join(', ')}</div> */}
-                <button type="button" onClick={() => deleteCoordinate(point)}>
-                  удалить
+                <button
+                  type="button"
+                  className={styles.rubbish}
+                  onClick={() => deleteCoordinate(point)}
+                >
+                  <img src="/rubbishbin.png" className={styles.rubbishBin} />
+                  {/* удалить */}
                 </button>
               </div>
               {/* <strong>{point.number}. {point.name}</strong>: {point.coords.join(', ')} */}
@@ -73,3 +86,15 @@ const RouteManager: React.FC<RouteManagerProps> = ({ pathId }) => {
 };
 
 export default RouteManager;
+
+
+
+
+
+
+{/* <div>{point.coords.join(', ')}</div> */}
+                {/* <button
+                type='button'
+                onClick={() => deleteCoordinate(point)}>
+                  удалить
+                </button> */}

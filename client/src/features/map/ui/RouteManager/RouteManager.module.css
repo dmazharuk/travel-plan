@@ -44,6 +44,15 @@
   color: #3d2c2e;
 }
 
+.rubbish {
+  background-color: #fff;
+}
+
+.rubbishBin {
+  height: 1.5rem;
+}
+
+
 @media (width <= 768px) {
   .container {
     padding: 0.5rem;

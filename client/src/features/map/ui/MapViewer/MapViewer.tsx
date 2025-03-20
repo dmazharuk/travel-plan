@@ -11,7 +11,6 @@ import {
 import MapViewerYandexMap from "../MapViewerYandexMap/MapViewerYandexMap";
 import styles from "./MapViewer.module.css"; // Подключаем стили
 import { ICoordinate } from "@/app/entities/coordinate";
-// import { useParams } from "react-router";
 
 interface MapManagerProps {
   roadId: number | null | undefined;
@@ -20,20 +19,13 @@ interface MapManagerProps {
 const MapViewer: React.FC<MapManagerProps> = ({ roadId }) => {
   const dispatch = useAppDispatch();
   const [editable, setEditable] = useState(false);
+  const path = useAppSelector((state) => state.path.path); // Получаем один path
+  const coordinates = useAppSelector((state) => state.coordinate.coordinates);
+  const [isLoading, setIsLoading] = useState(true); // Состояние загрузки данных
   const [formData, setFormData] = useState<Partial<ICoordinate>>({
     coordinateTitle: "",
     coordinateBody: "",
   });
-
-  // const { id } = useParams<{ id: string }>();
-
-  const path = useAppSelector((state) => state.path.path); // Получаем один path
-  const coordinates = useAppSelector((state) => state.coordinate.coordinates);
-  // const coordinates = useAppSelector((state) => state.coordinate.coordinates);
-
-  // const coordinate = useAppSelector((state) => state.coordinate.coordinates);
-  const [isLoading, setIsLoading] = useState(true); // Состояние загрузки данных
-
   const [points, setPoints] = useState<
     { coords: [number, number]; name: string; number: number }[]
   >([]);
@@ -105,19 +97,6 @@ const MapViewer: React.FC<MapManagerProps> = ({ roadId }) => {
     }
   }, [path, dispatch]);
 
-  // const deleteCoordinate = async (coordinate: any) => {
-  //     console.log(coordinate?.id);
-
-  //     await deleteCoordinateThunk(coordinate.id);
-  //     return console.log('succes');
-  //   }
-
-  // const deleteCoordinate = () => {
-  //   if (coord.id) {
-  //     dispatch(deleteCoordinateThunk({ id: Number(id) }));
-  //     // navigate(CLIENT_ROUTES.CABINET_PAGE);
-  //   }
-  // };
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -236,7 +215,8 @@ const MapViewer: React.FC<MapManagerProps> = ({ roadId }) => {
                         className={styles.change}
                         onClick={() => setEditable(!editable)}
                       >
-                        {editable ? "Отменить" : "Редактировать"}
+                        {editable ? "Отменить" 
+                        : <img src="/notes.png" className={styles.rubbishBin} />}
                         {/* <img src="/rubbishbin.png" className={styles.rubbishBin} /> */}
                         {/* изменить */}
                       </button>
@@ -270,7 +250,7 @@ const MapViewer: React.FC<MapManagerProps> = ({ roadId }) => {
             </ul>
           </div>
         ) : (
-          <p className={styles.formLabel}>Координаты не найдены.</p>
+          <p className={styles.formNoCoords}>Организатор пока не добавил карту к этому маршруту</p>
         )}
       </div>
     </div>
