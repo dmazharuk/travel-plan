@@ -35,7 +35,7 @@ export function CreateRoadForm() {
 
   //история с датами из welcomePage
   const location = useLocation();
-  const {startDate, endDate} = location.state;
+  const {startDate, endDate} = location.state ||{startDate: null, endDate: null};
 
   
 
