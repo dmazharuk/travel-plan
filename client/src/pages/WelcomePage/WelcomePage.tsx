@@ -1,29 +1,46 @@
-import { JSX, useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import Parallax from "@/widgets/Parallax/Parallax";
-import styles from "./WelcomePage.module.css";
-import { useSearchParams } from "react-router";
-import { SignInModal } from "@/features/auth/SignInModal/SignInModal";
+import { JSX, useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import Parallax from '@/widgets/Parallax/Parallax';
+import styles from './WelcomePage.module.css';
+import { useSearchParams } from 'react-router';
+import { SignInModal } from '@/features/auth/SignInModal/SignInModal';
 import { useNavigate } from 'react-router';
 import { CLIENT_ROUTES } from '@/shared/enums/clientRoutes';
 import { CalendarWidget } from '@/widgets/CalendarWidget/CalendarWidget';
+import { useAppSelector } from '@/shared/hooks/reduxHooks';
 
 export function WelcomePage(): JSX.Element {
+
   const [searchParams] = useSearchParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
-    const navigate = useNavigate();
-
+  const navigate = useNavigate();
 
   const linkVariants = (index: number) => ({
     hidden: { opacity: 0, x: index % 2 === 0 ? -100 : 100 }, // Четные — слева, нечетные — справа
     visible: { opacity: 1, x: 0 },
   });
 
+  // история с календарем
+
+  const { user } = useAppSelector((state) => state.user);
+  const handleConfirmDates = () => {
+    // console.log("выбрали даты", {startDate, endDate});
+    if (user) {
+      navigate(CLIENT_ROUTES.CREATE_ROAD_PAGE, {
+        state: {
+          startDate,
+          endDate,
+        },
+      });
+    } else {
+      setIsModalOpen(true);
+    }
+  };
 
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-  
+
   const handleDateChange = (dates: [Date | null, Date | null]) => {
     const [start, end] = dates;
     setStartDate(start);
@@ -89,7 +106,6 @@ export function WelcomePage(): JSX.Element {
                   style={{ cursor: 'pointer' }}
                   onClick={() => setIsCalendarOpen(true)}
                 >
-                  
                   <div className={styles.linkCard}>
                     {' '}
                     <img className={styles.img} src="/div3.png" />
@@ -101,10 +117,10 @@ export function WelcomePage(): JSX.Element {
                     startDate={startDate}
                     endDate={endDate}
                     onChange={handleDateChange}
-          onClose={() => setIsCalendarOpen(false)}
+                    onClose={() => setIsCalendarOpen(false)}
+                    onConfirm={handleConfirmDates}
                   />
                 )}
-                
               </div>
 
               <div>
@@ -146,10 +162,8 @@ export function WelcomePage(): JSX.Element {
             </div>
           </div>
         </div>
-        </div>
-        <div>
-        {isModalOpen && <SignInModal closeModal={() => setIsModalOpen(false)} />}
       </div>
+      <div>{isModalOpen && <SignInModal closeModal={() => setIsModalOpen(false)} />}</div>
     </>
   );
 }

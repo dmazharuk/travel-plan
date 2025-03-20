@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAppDispatch } from '@/shared/hooks/reduxHooks';
-import { useNavigate, useParams } from 'react-router';
+import { useLocation, useNavigate, useParams } from 'react-router';
 import { createRoad, updateRoad, IRoadRowData, getRoadById } from '@/app/entities/road';
 import styles from './CreateRoadForm.module.css';
 import { axiosInstance } from '@/shared/lib/axiosInstance';
@@ -33,9 +33,27 @@ export function CreateRoadForm() {
   const isEditMode = Boolean(id);
   const [formData, setFormData] = useState<IRoadRowData>(initialFormData);
 
+  //история с датами из welcomePage
+  const location = useLocation();
+  const {startDate, endDate} = location.state;
+
   
 
   useEffect(() => {
+    // console.log('полченные даты из welcomePage',{startDate, endDate});
+    
+if(startDate && endDate){
+  const newStartDate = new Date(startDate);
+  newStartDate.setDate(newStartDate.getDate() + 1);
+  const startDateString = newStartDate.toISOString().split('T')[0];
+  // console.log('startDateString', startDateString);
+  const newEndDate = new Date(endDate);
+  newEndDate.setDate(newEndDate.getDate() + 1);
+  const endDateString = newEndDate.toISOString().split('T')[0];
+  
+  setFormData((prev) => ({ ...prev, tripStartDate: startDateString, tripEndDate: endDateString }));
+}
+
     if (!isEditMode) return;
   
     const fetchRoadData = async () => {
@@ -52,7 +70,7 @@ export function CreateRoadForm() {
     };
   
     fetchRoadData();
-  }, [isEditMode, id, dispatch]);
+  }, [isEditMode, id, dispatch, startDate, endDate]);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
