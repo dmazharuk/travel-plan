@@ -32,12 +32,10 @@ export function WelcomePage(): JSX.Element {
     },
   });
 
-  console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Main')
-
   // история с календарем
 
   const handleConfirmDates = () => {
- 
+  // console.log("выбрали даты", {startDate, endDate});
     if (user) {
       navigate(CLIENT_ROUTES.CREATE_ROAD_PAGE, {
         state: {
