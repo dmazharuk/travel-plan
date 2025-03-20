@@ -32,6 +32,8 @@ export function WelcomePage(): JSX.Element {
     },
   });
 
+  console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Main')
+
   // история с календарем
 
   const handleConfirmDates = () => {
