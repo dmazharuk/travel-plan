@@ -11,7 +11,7 @@ export default function Footer(): JSX.Element {
           rel="noopener noreferrer"
         >
           <svg
-            width="20"
+            width=""
             height="20"
             viewBox="0 0 514 502"
             fill="none"

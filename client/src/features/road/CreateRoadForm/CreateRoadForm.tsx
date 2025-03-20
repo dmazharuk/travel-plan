@@ -205,11 +205,10 @@ export function CreateRoadForm() {
   const handleGetRecommendation = async () => {
     try {
       const recomendation = await axiosInstance.post(
-        'http://localhost:3000/api/gigachat/recommendations',
-        { city: formData.city }
+        '/gigachat/recommendations',
+        { city: formData.city },
       );
-      // console.log(recomendation.data, '<========recomendation');
-
+     
       setFormData((prevState) => ({
         ...prevState,
         routeInfo: recomendation.data.data,
@@ -234,8 +233,10 @@ export function CreateRoadForm() {
 
     try {
       const recomendation = await axiosInstance.post(
-        'http://localhost:3000/api/gigachat/recommendations',
-        { city: formData.city, type: 'items' }
+        '/gigachat/recommendations',
+        { city: formData.city,
+          type:'items'
+         },
       );
       console.log(recomendation.data, '<========recomendation');
       setFormData((prevState) => ({

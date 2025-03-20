@@ -19,7 +19,9 @@
   background: linear-gradient(145deg, #fff, #f8f8f8);
   border-radius: 20px;
   box-shadow: 0 10px 30px rgb(0 0 0 / 12%);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.5, 0.5, 0.5, 0.5) 0.1s;
+  
+ 
 }
 
 .linkCard:first-child {
@@ -31,7 +33,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  transition: transform 0.4s ease;
 }
 
 .linkCard:last-child {

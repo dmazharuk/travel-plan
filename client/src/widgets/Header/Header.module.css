@@ -53,7 +53,7 @@
   cursor: pointer;
   background: linear-gradient(45deg, #3c4b3b, #4a5f48);
   border: none;
-  border-radius: 25px;
+  border-radius: 15px;
   transition: all 0.3s ease;
 }
 
