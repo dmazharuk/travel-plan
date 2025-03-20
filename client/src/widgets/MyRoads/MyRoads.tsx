@@ -31,7 +31,7 @@ export function MyRoads() {
             (road.visibility === 'public' || road.visibility === 'friends')),
         [roads, user?.id]
       ),
-    [roads]
+    [roads, user?.id]
   );
 
   useEffect(() => {
@@ -75,7 +75,7 @@ export function MyRoads() {
     const pastelColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 
     const darkerSaturation = saturation + 20;
-    const darkerLightness = lightness - 8;
+    const darkerLightness = Math.max(lightness - 15, 20);
     const darkerColor = `hsl(${hue}, ${darkerSaturation}%, ${darkerLightness}%)`;
 
     return { pastelColor, darkerColor };
@@ -127,14 +127,13 @@ export function MyRoads() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Мой кабинет</h1>
+        <h1 className={styles.title}>Мои маршруты</h1>
         <div className={styles.conteinerForTitle}>
-          <h3>Мои маршруты</h3>
           <button
             onClick={handleCreateRoadClick}
             className={styles.createButton}
           >
-            <span>Создать маршрут</span>
+            Создать маршрут
           </button>
         </div>
       </div>
@@ -158,36 +157,48 @@ export function MyRoads() {
                 }}
               >
                 <div className={styles.roadHeader}>
-                  {cityImages[road.city] ? (
-                    <img
-                      src={cityImages[road.city]}
-                      alt={road.city}
-                      className={styles.roadImage}
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div className={styles.imagePlaceholder} />
-                  )}
+                  <div className={styles.roadImageContainer}>
+                    {cityImages[road.city] ? (
+                      <img
+                        src={cityImages[road.city]}
+                        alt={road.city}
+                        className={styles.roadImage}
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className={styles.imagePlaceholder} />
+                    )}
+                  </div>
                   <div className={styles.roadInfo}>
                     <div className={styles.titleBlock}>
                       <h3 className={styles.roadTitle}>
                         {road.city}, {road.country}
                       </h3>
-                      {road.author?.id === user?.id && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleToggleVisibility(road.id, road.visibility);
-                          }}
-                          className={styles.visibilityButton}
-                        >
-                          {road.visibility === 'public'
-                            ? 'Публичный'
-                            : road.visibility === 'friends'
-                            ? 'Для друзей'
-                            : 'Приватный'}
-                        </button>
-                      )}
+                      <div className={styles.controls}>
+                        {road.author?.id === user?.id && (
+                          <span
+                            className={styles.ownerBadge}
+                            style={{ backgroundColor: darkerColor }}
+                          >
+                            Мой маршрут
+                          </span>
+                        )}
+                        {road.author?.id === user?.id && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleToggleVisibility(road.id, road.visibility);
+                            }}
+                            className={styles.visibilityButton}
+                          >
+                            {road.visibility === 'public'
+                              ? 'Публичный'
+                              : road.visibility === 'friends'
+                              ? 'Для друзей'
+                              : 'Приватный'}
+                          </button>
+                        )}
+                      </div>
                     </div>
                     <div className={styles.details}>
                       <p className={styles.organizer}>

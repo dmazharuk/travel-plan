@@ -1,4 +1,4 @@
-/* Основные стили для контейнера */
+/* MyRoads.module.css */
 .container {
   max-width: 1200px;
   padding: 2rem;
@@ -9,7 +9,6 @@
   box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
 }
 
-/* Заголовок страницы */
 .title {
   margin-bottom: 1.5rem;
   font-size: 2rem;
@@ -21,32 +20,14 @@
 .conteinerForTitle {
   display: flex;
   align-items: baseline;
-  justify-content: flex-end;
+  justify-content: space-between;
   margin-bottom: 1.5rem;
 }
 
-/* Кнопка создания маршрута */
-.createButton {
-  position: relative;
-  display: inline-flex;
-  gap: 0.5rem;
-  align-items: center;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 500;
-  color: #fff;
-  cursor: pointer;
-  background-color: #3c4b3b;
-  border: none;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
-  transition: all 0.3s ease;
-}
+
 
 .createButton:hover {
   background-color: #2f3b2f;
-
-  /* transform: translateY(-1px); */
   box-shadow: 0 4px 8px rgb(0 0 0 / 15%);
 }
 
@@ -56,7 +37,6 @@
   transform: translateY(0);
 }
 
-/* Стили для списка маршрутов */
 .roadList {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -74,8 +54,6 @@
 
 .roadItem:hover {
   box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
-
-  /* transform: translateY(-3px); */
 }
 
 .roadHeader {
@@ -162,7 +140,6 @@
   align-items: center;
 }
 
-/* Стили для метки владельца */
 .ownerBadge {
   padding: 0.3rem 0.7rem;
   font-size: 0.75rem;
@@ -173,7 +150,6 @@
   box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
 }
 
-/* Сообщение об отсутствии маршрутов */
 .emptyMessage {
   padding: 2rem;
   font-size: 1rem;
@@ -181,7 +157,6 @@
   text-align: center;
 }
 
-/* Адаптивность */
 @media (width <= 1000px) {
   .container {
     padding: 1rem;
@@ -219,12 +194,7 @@
     align-items: stretch;
   }
 
-  .createButton {
-    width: 100%;
-    padding: 0.6rem 1.2rem;
-    font-size: 0.9rem;
-    justify-content: center; 
-  }
+
 
   .controls {
     gap: 0.5rem;
@@ -233,10 +203,5 @@
   .ownerBadge {
     padding: 0.2rem 0.6rem;
     font-size: 0.65rem;
-  }
-
-  .visibilityButton {
-    padding: 0.3rem 0.6rem;
-    font-size: 0.7rem;
   }
 }
