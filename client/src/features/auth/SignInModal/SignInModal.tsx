@@ -198,14 +198,17 @@ export function SignInModal({ closeModal }: SignInModalProps) {
         );
       }
 
-// проверка на подтверждение email
-if(!resultAction.payload?.data?.isEmailConfirmed){
-  dispatch(showAlert({ message: 'Пожалуйста, подтвердите ваш email', status: 'mistake' }));
-  
-  return;
-
-}
-
+      // проверка на подтверждение email
+      if (!resultAction.payload?.data?.isEmailConfirmed) {
+        dispatch(
+          showAlert({
+            message: 'Пожалуйста, подтвердите ваш email',
+            status: 'mistake',
+          })
+        );
+        closeModal();
+        return;
+      }
 
       dispatch(
         showAlert({ message: 'Вы успешно авторизованы', status: 'success' })
