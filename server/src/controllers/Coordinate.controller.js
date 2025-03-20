@@ -129,17 +129,15 @@ class CoordinateController {
         return res.status(400).json({ message: "pathId is required" });
       }
 
-      const coordinates = await Coordinate.findAll({ 
-        where: { pathId } 
+      const coordinates = await Coordinate.findAll({
+        where: { pathId },
       });
 
       // console.log('........................',coordinates);
 
-
       if (!coordinates || coordinates.length === 0) {
-        return res
-          .status(404)
-          .json(formatResponse(404, "No coordinates found for this pathId"));
+        return console.log('>>>>>>>>>>>>>>>>>>>>>>>>>no coords wuth this');
+        
       }
 
       res.status(200).json(formatResponse(200, "Success", coordinates));
@@ -153,22 +151,21 @@ class CoordinateController {
   static async updateCoordinate(req, res) {
     const { id } = req.params;
     const {
-      latitude,
-      longitude,
+      
       coordinateTitle,
       coordinateBody,
-      coordinateNumber,
+      // coordinateNumber,
     } = req.body;
-    const { path } = res.locals;
+    // const { path } = res.locals;
 
     try {
       const updatedCoordinate = await CoordinateService.update(id, {
-        latitude: latitude,
-        longitude: longitude,
+        // latitude: latitude,
+        // longitude: longitude,
         coordinateTitle: coordinateTitle,
         coordinateBody: coordinateBody,
-        coordinateNumber: coordinateNumber,
-        pathId: path.id,
+        // coordinateNumber: coordinateNumber,
+        // pathId: path.id,
       });
 
       if (!updatedCoordinate) {
@@ -195,9 +192,12 @@ class CoordinateController {
 
   static async deleteCoordinate(req, res) {
     const { id } = req.params;
+    // console.log(id);
 
     try {
       const deletedCoordinate = await CoordinateService.delete(id);
+
+      // console.log(deletedCoordinate);
 
       if (!deletedCoordinate) {
         return res
@@ -207,7 +207,7 @@ class CoordinateController {
 
       res
         .status(200)
-        .json(formatResponse(200, "Coordinate deleted successfully"));
+        .json(formatResponse(200, "Coordinate deleted successfully", deletedCoordinate));
     } catch ({ message }) {
       res
         .status(500)

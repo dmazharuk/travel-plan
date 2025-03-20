@@ -61,6 +61,21 @@ ul li {
   border-radius: 6px;
 }
 
+.formRow {
+  display: flex;
+  gap: 1rem; /* Отступ между элементами */
+  align-items: flex-end; /* Выравниваем элементы по нижнему краю */
+}
+
+.rubbish {
+  background-color: #fff;
+}
+
+.rubbishBin {
+  height: 1.5rem;
+  /* background-color: #fff; */
+}
+
 /* Адаптивность */
 @media (width <= 768px) {
   .formGrid {

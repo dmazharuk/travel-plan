@@ -22,11 +22,11 @@ class CoordinateService {
   static async update(id, data) {
     const coordinate = await this.getById(id);
     if (coordinate) {
-      coordinate.latitude = data.latitude;
-      coordinate.longitude = data.longitude;
+      // coordinate.latitude = data.latitude;
+      // coordinate.longitude = data.longitude;
       coordinate.coordinateTitle = data.coordinateTitle;
       coordinate.coordinateBody = data.coordinateBody;
-      coordinate.coordinateNumber = data.coordinateNumber;
+      // coordinate.coordinateNumber = data.coordinateNumber;
       await coordinate.save();
     }
     return coordinate;
