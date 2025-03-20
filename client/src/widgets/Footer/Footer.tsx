@@ -1,36 +1,3 @@
-// import styles from './Footer.module.css';
-// import { JSX } from 'react';
-
-// export default function Footer(): JSX.Element {
-//   return (
-//     <div className={styles.container}>
-//       <div className={styles.links}>
-//         <a
-//           href="https://github.com/user1"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           GitHub User 1
-//         </a>
-//         <a
-//           href="https://github.com/user2"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           GitHub User 2
-//         </a>
-//         <a
-//           href="https://github.com/project"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Project Repository
-//         </a>
-//       </div>
-//     </div>
-//   );
-// }
-
 import styles from './Footer.module.css';
 import { JSX } from 'react';
 
