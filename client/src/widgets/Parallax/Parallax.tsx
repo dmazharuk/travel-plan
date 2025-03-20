@@ -1,11 +1,13 @@
 import { useEffect, useRef } from 'react';
 import styles from './Parallax.module.css';
+import { useAppSelector } from '@/shared/hooks/reduxHooks';
 
 type Props = {
   setIsModalOpen: (a: boolean) => void;
 };
 
 const Parallax = ({ setIsModalOpen }: Props) => {
+  const user = useAppSelector((state) => state.user.user);
   const backgroundRef = useRef<HTMLVideoElement>(null);
   const foregroundRef = useRef<HTMLDivElement>(null);
 
@@ -29,11 +31,11 @@ const Parallax = ({ setIsModalOpen }: Props) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const randomVideo = '/videoMain/all.mp4';
+  const randomVideo = `/videoMain/videoMain${Math.ceil(
+    Math.random() * 10
+  )}.mp4`;
 
-  // `/videoMain/videoMain${Math.ceil(
-  //   Math.random() * 10
-  // )}.mp4`;
+  // '/videoMain/all.mp4';
 
   return (
     <div className={styles.parallaxcontainer}>
@@ -54,12 +56,14 @@ const Parallax = ({ setIsModalOpen }: Props) => {
         <div className={styles.parallaxname}>
           <h1 className={styles.title}>TravelPlan</h1>
           <p className={styles.subtitle}>Спланируй свое путешествие</p>
-          <button
-            className={styles.button}
-            onClick={() => setIsModalOpen(true)}
-          >
-            Вход/регистрация
-          </button>
+          {!user && (
+            <button
+              className={styles.button}
+              onClick={() => setIsModalOpen(true)}
+            >
+              Вход/регистрация
+            </button>
+          )}
         </div>
       </div>
     </div>
