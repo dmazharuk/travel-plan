@@ -1,3 +1,4 @@
+
 import { MyRoads } from '@/widgets/MyRoads/MyRoads';
 import styles from './CabinetPage.module.css';
 import { useAppDispatch } from '@/shared/hooks/reduxHooks';
@@ -8,7 +9,10 @@ import { CLIENT_ROUTES } from '@/shared/enums/clientRoutes';
 import { Modal } from '@/shared/ui/Modal';
 import { useState } from 'react';
 
+
+
 export default function CabinetPage() {
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
