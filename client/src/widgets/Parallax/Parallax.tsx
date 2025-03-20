@@ -61,7 +61,7 @@ const Parallax = ({ setIsModalOpen }: Props) => {
               className={styles.button}
               onClick={() => setIsModalOpen(true)}
             >
-              Вход/регистрация
+              Вход
             </button>
           )}
         </div>
