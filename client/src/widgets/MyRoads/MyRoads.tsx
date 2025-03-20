@@ -1,12 +1,13 @@
 import { getAllRoads, updateRoad } from '@/app/entities/road';
 import { useAppDispatch, useAppSelector } from '@/shared/hooks/reduxHooks';
-import { useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import styles from './MyRoads.module.css';
 
 export function MyRoads() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [cityImages, setCityImages] = useState<{ [key: string]: string }>({});
 
   const { roads, isLoading, error } = useAppSelector((state) => state.road);
   const { user } = useAppSelector((state) => state.user);
@@ -21,12 +22,50 @@ export function MyRoads() {
   }, [dispatch]);
 
   // Проверка на наличие author
-  const userRoads = roads.filter(
-    (road) =>
-      road.author?.id === user?.id ||
-      (road.companions?.some((companion) => companion.id === user?.id) &&
-        (road.visibility === 'public' || road.visibility === 'friends'))
+  const userRoads = useMemo(
+    () =>
+      roads.filter(
+        (road) =>
+          road.author?.id === user?.id ||
+          (road.companions?.some((companion) => companion.id === user?.id) &&
+            (road.visibility === 'public' || road.visibility === 'friends')),
+        [roads, user?.id]
+      ),
+    [roads]
   );
+
+  useEffect(() => {
+    const fetchCityImages = async () => {
+      const uniqueCities = Array.from(
+        new Set(userRoads.map((road) => road.city))
+      );
+      const newImages: { [key: string]: string } = {};
+
+      await Promise.all(
+        uniqueCities.map(async (city) => {
+          if (!cityImages[city]) {
+            try {
+              const response = await fetch(
+                `https://api.unsplash.com/search/photos?query=${city}&client_id=${
+                  import.meta.env.VITE_UNSPLASH_ACCESS_KEY
+                }&per_page=1`
+              );
+              const data = await response.json();
+              if (data.results?.[0]?.urls?.regular) {
+                newImages[city] = data.results[0].urls.regular;
+              }
+            } catch (error) {
+              console.error('Error fetching image for', city, error);
+            }
+          }
+        })
+      );
+
+      setCityImages((prev) => ({ ...prev, ...newImages }));
+    };
+
+    if (userRoads.length > 0) fetchCityImages();
+  }, [userRoads]);
 
   // Функция для генерации пастельного цвета и его более темного варианта
   const getPastelColorPair = () => {
@@ -95,8 +134,7 @@ export function MyRoads() {
             onClick={handleCreateRoadClick}
             className={styles.createButton}
           >
-            <span>+</span>
-            <span className={styles.tooltip}>Создать маршрут</span>
+            <span>Создать маршрут</span>
           </button>
         </div>
       </div>
@@ -120,39 +158,50 @@ export function MyRoads() {
                 }}
               >
                 <div className={styles.roadHeader}>
-                  <div>
-                    <h3 className={styles.roadTitle}>
-                      {road.city}, {road.country}
-                    </h3>
-                    <p className={styles.roadDate}>
-                      Создан: {new Date(road.createdAt).toLocaleDateString()}
-                      <br />
-                      Создатель: {road.author?.username}
-                    </p>
-                    <p className={styles.tripDate}>
-                      Даты путешествия:{' '}
-                      {`${new Date(
-                        road.tripStartDate
-                      ).toLocaleDateString()} - ${new Date(
-                        road.tripEndDate
-                      ).toLocaleDateString()}`}
-                    </p>
-                  </div>
-                  {road.author?.id === user?.id && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleToggleVisibility(road.id, road.visibility);
-                      }}
-                      className={`${styles.visibilityButton}`}
-                    >
-                      {road.visibility === 'public'
-                        ? 'Публичный'
-                        : road.visibility === 'friends'
-                        ? 'Для друзей'
-                        : 'Приватный'}
-                    </button>
+                  {cityImages[road.city] ? (
+                    <img
+                      src={cityImages[road.city]}
+                      alt={road.city}
+                      className={styles.roadImage}
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className={styles.imagePlaceholder} />
                   )}
+                  <div className={styles.roadInfo}>
+                    <div className={styles.titleBlock}>
+                      <h3 className={styles.roadTitle}>
+                        {road.city}, {road.country}
+                      </h3>
+                      {road.author?.id === user?.id && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleToggleVisibility(road.id, road.visibility);
+                          }}
+                          className={styles.visibilityButton}
+                        >
+                          {road.visibility === 'public'
+                            ? 'Публичный'
+                            : road.visibility === 'friends'
+                            ? 'Для друзей'
+                            : 'Приватный'}
+                        </button>
+                      )}
+                    </div>
+                    <div className={styles.details}>
+                      <p className={styles.organizer}>
+                        Организатор: {road.author?.username}
+                      </p>
+                      <p className={styles.tripDate}>
+                        {`${new Date(
+                          road.tripStartDate
+                        ).toLocaleDateString()} - ${new Date(
+                          road.tripEndDate
+                        ).toLocaleDateString()}`}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             );

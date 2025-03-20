@@ -19,9 +19,8 @@
 
 .conteinerForTitle {
   display: flex;
-  align-items: baseline; 
+  align-items: baseline;
   justify-content: space-between;
-  
 }
 
 /* Кнопка создания маршрута */
@@ -61,7 +60,6 @@
   transition: opacity 0.3s ease;
 }
 
-
 .createButton:hover .tooltip {
   visibility: visible; /* Показываем подсказку при наведении */
   opacity: 1;
@@ -72,7 +70,7 @@
   top: 100%; /* Стрелка подсказки */
   left: 50%;
   margin-left: -5px;
-  content: "";
+  content: '';
   border-color: #333 transparent transparent;
   border-style: solid;
   border-width: 5px;
@@ -83,8 +81,6 @@
   font-size: 1.2rem;
 }
 
-
-
 /* Стили для списка маршрутов */
 .roadList {
   display: grid;
@@ -94,7 +90,7 @@
 }
 
 .roadItem {
-  padding: 1rem;
+  padding: 1.5rem;
   color: #333; /* Цвет текста */
   cursor: pointer;
   border: 1px solid rgb(255 255 255 / 30%); /* Легкая граница */
@@ -114,9 +110,11 @@
 }
 
 .roadTitle {
-  font-size: 1.25rem;
   font-weight: 600;
   color: inherit; /* Наследуем цвет текста */
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 .roadDate {
@@ -124,7 +122,6 @@
   color: inherit; /* Наследуем цвет текста */
   opacity: 0.8; /* Легкая прозрачность */
 }
-
 
 .private {
   display: none;
@@ -159,10 +156,91 @@
   text-align: center;
 }
 
+.roadImageContainer {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
+}
+
+.roadImage {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+}
+
+.imagePlaceholder {
+  width: 120px;
+  height: 120px;
+  background-color: rgb(255 255 255 / 30%);
+  border-radius: 12px;
+  backdrop-filter: blur(5px);
+}
+
+.roadContent {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.imageWrapper {
+  flex-shrink: 0;
+}
+
+.roadInfo {
+  flex-grow: 1;
+}
+
+.titleBlock {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.organizer {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #4a5568;
+}
+
+.tripDate {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #2d3748;
+}
+
 /* Адаптивность */
 @media (width <= 768px) {
   .container {
     padding: 1rem;
+  }
+
+  .roadContent {
+    flex-direction: column;
+  }
+
+  .roadImage,
+  .imagePlaceholder {
+    width: 100%;
+    height: 200px;
+  }
+
+  .titleBlock {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .title {
@@ -188,5 +266,10 @@
 
   .visibilityButton {
     padding: 0.5rem;
+  }
+
+  .roadImageContainer {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
