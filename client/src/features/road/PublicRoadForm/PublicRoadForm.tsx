@@ -36,12 +36,26 @@ export default function PublicRoadForm() {
         uniqueCities.map(async (city) => {
           if (!cityImages[city]) {
             try {
-              const response = await fetch(
-                `https://api.unsplash.com/search/photos?query=${city}&client_id=${
+              // Пробуем найти изображение города
+              let response = await fetch(
+                `https://api.unsplash.com/search/photos?query=${encodeURIComponent(
+                  city
+                )}&client_id=${
                   import.meta.env.VITE_UNSPLASH_ACCESS_KEY
                 }&per_page=1`
               );
-              const data = await response.json();
+              let data = await response.json();
+
+              // Если не нашли - ищем по общему запросу "travel"
+              if (!data.results?.[0]?.urls?.regular) {
+                response = await fetch(
+                  `https://api.unsplash.com/search/photos?query=travel&client_id=${
+                    import.meta.env.VITE_UNSPLASH_ACCESS_KEY
+                  }&per_page=1`
+                );
+                data = await response.json();
+              }
+
               if (data.results?.[0]?.urls?.regular) {
                 newImages[city] = data.results[0].urls.regular;
               }
