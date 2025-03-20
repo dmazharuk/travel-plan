@@ -450,7 +450,7 @@ export function CreateRoadForm() {
         </div> 
          {/* КАРТА */}
         <div className={styles.main}>
-          <h3>Маршрут путешествия</h3>
+          <h3 className={styles.title}>Карта путешествия 📌</h3>
           {/* {isMapVisible ? "Скрыть карту" 
           :
            "Добавим карту?" } */}

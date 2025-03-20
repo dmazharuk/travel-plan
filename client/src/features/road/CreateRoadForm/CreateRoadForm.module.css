@@ -8,6 +8,15 @@
   box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
 }
 
+.title {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #3d2c2e;
+  text-align: center;
+}
+
 .formTitle {
   margin-bottom: 1rem;
   font-size: 1.5rem;
@@ -87,7 +96,7 @@
 }
 
 .submitButton:hover {
-  background-color: #3d2c2e;
+  background-color: #242424;
 }
 
 /* Адаптивность */

@@ -42,7 +42,7 @@ const MapViewer: React.FC<MapManagerProps> = ({ roadId }) => {
       number: points.length + 1,
     };
     setPoints((prev) => [...prev, newPoint]);
-    alert(`Точка "${name}" добавлена`);
+    // alert(`Точка "${name}" добавлена`);
   };
 
   // Получаем Path по roadId
