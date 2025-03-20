@@ -44,6 +44,7 @@ export function SignInModal({ closeModal }: SignInModalProps) {
   const passwordInputId = useId();
   const repeatPasswordInputId = useId();
   const newPasswordInputId = useId();
+  const repeatNewPasswordInputId = useId();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const resetToken = searchParams.get('token');
@@ -340,10 +341,10 @@ export function SignInModal({ closeModal }: SignInModalProps) {
               <div className={styles.passwordContainer}>
                 <input
                   type={showPassword ? 'text' : 'password'}
-                  name="password"
+                  name="newPassword"
                   placeholder="Введите пароль"
                   onChange={onChangeHandler}
-                  value={inputs.password}
+                  value={inputs.newPassword}
                   id={newPasswordInputId}
                   className={styles.modalInput}
                 />
@@ -356,7 +357,9 @@ export function SignInModal({ closeModal }: SignInModalProps) {
                 </button>
               </div>
 
-              <label htmlFor={repeatPasswordInputId}>Повторите пароль:</label>
+              <label htmlFor={repeatNewPasswordInputId}>
+                Повторите пароль:
+              </label>
               <div className={styles.passwordContainer}>
                 <input
                   type={showRepeatPassword ? 'text' : 'password'}
@@ -364,7 +367,7 @@ export function SignInModal({ closeModal }: SignInModalProps) {
                   placeholder="Повторите пароль"
                   onChange={onChangeHandler}
                   value={inputs.repeatPassword}
-                  id={repeatPasswordInputId}
+                  id={repeatNewPasswordInputId}
                   className={styles.modalInput}
                 />
                 <button
