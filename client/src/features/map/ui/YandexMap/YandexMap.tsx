@@ -44,18 +44,30 @@ const YandexMap: React.FC<YandexMapProps> = ({
   const addTempPlacemark = (coords: [number, number]) => {
     if (tempPlacemarkRef.current) {
       // Удаляем старую временную метку
-
       mapInstance.current?.geoObjects.remove(tempPlacemarkRef.current);
-    } // Создаем новую временную метку
-
-    tempPlacemarkRef.current = new ymaps.Placemark(coords, {
-      hintContent: pointName || "Новая точка",
-
-      balloonContent: `Название: ${
-        pointName || "Новая точка"
-      }<br>Описание: ${pointDescription}<br>Координаты: ${coords.join(", ")}`,
-    }); // Добавляем временную метку на карту
-
+    }
+  
+    // Создаем новую временную метку с стилизацией
+    tempPlacemarkRef.current = new ymaps.Placemark(
+      coords,
+      {
+        hintContent: pointName || "Новая точка",
+        balloonContent: `Название: ${
+          pointName || "Новая точка"
+        }<br>Описание: ${pointDescription}<br>Координаты: ${coords.join(", ")}`,
+      },
+      {
+        // Стилизация временной метки
+        iconLayout: 'default#image',
+        iconImageHref: 'https://cdn-icons-png.flaticon.com/512/684/684908.png', // URL вашей иконки
+        iconImageSize: [30, 30],
+        iconImageOffset: [-15, -30],
+        // или используем стандартный стиль Яндекс.Карт
+        // preset: 'islands#greenIcon', // Пример стандартного стиля
+      }
+    );
+  
+    // Добавляем временную метку на карту
     mapInstance.current?.geoObjects.add(tempPlacemarkRef.current);
   };
 
@@ -79,7 +91,7 @@ const YandexMap: React.FC<YandexMapProps> = ({
         },
       });
 
-      mapInstance.current.controls.add(searchControl); // Обработка выбора результата поиска 
+      mapInstance.current.controls.add(searchControl); // Обработка выбора результата поиска
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       searchControl.events.add("resultselect", (e: any) => {
@@ -94,7 +106,7 @@ const YandexMap: React.FC<YandexMapProps> = ({
         setPointName(name); // Устанавливаем название организации
 
         addTempPlacemark(coords); // Добавляем временную метку
-      }); // Обработка клика по карте 
+      }); // Обработка клика по карте
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       mapInstance.current.events.add("click", (e: any) => {
@@ -110,22 +122,36 @@ const YandexMap: React.FC<YandexMapProps> = ({
   }, [addTempPlacemark, points]); // Обновление постоянных меток при изменении points
 
   useEffect(() => {
-    if (!mapInstance.current) return; // Очищаем старые метки
+    if (!mapInstance.current) return;
 
-    placemarksRef.current.removeAll(); // Добавляем новые метки
+    // Очищаем старые метки
+    placemarksRef.current.removeAll();
 
+    // Добавляем новые метки с стилизацией
     points.forEach((point) => {
-      const placemark = new ymaps.Placemark(point.coords, {
-        hintContent: `${point.number}. ${point.name}`, // Добавляем номер в подпись
-
-        balloonContent: `Название: ${point.name}<br>Описание: ${
-          point.description
-        }<br>Координаты: ${point.coords.join(", ")}`,
-      });
+      const placemark = new ymaps.Placemark(
+        point.coords,
+        {
+          hintContent: `${point.name}`,
+          balloonContent: `Название: ${point.name}<br>Описание: ${
+            point.description || "Нет описания"
+          }<br>Координаты: ${point.coords.join(", ")}`,
+        },
+        {
+          // Стилизация метки
+          iconLayout: "default#image", // Используем стандартный layout для изображений
+          iconImageHref:
+            "https://cdn-icons-png.flaticon.com/512/684/684908.png", // URL вашей иконки
+          iconImageSize: [30, 30], // Размер иконки
+          iconImageOffset: [-15, -30], // Смещение иконки
+          // или используем стандартный стиль Яндекс.Карт
+          // preset: 'islands#redIcon', // Пример стандартного стиля
+        }
+      );
 
       placemarksRef.current.add(placemark);
     });
-  }, [points]); // Обработка добавления точки в маршрут
+  }, [points]);
 
   const dispatch = useAppDispatch();
 
