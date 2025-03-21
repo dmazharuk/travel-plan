@@ -40,6 +40,10 @@ const MapViewer: React.FC<MapManagerProps> = ({ roadId }) => {
       setInitialCenter(formattedPoints[0].coords);
       setIsLoading(false); // Данные загружены
     }
+
+    return () => {
+      setPoints([]);
+    };
   }, [coordinates]);
 
   const handleAddToRoute = (coords: [number, number], name: string) => {

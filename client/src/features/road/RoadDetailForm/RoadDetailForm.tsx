@@ -36,15 +36,6 @@ export function RoadDetailForm() {
     visitDates: '',
   });
 
-  //логика для карты, начало
-  useEffect(() => {
-    if (id) {
-      dispatch(getRoadById({ id: Number(id) }));
-    }
-  }, [id, dispatch]);
-
-  //логика для карты, конец
-
   // Функция для преобразования даты в формат yyyy-MM-dd
   const formatDateForInput = (dateString?: string) => {
     if (!dateString) return '';
@@ -355,7 +346,7 @@ export function RoadDetailForm() {
 
       {/* про карту, начало */}
       <div>
-      <h3 className={styles.title}>Карта путешествия 📌</h3>
+        <h3 className={styles.title}>Карта путешествия 📌</h3>
         {road.id && <MapViewer roadId={road.id} />}
       </div>
 

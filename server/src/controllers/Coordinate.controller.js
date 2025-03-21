@@ -131,7 +131,8 @@ class CoordinateController {
       });
 
       if (!coordinates || coordinates.length === 0) {
-        return console.log('>>>>>>>>>>>>>>>>>>>>>>>>>no coords wuth this');
+        return res.status(200).json(formatResponse(200, 'Success', []));
+     
       }
 
       res.status(200).json(formatResponse(200, 'Success', coordinates));

@@ -1,4 +1,4 @@
-import { getAllRoads, updateRoad } from '@/app/entities/road';
+import { getAllRoads, getRoadById, updateRoad } from '@/app/entities/road';
 import { useAppDispatch, useAppSelector } from '@/shared/hooks/reduxHooks';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -127,7 +127,8 @@ export function MyRoads() {
     }
   };
 
-  const handleRoadClick = (roadId: number) => {
+  const handleRoadClick = async (roadId: number) => {
+    await dispatch(getRoadById({ id: Number(roadId) }));
     navigate(`/cabinet/road/${roadId}`);
   };
 
