@@ -41,6 +41,7 @@ export function CreateRoadForm() {
   const { id } = useParams();
   const isEditMode = Boolean(id);
   const [formData, setFormData] = useState<IRoadRowData>(initialFormData);
+  const [aiThink, setAiThink] = useState(false);
 
   //история с датами из welcomePage
   const location = useLocation();
@@ -201,6 +202,7 @@ export function CreateRoadForm() {
   // Обработчик для получения рекомендаций
   const handleGetRecommendation = async () => {
     try {
+      setAiThink(true);
       const recomendation = await axiosInstance.post(
         '/gigachat/recommendations',
         { city: formData.city }
@@ -221,14 +223,15 @@ export function CreateRoadForm() {
           status: 'mistake',
         })
       );
+    } finally {
+      setAiThink(false);
     }
   };
 
   // Обработчик для получения рекомендаций по вещам
   const handleRecomImportantThings = async () => {
-    console.log(formData.city, 'formData.city');
-
     try {
+      setAiThink(true);
       const recomendation = await axiosInstance.post(
         '/gigachat/recommendations',
         { city: formData.city, type: 'items' }
@@ -246,6 +249,8 @@ export function CreateRoadForm() {
           status: 'mistake',
         })
       );
+    } finally {
+      setAiThink(false);
     }
   };
 
@@ -423,7 +428,7 @@ export function CreateRoadForm() {
         <div className={styles.formGroup}>
           <button
             type="button"
-            disabled={!formData.city}
+            disabled={!formData.city || aiThink}
             onClick={handleGetRecommendation}
             className={styles.aiButton}
             title={!formData.city ? 'Сначала введите город' : ''}
@@ -503,7 +508,7 @@ export function CreateRoadForm() {
         <div className={styles.formGroup}>
           <button
             type="button"
-            disabled={!formData.city}
+            disabled={!formData.city || aiThink}
             onClick={handleRecomImportantThings}
             className={styles.aiButton}
             title={!formData.city ? 'Сначала введите город' : ''}
