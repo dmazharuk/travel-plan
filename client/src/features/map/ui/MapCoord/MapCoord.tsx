@@ -1,7 +1,7 @@
 import { deleteCoordinateThunk, updateCoordinateThunk } from "@/app/entities/coordinate";
 import { useAppDispatch } from "@/shared/hooks/reduxHooks";
 import { ChangeEvent, useState } from "react";
-import styles from "./MapCoord.module.css"; // Подключаем стили
+import styles from "./MapCoord.module.css";
 
 interface Coordinate {
   id: number;

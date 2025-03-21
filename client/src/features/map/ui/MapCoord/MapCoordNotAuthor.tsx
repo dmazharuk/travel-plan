@@ -1,7 +1,15 @@
-import { useState } from "react";
-import styles from "./MapCoord.module.css"; // Подключаем стили
+import { ChangeEvent, useState } from "react";
+import styles from "./MapCoord.module.css"; 
 
-export function MapCoordNotAuthor({ coord }) {
+interface Coordinate {
+  id: number;
+  coordinateTitle: string;
+  coordinateBody: string;
+}
+
+//
+
+export function MapCoordNotAuthor({ coord }: { coord: Coordinate }) {
   const [inputs, setInputs] = useState({
     coordinateTitle: coord.coordinateTitle,
     coordinateBody: coord.coordinateBody,
@@ -9,7 +17,7 @@ export function MapCoordNotAuthor({ coord }) {
   const [editable] = useState(false);
   // const [editable, setEditable] = useState(false);
 
-  function changeInputsHandler({ target }) {
+  function changeInputsHandler({ target }: ChangeEvent<HTMLInputElement>) {
     const { value, name } = target;
     setInputs((prev) => ({ ...prev, [name]: value }));
   }
