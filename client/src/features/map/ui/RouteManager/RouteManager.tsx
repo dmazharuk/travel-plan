@@ -1,8 +1,8 @@
-import React, { useId, useState } from "react";
-import YandexMap from "../YandexMap/YandexMap";
-import styles from "./RouteManager.module.css";
-import { useAppSelector } from "@/shared/hooks/reduxHooks";
-import { MapCoord } from "../MapCoord/MapCoord";
+import React, { useId, useState } from 'react';
+import YandexMap from '../YandexMap/YandexMap';
+import styles from './RouteManager.module.css';
+import { useAppSelector } from '@/shared/hooks/reduxHooks';
+import { MapCoord } from '../MapCoord/MapCoord';
 
 interface RouteManagerProps {
   pathId: number | null; // Добавляем pathId в пропсы
@@ -49,29 +49,19 @@ const RouteManager: React.FC<RouteManagerProps> = ({ pathId }) => {
           />
         </div>
 
-        {/* {coordinates?.length === 0 ? 
-       (
-        <div className={styles.formNoCoords}>
-          Вы пока не добавили точки
-        </div>
-      )
-      :
-      ( */}
         <div className={styles.formGroup}>
           <div className={styles.coordinatesContainer}>
             <h3 className={styles.coordinatesTitle}>Координаты маршрута</h3>
             <ul className={styles.coordinatesList}>
-              {coordinates.length !== 0 &&
+              {coordinates.length !== 0 ?
                 coordinates.map(
                   (coord) =>
                     coord.pathId === pathId && (
                       <li key={coord.id} className={styles.coordinateItem}>
-                        {/* {coordinates?.length === 0 ? <></> : */}
                         <MapCoord coord={coord} />
-                        {/* } */}
                       </li>
                     )
-                )}
+                ):<div>Вы пока не добивали точки</div>}
             </ul>
           </div>
         </div>

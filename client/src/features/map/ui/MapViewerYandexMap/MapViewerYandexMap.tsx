@@ -1,29 +1,43 @@
-import React, { useEffect, useRef, useState } from "react";
-import styles from "./MapViewerYandexMap.module.css";
-import { createCoordinateThunk } from "@/app/entities/coordinate";
-import { useAppDispatch, useAppSelector } from "@/shared/hooks/reduxHooks";
-import { IPath } from "@/app/entities/path";
+import React, { useEffect, useRef, useState } from 'react';
+import styles from './MapViewerYandexMap.module.css';
+import { createCoordinateThunk } from '@/app/entities/coordinate';
+import { useAppDispatch, useAppSelector } from '@/shared/hooks/reduxHooks';
+import { IPath } from '@/app/entities/path';
 
-declare const ymaps: typeof import("yandex-maps");
+declare const ymaps: typeof import('yandex-maps');
 
 interface MapViewerYandexMapProps {
-  points: { coords: [number, number]; name: string; number: number; description?: string }[];
+  points: {
+    coords: [number, number];
+    name: string;
+    number: number;
+    description?: string;
+  }[];
   onAddToRoute?: (coords: [number, number], name: string) => void;
   pathId: number | null | undefined;
-  path: IPath | null ;
+  path: IPath | null;
   initialCenter: [number, number]; // Новый пропс для начального центра карты
 }
 
-const MapViewerYandexMap: React.FC<MapViewerYandexMapProps> = ({ points, onAddToRoute, pathId, path, initialCenter }) => {
+const MapViewerYandexMap: React.FC<MapViewerYandexMapProps> = ({
+  points,
+  onAddToRoute,
+  pathId,
+  path,
+  initialCenter,
+}) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<ymaps.Map | null>(null); // Для хранения экземпляра карты
-  const placemarksRef = useRef<ymaps.GeoObjectCollection>(new ymaps.GeoObjectCollection()); // Для хранения постоянных меток
-  const [selectedCoords, setSelectedCoords] = useState<[number, number] | null>(null); // Выбранные координаты
-  const [pointName, setPointName] = useState(""); // Название точки
-  const [pointDescription, setpointDescription] = useState(""); // Описание точки
+  const placemarksRef = useRef<ymaps.GeoObjectCollection>(
+    new ymaps.GeoObjectCollection()
+  ); // Для хранения постоянных меток
+  const [selectedCoords, setSelectedCoords] = useState<[number, number] | null>(
+    null
+  ); // Выбранные координаты
+  const [pointName, setPointName] = useState(''); // Название точки
+  const [pointDescription, setpointDescription] = useState(''); // Описание точки
   const tempPlacemarkRef = useRef<ymaps.Placemark | null>(null); // Для хранения временной метки
   const { user } = useAppSelector((state) => state.user);
-  
 
   // Добавление временной метки
   const addTempPlacemark = (coords: [number, number]) => {
@@ -34,20 +48,24 @@ const MapViewerYandexMap: React.FC<MapViewerYandexMapProps> = ({ points, onAddTo
 
     // Создаем новую временную метку
     // Создаем новую временную метку с стилизацией
-tempPlacemarkRef.current = new ymaps.Placemark(coords, {
-  hintContent: `${pointName}` || "Новая точка",
-  balloonContent: `Название: ${
-    pointName || "Новая точка"
-  }<br>Описание: ${pointDescription}<br>Координаты: ${coords.join(", ")}`,
-}, {
-  iconLayout: 'default#image',
-  iconImageHref: './mapitem.png', // URL вашей иконки
-  iconImageSize: [30, 30],
-  iconImageOffset: [-15, -30],
-  // или
-  // preset: 'islands#redIcon', 
-  // Красная иконка
-});
+    tempPlacemarkRef.current = new ymaps.Placemark(
+      coords,
+      {
+        hintContent: `${pointName}` || 'Новая точка',
+        balloonContent: `Название: ${
+          pointName || 'Новая точка'
+        }<br>Описание: ${pointDescription}<br>Координаты: ${coords.join(', ')}`,
+      },
+      {
+        iconLayout: 'default#image',
+        iconImageHref: '/mapitem.png', // URL вашей иконки
+        iconImageSize: [30, 30],
+        iconImageOffset: [-15, -30],
+        // или
+        // preset: 'islands#redIcon',
+        // Красная иконка
+      }
+    );
 
     // Добавляем временную метку на карту
     mapInstance.current?.geoObjects.add(tempPlacemarkRef.current);
@@ -72,7 +90,10 @@ tempPlacemarkRef.current = new ymaps.Placemark(coords, {
   };
 
   // Функция для расширения границ на заданный процент
-  const expandBounds = (bounds: [[number, number], [number, number]], percent: number) => {
+  const expandBounds = (
+    bounds: [[number, number], [number, number]],
+    percent: number
+  ) => {
     const [[minLat, minLon], [maxLat, maxLon]] = bounds;
 
     const latDiff = (maxLat - minLat) * percent;
@@ -105,7 +126,7 @@ tempPlacemarkRef.current = new ymaps.Placemark(coords, {
       // Добавление элемента управления поиском
       const searchControl = new ymaps.control.SearchControl({
         options: {
-          provider: "yandex#search",
+          provider: 'yandex#search',
         },
       });
 
@@ -113,13 +134,13 @@ tempPlacemarkRef.current = new ymaps.Placemark(coords, {
 
       // Обработка выбора результата поиска
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      searchControl.events.add("resultselect", (e: any) => {
+      searchControl.events.add('resultselect', (e: any) => {
         const results = searchControl.getResultsArray();
-        const selectedResult = results[e.get("index")];
+        const selectedResult = results[e.get('index')];
         // @ts-expect-error: Type is not ts
         const coords = selectedResult.geometry.getCoordinates();
         // @ts-expect-error: Type is not ts
-        const name = selectedResult.properties.get("name"); // Получаем название организации
+        const name = selectedResult.properties.get('name'); // Получаем название организации
 
         setSelectedCoords(coords); // Сохраняем выбранные координаты
         setPointName(name); // Устанавливаем название организации
@@ -128,10 +149,10 @@ tempPlacemarkRef.current = new ymaps.Placemark(coords, {
 
       // Обработка клика по карте
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      mapInstance.current.events.add("click", (e: any) => {
-        const coords = e.get("coords") as [number, number];
+      mapInstance.current.events.add('click', (e: any) => {
+        const coords = e.get('coords') as [number, number];
         setSelectedCoords(coords); // Сохраняем выбранные координаты
-        setPointName(""); // Очищаем название, так как это не организация
+        setPointName(''); // Очищаем название, так как это не организация
         addTempPlacemark(coords); // Добавляем временную метку
       });
 
@@ -157,27 +178,31 @@ tempPlacemarkRef.current = new ymaps.Placemark(coords, {
     // Очищаем старые метки
     placemarksRef.current.removeAll();
 
-   // Добавляем новые метки с стилизацией
-points.forEach((point) => {
-  const placemark = new ymaps.Placemark(point.coords, {
-    hintContent: `${point.name}`, 
-    balloonContent: `Название: ${point.name}<br>Описание: ${
-      point.description || "Нет описания"
-    }<br>Координаты: ${point.coords.join(", ")}`,
-  }, {
-    // Стилизация метки
-    iconLayout: 'default#image', // Используем стандартный layout для изображений
-    iconImageHref: './mapitem.png', // URL вашей иконки
-    iconImageSize: [30, 30], // Размер иконки
-    iconImageOffset: [-15, -30], // Смещение иконки
-    // Дополнительные опции
-    // preset: 'islands#redIcon', 
-    // Используем стандартный стиль Яндекс.Карт
-    // или
-    // preset: 'islands#blueCircleDotIcon', // Другой стандартный стиль
-  });
-  placemarksRef.current.add(placemark);
-});
+    // Добавляем новые метки с стилизацией
+    points.forEach((point) => {
+      const placemark = new ymaps.Placemark(
+        point.coords,
+        {
+          hintContent: `${point.name}`,
+          balloonContent: `Название: ${point.name}<br>Описание: ${
+            point.description || 'Нет описания'
+          }<br>Координаты: ${point.coords.join(', ')}`,
+        },
+        {
+          // Стилизация метки
+          iconLayout: 'default#image', // Используем стандартный layout для изображений
+          iconImageHref: '/mapitem.png', // URL вашей иконки
+          iconImageSize: [30, 30], // Размер иконки
+          iconImageOffset: [-15, -30], // Смещение иконки
+          // Дополнительные опции
+          // preset: 'islands#redIcon',
+          // Используем стандартный стиль Яндекс.Карт
+          // или
+          // preset: 'islands#blueCircleDotIcon', // Другой стандартный стиль
+        }
+      );
+      placemarksRef.current.add(placemark);
+    });
   }, [points]);
 
   // Обработка добавления точки в маршрут
@@ -196,18 +221,21 @@ points.forEach((point) => {
           createCoordinateThunk({
             latitude: selectedCoords[0],
             longitude: selectedCoords[1],
-            coordinateTitle: pointName,
-            coordinateBody: pointDescription,
+            coordinateTitle: pointName
+              .trim()
+              .toLowerCase()
+              .replace(/\b\w/g, (char) => char.toUpperCase()),
+            coordinateBody: pointDescription.toLocaleLowerCase(),
             coordinateNumber: points.length + 1,
             pathId: pathId,
           })
         );
 
-        setPointName("");
-        setpointDescription("");
+        setPointName('');
+        setpointDescription('');
         setSelectedCoords(null);
       } else {
-        console.error("pathId не определен");
+        console.error('pathId не определен');
       }
     }
   };
@@ -217,7 +245,6 @@ points.forEach((point) => {
       <div ref={mapRef} className={styles.mapContainer} />
 
       {path?.userId === user?.id && selectedCoords && (
-        // <div>lol<div/>
         <div className={styles.formGroup}>
           <div className={styles.formRow}>
             <div className={styles.inputGroup}>
@@ -249,25 +276,21 @@ points.forEach((point) => {
                 type="button"
                 className={`${styles.button} ${styles.buttonSuccess}`}
                 onClick={handleAddToRoute}
+                disabled={!pointDescription||!pointName}
               >
-                Добавить в маршрут: {selectedCoords[0].toFixed(4)},{" "}
+                
+                Добавить в маршрут: {selectedCoords[0].toFixed(4)},{' '}
                 {selectedCoords[1].toFixed(4)}
               </button>
             </div>
           </div>
         </div>
       )}
-      
-
     </div>
   );
 };
 
 export default MapViewerYandexMap;
 
-
-
-
-
-// 
-// 
+//
+//

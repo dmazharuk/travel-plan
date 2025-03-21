@@ -80,7 +80,8 @@
   transition: all 0.3s ease;
 }
 
-.aiButton {
+.aiButton,
+.mapButton {
   width: 100%;
   padding: 1rem;
   font-size: 1rem;
@@ -91,6 +92,10 @@
   border: none;
   border-radius: 8px;
   transition: all 0.3s ease;
+}
+
+.mapButton {
+  margin-bottom: 20px;
 }
 
 .submitButton:hover {

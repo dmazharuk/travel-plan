@@ -92,3 +92,89 @@
   background: none;
   border: none;
 }
+
+.modalTitle {
+  margin: 0 0 15px 0;
+  font-size: 1.5rem;
+  color: #333;
+  text-align: center;
+}
+
+.footerLinks {
+  width: 100%;
+  text-align: center;
+  margin-top: 10px;
+}
+
+@media (max-width: 480px) {
+  .modalContent {
+    width: 90%;
+    max-width: 100%;
+    padding: 15px;
+    margin: 10px;
+  }
+
+  .modalForm {
+    gap: 8px;
+  }
+
+  .modalInput {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .modalButton {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .modalText {
+    font-size: 0.8rem;
+    text-align: center;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+    margin: 10px 0;
+    text-align: center;
+  }
+
+  .passwordContainer {
+    margin-bottom: 5px;
+  }
+
+  .eyeButton {
+    right: 8px;
+    padding: 3px;
+  }
+
+  .eyeButton svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .modalTitle {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+  }
+
+  .footerLinks {
+    margin-top: 8px;
+  }
+}
+
+@media (max-width: 360px) {
+  .modalContent {
+    width: 95%;
+    padding: 10px;
+  }
+
+  .modalInput {
+    padding: 6px;
+    font-size: 13px;
+  }
+
+  .modalButton {
+    padding: 10px;
+  }
+}

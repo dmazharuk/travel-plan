@@ -223,7 +223,7 @@ export function SignInModal({ closeModal }: SignInModalProps) {
       case 'signUp':
         return (
           <>
-            <h2>Регистрация в Travel-Plan</h2>
+            <h2 className={styles.modalTitle}>Регистрация в Travel-Plan</h2>
             <form className={styles.modalForm} onSubmit={onSubmitHandler}>
               <label htmlFor={usernameInputId}>Имя пользователя:</label>
               <input
@@ -361,7 +361,7 @@ export function SignInModal({ closeModal }: SignInModalProps) {
       case 'forgotPassword':
         return (
           <>
-            <h2>Восстановление пароля</h2>
+            <h2 className={styles.modalTitle}>Восстановление пароля</h2>
             <form className={styles.modalForm} onSubmit={handleForgotPassword}>
               <label htmlFor={emailInputId}>Email:</label>
               <input
@@ -388,7 +388,7 @@ export function SignInModal({ closeModal }: SignInModalProps) {
       case 'resetPassword':
         return (
           <>
-            <h2>Сброс пароля</h2>
+            <h2 className={styles.modalTitle}>Сброс пароля</h2>
             <form className={styles.modalForm} onSubmit={handlePasswordReset}>
               <label htmlFor={newPasswordInputId}>Новый пароль:</label>
               <div className={styles.passwordContainer}>
@@ -629,7 +629,7 @@ export function SignInModal({ closeModal }: SignInModalProps) {
     <div className={styles.modal} onClick={handleCloseModal}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
         {renderFormContent()}
-        {renderFooterLinks()}
+        <div className={styles.footerLinks}>{renderFooterLinks()}</div>
       </div>
     </div>
   );

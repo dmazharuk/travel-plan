@@ -76,6 +76,11 @@
   background-color: #2d3b2d; /* Ещё более тёмный зелёный при наведении */
 }
 
+.button:disabled {
+  cursor: not-allowed;
+  background-color: #cbd5e0;
+}
+
 @media (width <= 768px) {
   .formRow {
     flex-direction: column;

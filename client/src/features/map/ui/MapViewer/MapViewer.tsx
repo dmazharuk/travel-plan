@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/shared/hooks/reduxHooks";
-import { getPathByRoadIdThunk } from "@/app/entities/path/api";
-import { getCoordinatesByPathIdThunk } from "@/app/entities/coordinate/api";
-import MapViewerYandexMap from "../MapViewerYandexMap/MapViewerYandexMap";
-import { MapCoord } from "../MapCoord/MapCoord";
-import { MapCoordNotAuthor } from "../MapCoord/MapCoordNotAuthor";
-import styles from "./MapViewer.module.css";
+import React, { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '@/shared/hooks/reduxHooks';
+import { getPathByRoadIdThunk } from '@/app/entities/path/api';
+import { getCoordinatesByPathIdThunk } from '@/app/entities/coordinate/api';
+import MapViewerYandexMap from '../MapViewerYandexMap/MapViewerYandexMap';
+import { MapCoord } from '../MapCoord/MapCoord';
+import { MapCoordNotAuthor } from '../MapCoord/MapCoordNotAuthor';
+import styles from './MapViewer.module.css';
 
 interface MapManagerProps {
   roadId: number | null | undefined;
@@ -82,7 +82,7 @@ const MapViewer: React.FC<MapManagerProps> = ({ roadId }) => {
                   path?.roadId === roadId && */}
         <div className={styles.formGroup}>
           <MapViewerYandexMap
-            key={initialCenter.join(",")} // Принудительно пересоздаем карту при изменении initialCenter
+            key={initialCenter.join(',')} // Принудительно пересоздаем карту при изменении initialCenter
             points={points}
             onAddToRoute={handleAddToRoute}
             path={path}
@@ -131,12 +131,3 @@ const MapViewer: React.FC<MapManagerProps> = ({ roadId }) => {
 };
 
 export default MapViewer;
-
-
-
-
-
-
-
-
-
