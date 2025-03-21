@@ -1,10 +1,10 @@
 /* Стили для контейнера координаты */
 .coordinateContainer {
-  width: 100%;
   display: flex;
   gap: 0.5rem;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
 }
 
 /* Стили для инпутов */

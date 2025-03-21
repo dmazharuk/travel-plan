@@ -25,14 +25,14 @@
 
 /* Элемент списка координат */
 .coordinateItem {
+  display: flex;
+  align-items: center;
+  min-height: 5rem;
   padding: 0.75rem;
   margin-bottom: -1px; /* Убираем двойную границу между элементами */
   border: 1px solid #ddd;
   border-radius: 0; /* Убираем скругления у элементов */
   transition: background-color 0.3s ease;
-  min-height: 5rem;
-  display: flex;
-  align-items: center;
 }
 
 /* Убираем границу у последнего элемента, чтобы она не выходила за пределы контейнера */

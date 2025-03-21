@@ -17,7 +17,7 @@ type UserState = {
 const initialState: UserState = {
   user: null,
   error: null,
-  isLoading: false,
+  isLoading: true,
 };
 
 const userSLice = createSlice({
