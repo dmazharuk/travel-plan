@@ -94,7 +94,7 @@
 }
 
 .modalTitle {
-  margin: 0 0 15px 0;
+  margin: 0 0 15px;
   font-size: 1.5rem;
   color: #333;
   text-align: center;
@@ -102,11 +102,11 @@
 
 .footerLinks {
   width: 100%;
-  text-align: center;
   margin-top: 10px;
+  text-align: center;
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .modalContent {
     width: 90%;
     max-width: 100%;
@@ -134,8 +134,8 @@
   }
 
   h2 {
-    font-size: 1.2rem;
     margin: 10px 0;
+    font-size: 1.2rem;
     text-align: center;
   }
 
@@ -154,8 +154,8 @@
   }
 
   .modalTitle {
-    font-size: 1.3rem;
     margin-bottom: 10px;
+    font-size: 1.3rem;
   }
 
   .footerLinks {
@@ -163,7 +163,7 @@
   }
 }
 
-@media (max-width: 360px) {
+@media (width <= 360px) {
   .modalContent {
     width: 95%;
     padding: 10px;
