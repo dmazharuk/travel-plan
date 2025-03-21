@@ -57,6 +57,24 @@
   transition: all 0.3s ease;
 }
 
+.authButton:hover {
+  box-shadow: 0 5px 15px rgb(60 75 59 / 30%);
+  transform: translateY(-2px);
+}
+
+.container[data-page='main']:not(.scrolled) .authButton {
+  padding: 0.8rem 1.5rem;
+  font-weight: 500;
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+
+  /* background: linear-gradient(45deg,#3c4b3b, #4a5f48); */
+  
+  border-radius: 15px;
+  transition: background-color 0.3s ease;
+}
+
 .username {
   display: flex;
   gap: 0.5rem;
@@ -78,10 +96,7 @@
   background: transparent;
 }
 
-.authButton:hover {
-  box-shadow: 0 5px 15px rgb(60 75 59 / 30%);
-  transform: translateY(-2px);
-}
+
 
 .container[data-page='main']:not(.scrolled) .logo a,
 .container[data-page='main']:not(.scrolled) .navLinks a,

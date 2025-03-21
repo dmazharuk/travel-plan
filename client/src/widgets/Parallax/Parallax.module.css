@@ -54,15 +54,16 @@ video {
   padding: 12px 30px;
   font-size: 1.2rem;
   color: white;
+  text-decoration: none;
   cursor: pointer;
-  background-color: #3c4b3b;
-  border: none;
+  background-color: rgb(255 255 255 / 10%);
+  border: 1px solid rgb(255 255 255 / 30%);
   border-radius: 15px;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease;
 }
 
 .button:hover {
-  background-color: #3e583c;
+  background-color: #2e2e2e;
 }
 
 /* Мобильная версия */
