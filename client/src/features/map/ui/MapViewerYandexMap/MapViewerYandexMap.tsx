@@ -152,7 +152,7 @@ const MapViewerYandexMap: React.FC<MapViewerYandexMapProps> = ({ points, onAddTo
     points.forEach((point) => {
       const placemark = new ymaps.Placemark(point.coords, {
         hintContent: `${point.name}`, 
-        balloonContent: `Номер: ${point.number} <br> Название: ${point.name}<br>Описание: ${
+        balloonContent: `Название: ${point.name}<br>Описание: ${
           point.description || "Нет описания"
         }`,
       });

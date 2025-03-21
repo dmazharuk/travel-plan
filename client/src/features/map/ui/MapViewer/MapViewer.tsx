@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/shared/hooks/reduxHooks";
 import { getPathByRoadIdThunk } from "@/app/entities/path/api";
-import {
-  deleteCoordinateThunk,
-  getAllCoordinatesThunk,
-  getCoordinateById,
-  getCoordinatesByPathIdThunk,
-  updateCoordinateThunk,
-} from "@/app/entities/coordinate/api";
+import { getCoordinatesByPathIdThunk } from "@/app/entities/coordinate/api";
 import MapViewerYandexMap from "../MapViewerYandexMap/MapViewerYandexMap";
-import styles from "./MapViewer.module.css"; // Подключаем стили
-import { ICoordinate } from "@/app/entities/coordinate";
+import { MapCoord } from "../MapCoord/MapCoord";
+import { MapCoordNotAuthor } from "../MapCoord/MapCoordNotAuthor";
+import styles from "./MapViewer.module.css";
 
 interface MapManagerProps {
   roadId: number | null | undefined;
@@ -18,32 +13,17 @@ interface MapManagerProps {
 
 const MapViewer: React.FC<MapManagerProps> = ({ roadId }) => {
   const dispatch = useAppDispatch();
-  const [editable, setEditable] = useState(false);
   const path = useAppSelector((state) => state.path.path); // Получаем один path
+  const { user } = useAppSelector((state) => state.user);
+
   const coordinates = useAppSelector((state) => state.coordinate.coordinates);
   const [isLoading, setIsLoading] = useState(true); // Состояние загрузки данных
-  const [formData, setFormData] = useState<Partial<ICoordinate>>({
-    coordinateTitle: "",
-    coordinateBody: "",
-  });
   const [points, setPoints] = useState<
     { coords: [number, number]; name: string; number: number }[]
   >([]);
   const [initialCenter, setInitialCenter] = useState<[number, number]>([
     55.76, 37.64,
   ]); // По умолчанию Москва
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const deleteCoordinate = (coordinateId: any) => {
-    // console.log(coordinateId);
-
-    dispatch(deleteCoordinateThunk(coordinateId))
-      .unwrap()
-      .then(() => {})
-      .catch((error) => {
-        console.error("Ошибка при удалении координаты:", error);
-      });
-  };
 
   // Преобразуем координаты в формат для YandexMap
   useEffect(() => {
@@ -62,8 +42,6 @@ const MapViewer: React.FC<MapManagerProps> = ({ roadId }) => {
     }
   }, [coordinates]);
 
-  // console.log(path);
-
   const handleAddToRoute = (coords: [number, number], name: string) => {
     const newPoint = {
       coords,
@@ -71,7 +49,6 @@ const MapViewer: React.FC<MapManagerProps> = ({ roadId }) => {
       number: points.length + 1,
     };
     setPoints((prev) => [...prev, newPoint]);
-    // alert(`Точка "${name}" добавлена`);
   };
 
   // Получаем Path по roadId
@@ -84,9 +61,6 @@ const MapViewer: React.FC<MapManagerProps> = ({ roadId }) => {
     }
   }, [roadId, dispatch]);
 
-  // console.log(coordinates);
-  // console.log(coords);
-
   // Получаем координаты по pathId
   useEffect(() => {
     if (path?.id) {
@@ -97,66 +71,15 @@ const MapViewer: React.FC<MapManagerProps> = ({ roadId }) => {
     }
   }, [path, dispatch]);
 
-
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleSave = (coordinateId: any) => {
-    // console.log(coordinateId);
-
-    const updatedCoordinate = {
-      coordinateTitle: formData.coordinateTitle,
-      coordinateBody: formData.coordinateBody,
-    };
-
-    if (coordinateId) {
-      dispatch(
-        updateCoordinateThunk({
-          id: Number(coordinateId),
-          updatedCoordinate: updatedCoordinate,
-        })
-      )
-        .unwrap()
-        .then(() => {
-          dispatch(getCoordinateById({ id: Number(coordinateId) }));
-          dispatch(getAllCoordinatesThunk());
-          // navigate(CLIENT_ROUTES.CABINET_PAGE);
-        })
-        .catch((error) => {
-          console.error("Ошибка обновления:", error);
-        });
-    }
-  };
-
-  // const deleteCoordinate = (coordinateId: any) => {
-  //   // console.log(coordinateId);
-
-  //   dispatch(deleteCoordinateThunk(coordinateId))
-  //     .unwrap()
-  //     .then(() => {
-
-  //     })
-  //     .catch((error) => {
-  //       console.error("Ошибка при удалении координаты:", error);
-  //     });
-
-  // };
-
   if (isLoading) {
     return <p>Загрузка данных...</p>; // Показываем индикатор загрузки
   }
 
   return (
     <div className={styles.container}>
-      <h3 className={styles.title}>Карта путешествия 📌</h3>
       <div className={styles.formGrid}>
+        {/* {path?.userId === user?.id && coordinates.length !== 0 && coordinates.map((coord) => (
+                  path?.roadId === roadId && */}
         <div className={styles.formGroup}>
           <MapViewerYandexMap
             key={initialCenter.join(",")} // Принудительно пересоздаем карту при изменении initialCenter
@@ -167,90 +90,40 @@ const MapViewer: React.FC<MapManagerProps> = ({ roadId }) => {
             initialCenter={initialCenter}
           />
         </div>
-        {coordinates.length > 0 ? (
-          <div className={styles.formGroup}>
-            <h3 className={styles.formLabel}>Координаты маршрута:</h3>
 
-            <div className={styles.formRow}>
-              <div className={styles.formGroup}>
-                <label className={styles.formLabel}>Название точки </label>
-                <input
-                  type="text"
-                  name="coordinateTitle"
-                  // className={styles.formInput}
-                  value={formData.coordinateTitle || ""}
-                  onChange={handleChange}
-                  disabled={!editable}
-                  placeholder="введите новое название точки"
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label className={styles.formLabel}>Описание места</label>
-                <input
-                  type="text"
-                  name="coordinateBody"
-                  // className={styles.formInput}
-                  value={formData.coordinateBody || ""}
-                  onChange={handleChange}
-                  disabled={!editable}
-                  placeholder="введите новое описание"
-                />
-              </div>
-            </div>
-
-            <ul>
-              {coordinates.map((coord) => (
-                <li key={coord.id}>
-                  <div className={styles.mapReview}>
-                    <div>
-                      {coord.coordinateTitle}, {coord.coordinateBody}
-                    </div>
-                    {/* <div>{coord.latitude}, {coord.longitude}</div> */}
-
-                    {/* Кнопки управления */}
-                    {/* {coord?.user?.id === user?.id && ( */}
-                    <div>
-                      <button
-                        type="button"
-                        className={styles.change}
-                        onClick={() => setEditable(!editable)}
-                      >
-                        {editable ? "Отменить" 
-                        : <img src="/notes.png" className={styles.rubbishBin} />}
-                        {/* <img src="/rubbishbin.png" className={styles.rubbishBin} /> */}
-                        {/* изменить */}
-                      </button>
-
-                      {editable && (
-                        <button
-                          type="button"
-                          className={`${styles.button} ${styles.buttonSuccess}`}
-                          onClick={() => handleSave(coord.id)}
-                        >
-                          Сохранить
-                        </button>
-                      )}
-
-                      <button
-                        type="button"
-                        className={styles.rubbish}
-                        onClick={() => deleteCoordinate(coord.id)}
-                      >
-                        <img
-                          src="/rubbishbin.png"
-                          className={styles.rubbishBin}
-                        />
-                        {/* удалить */}
-                      </button>
-                    </div>
-                    {/* )} */}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
+        {/* {path?.userId === user?.id && ( <div>лол<div/>  )}; */}
+        {coordinates.length < 0 ? (
+          <p className={styles.formNoCoords}>
+            Организатор пока не добавил карту
+          </p>
         ) : (
-          <p className={styles.formNoCoords}>Организатор пока не добавил карту к этому маршруту</p>
+          <div className={styles.formGroup}>
+            <div className={styles.coordinatesContainer}>
+              <h3 className={styles.coordinatesTitle}>Координаты маршрута</h3>
+              <ul className={styles.coordinatesList}>
+                {path?.userId === user?.id &&
+                  coordinates.length !== 0 &&
+                  coordinates.map(
+                    (coord) =>
+                      path?.roadId === roadId && (
+                        <li key={coord.id} className={styles.coordinateItem}>
+                          <MapCoord coord={coord} />
+                        </li>
+                      )
+                  )}
+                {path?.userId !== user?.id &&
+                  coordinates.length !== 0 &&
+                  coordinates.map(
+                    (coord) =>
+                      path?.roadId === roadId && (
+                        <li key={coord.id} className={styles.coordinateItem}>
+                          <MapCoordNotAuthor coord={coord} />
+                        </li>
+                      )
+                  )}
+              </ul>
+            </div>
+          </div>
         )}
       </div>
     </div>

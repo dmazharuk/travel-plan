@@ -1,0 +1,96 @@
+/* Стили для контейнера координаты */
+.coordinateContainer {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Стили для инпутов */
+.coordinateInput {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.coordinateInput:focus {
+  outline: none;
+  border-color: #5a3d3f;
+  box-shadow: 0 0 0 2px rgb(90 61 63 / 10%);
+}
+
+
+/* Стили для кнопок без фона по умолчанию */
+.coordinateButton {
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.coordinateButtonNo {
+  display: flex;
+  align-items: center; /* Центрирование по вертикали */
+  justify-content: center; /* Центрирование по горизонтали */
+  width: 85px;
+  height: 44px;
+  background-color:#b3b3b3;
+  border-radius: 8px;
+}
+
+.coordinateButtonEdit {
+  display: flex;
+  align-items: center; /* Центрирование по вертикали */
+  justify-content: center; /* Центрирование по горизонтали */
+  width: 85px;
+  height: 44px;
+  background-color: #343434;
+  border-radius: 6px;;
+}
+
+.buttonSuccess:hover {
+  background-color:#333; /* Красный при наведении */
+
+}
+
+/* Стили для кнопки редактирования */
+.coordinateButton.editButton {
+  margin-right: 0.75rem; /* Отступ справа */
+}
+
+/* Стили для кнопки корзины */
+.coordinateButton.deleteButton:hover {
+  background-color: #940000; /* Красный при наведении */
+  border-radius: 8px;
+}
+
+/* Стили для кнопки слева (редактирование) */
+.coordinateButton.editButton:hover {
+  background-color: #b3b3b3; /* Темно-серый при наведении */
+  border-radius: 8px;
+}
+
+
+
+/* Стили для иконок */
+.coordinateIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+
+/* Адаптивность */
+@media (width <= 768px) {
+  .formGrid {
+    flex-direction: column;
+  }
+}

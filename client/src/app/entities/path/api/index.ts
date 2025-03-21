@@ -40,7 +40,7 @@ export const getPathByRoadIdThunk = createAsyncThunk<
       const { data } = await axiosInstance.get<IServerResponse<IPath>>(
         `/paths/by-road/${roadId}` // Предполагаемый эндпоинт
       );
-      // console.log('Path data received:', data);
+   
       return data;
     } catch (error) {
       const err = error as AxiosError<IServerResponse>;

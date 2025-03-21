@@ -47,7 +47,7 @@ export const getCoordinatesByPathIdThunk = createAsyncThunk<
       const { data } = await axiosInstance.get<IServerResponse<ArrayCoordinatesType>>(
         `/coordinates/by-path/${pathId}` // Предполагаемый эндпоинт
       );
-      // console.log('Coordinates data received:', data);
+
       return data;
     } catch (error) {
       const err = error as AxiosError<IServerResponse>;
@@ -110,7 +110,6 @@ export const deleteCoordinateThunk = createAsyncThunk<
     const { data } = await axiosInstance.delete<IServerResponse<ICoordinate>>(
       `/coordinates/delete/${id}`
     );
-    console.log(data);
     
     return data;
   } catch (error) {

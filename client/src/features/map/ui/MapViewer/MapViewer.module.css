@@ -1,105 +1,50 @@
-/* Основные стили для контейнера */
-.container {
-  max-width: 800px;
-  padding-top: 1rem;
-  margin: 0 auto;
-  background-color: #f5f5f5;
-  border-radius: 12px;
+/* Стили для контейнера координат */
+.coordinatesContainer {
+  padding: 1rem;
+  margin-top: 1.5rem;
+  overflow: hidden; /* Чтобы скругления углов контейнера не "ломались" */
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px; /* Скругление только у контейнера */
 }
 
-/* Заголовок страницы */
-.title {
-  margin-top: 2rem;
+/* Заголовок списка координат */
+.coordinatesTitle {
   margin-bottom: 1rem;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 600;
   color: #3d2c2e;
-  text-align: center;
 }
 
-.change {
-  background-color: #d1d1d1;
-}
-
-.change:hover {
-  background-color: #757575;
-}
-
-.formNoCoords {
-  margin: 0.5rem;
-  margin-bottom: 3rem;
-  font-size: 0.9rem;
-  text-align: center;
-}
-
-.buttonSuccess {
-  background-color:  #989898;
-}
-
-.buttonSuccess:hover {
-  background-color: #4d4d4d;
-}
-
-/* Сетка для формы */
-.formGrid {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.formGroup {
-  flex: 1;
-  margin-bottom: 0.5rem;
-}
-
-.mapReview {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 60px;
-}
-
-.formLabel {
-  display: block;
-  margin-bottom: 0.25rem;
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: #3d2c2e;
-}
-
-/* Стили для списка координат */
-ul {
+/* Список координат */
+.coordinatesList {
   padding: 0;
+  margin: 0;
   list-style-type: none;
 }
 
-ul li {
-  padding: 0.5rem;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-  color: #333;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+/* Элемент списка координат */
+.coordinateItem {
+  padding: 0.75rem;
+  margin-bottom: -1px; /* Убираем двойную границу между элементами */
+  border: 1px solid #ddd;
+  border-radius: 0; /* Убираем скругления у элементов */
+  transition: background-color 0.3s ease;
 }
 
-.formRow {
-  display: flex;
-  gap: 1rem; /* Отступ между элементами */
-  align-items: flex-end; /* Выравниваем элементы по нижнему краю */
+/* Убираем границу у последнего элемента, чтобы она не выходила за пределы контейнера */
+.coordinateItem:last-child {
+  margin-bottom: 0;
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
 }
 
-.rubbish {
-  background-color: #fff;
+.coordinateItem:hover {
+  background-color: #f1f1f1;
 }
 
-.rubbishBin {
-  height: 1.5rem;
-}
-
-/* Адаптивность */
-@media (width <= 768px) {
-  .formGrid {
-    flex-direction: column;
-  }
+/* Убираем границу у первого и последнего элементов, чтобы они сливались с контейнером */
+.coordinateItem:first-child {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
 }
