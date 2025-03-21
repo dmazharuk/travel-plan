@@ -30,6 +30,9 @@
   border: 1px solid #ddd;
   border-radius: 0; /* Убираем скругления у элементов */
   transition: background-color 0.3s ease;
+  min-height: 5rem;
+  display: flex;
+  align-items: center;
 }
 
 /* Убираем границу у последнего элемента, чтобы она не выходила за пределы контейнера */
@@ -37,10 +40,6 @@
   margin-bottom: 0;
   border-bottom-right-radius: 6px;
   border-bottom-left-radius: 6px;
-}
-
-.coordinateItem:hover {
-  background-color: #f1f1f1;
 }
 
 /* Убираем границу у первого и последнего элементов, чтобы они сливались с контейнером */

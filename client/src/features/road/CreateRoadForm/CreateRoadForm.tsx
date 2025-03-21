@@ -50,13 +50,10 @@ export function CreateRoadForm() {
   };
 
   useEffect(() => {
-    // console.log('полченные даты из welcomePage',{startDate, endDate});
-
     if (startDate && endDate) {
       const newStartDate = new Date(startDate);
       newStartDate.setDate(newStartDate.getDate() + 1);
       const startDateString = newStartDate.toISOString().split('T')[0];
-      // console.log('startDateString', startDateString);
       const newEndDate = new Date(endDate);
       newEndDate.setDate(newEndDate.getDate() + 1);
       const endDateString = newEndDate.toISOString().split('T')[0];
@@ -206,9 +203,9 @@ export function CreateRoadForm() {
     try {
       const recomendation = await axiosInstance.post(
         '/gigachat/recommendations',
-        { city: formData.city },
+        { city: formData.city }
       );
-     
+
       setFormData((prevState) => ({
         ...prevState,
         routeInfo: recomendation.data.data,
@@ -234,9 +231,7 @@ export function CreateRoadForm() {
     try {
       const recomendation = await axiosInstance.post(
         '/gigachat/recommendations',
-        { city: formData.city,
-          type:'items'
-         },
+        { city: formData.city, type: 'items' }
       );
       console.log(recomendation.data, '<========recomendation');
       setFormData((prevState) => ({
@@ -544,7 +539,11 @@ export function CreateRoadForm() {
         {/* КАРТА */}
         <div className={styles.main}>
           <h3 className={styles.title}>Карта путешествия 📌</h3>
-          <button type="button" onClick={handleToggleMap}>
+          <button
+            type="button"
+            onClick={handleToggleMap}
+            className={styles.mapButton}
+          >
             {isMapVisible ? 'Скрыть карту' : 'Добавим карту?'}
           </button>
           {isMapVisible && <RouteManager pathId={pathId} />}{' '}

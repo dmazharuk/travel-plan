@@ -14,7 +14,6 @@ export function ProtectedRoute() {
       dispatch(
         showAlert({ message: 'Пожалуйста, авторизуйтесь', status: 'mistake' })
       );
-     
     } else if (!user.isEmailConfirmed) {
       dispatch(
         showAlert({
@@ -22,14 +21,12 @@ export function ProtectedRoute() {
           status: 'mistake',
         })
       );
-      
     }
   }, [user, dispatch]);
 
   if (!user) {
     return <Navigate to={CLIENT_ROUTES.MAIN} />;
-   
-      }
+  }
   if (!user.isEmailConfirmed) {
     return <Navigate to={CLIENT_ROUTES.MAIN} />;
   }

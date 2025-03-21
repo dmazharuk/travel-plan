@@ -1,5 +1,6 @@
 /* Стили для контейнера координаты */
 .coordinateContainer {
+  width: 100%;
   display: flex;
   gap: 0.5rem;
   align-items: center;
@@ -24,7 +25,6 @@
   box-shadow: 0 0 0 2px rgb(90 61 63 / 10%);
 }
 
-
 /* Стили для кнопок без фона по умолчанию */
 .coordinateButton {
   padding: 0.5rem;
@@ -43,7 +43,7 @@
   justify-content: center; /* Центрирование по горизонтали */
   width: 85px;
   height: 44px;
-  background-color:#b3b3b3;
+  background-color: #b3b3b3;
   border-radius: 8px;
 }
 
@@ -54,12 +54,7 @@
   width: 85px;
   height: 44px;
   background-color: #343434;
-  border-radius: 6px;;
-}
-
-.buttonSuccess:hover {
-  background-color:#333; /* Красный при наведении */
-
+  border-radius: 6px;
 }
 
 /* Стили для кнопки редактирования */
@@ -69,7 +64,7 @@
 
 /* Стили для кнопки корзины */
 .coordinateButton.deleteButton:hover {
-  background-color: #940000; /* Красный при наведении */
+  background-color: #333; /* Красный при наведении */
   border-radius: 8px;
 }
 
@@ -79,14 +74,16 @@
   border-radius: 8px;
 }
 
-
-
 /* Стили для иконок */
 .coordinateIcon {
   width: 1.5rem;
   height: 1.5rem;
 }
 
+.inputConteiner {
+  display: flex;
+  gap: 1rem;
+}
 
 /* Адаптивность */
 @media (width <= 768px) {

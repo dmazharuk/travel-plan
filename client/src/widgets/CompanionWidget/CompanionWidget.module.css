@@ -100,14 +100,14 @@
   font-weight: 500;
   color: #fff;
   cursor: pointer;
-  background-color: #1c278a;
+  background-color: #2c344e;
   border: none;
   border-radius: 6px;
   transition: background-color 0.3s ease;
 }
 
 .addCompanionForm button:hover {
-  background-color: #00005e;
+  background-color: #1e2643;
 }
 
 .companionList {

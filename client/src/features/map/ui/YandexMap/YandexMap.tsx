@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
-import styles from "./YandexMap.module.css";
-import { createCoordinateThunk } from "@/app/entities/coordinate";
-import { useAppDispatch } from "@/shared/hooks/reduxHooks";
+import React, { useEffect, useRef, useState } from 'react';
+import styles from './YandexMap.module.css';
+import { createCoordinateThunk } from '@/app/entities/coordinate';
+import { useAppDispatch } from '@/shared/hooks/reduxHooks';
 
-declare const ymaps: typeof import("yandex-maps");
+declare const ymaps: typeof import('yandex-maps');
 
 interface YandexMapProps {
   points: {
@@ -37,8 +37,8 @@ const YandexMap: React.FC<YandexMapProps> = ({
     null
   ); // Выбранные координаты
 
-  const [pointName, setPointName] = useState(""); // Название точки
-  const [pointDescription, setpointDescription] = useState(""); // Описание точки
+  const [pointName, setPointName] = useState(''); // Название точки
+  const [pointDescription, setpointDescription] = useState(''); // Описание точки
   const tempPlacemarkRef = useRef<ymaps.Placemark | null>(null); // Для хранения временной метки // Добавление временной метки
 
   const addTempPlacemark = (coords: [number, number]) => {
@@ -46,27 +46,27 @@ const YandexMap: React.FC<YandexMapProps> = ({
       // Удаляем старую временную метку
       mapInstance.current?.geoObjects.remove(tempPlacemarkRef.current);
     }
-  
+
     // Создаем новую временную метку с стилизацией
     tempPlacemarkRef.current = new ymaps.Placemark(
       coords,
       {
-        hintContent: pointName || "Новая точка",
+        hintContent: pointName || 'Новая точка',
         balloonContent: `Название: ${
-          pointName || "Новая точка"
-        }<br>Описание: ${pointDescription}<br>Координаты: ${coords.join(", ")}`,
+          pointName || 'Новая точка'
+        }<br>Описание: ${pointDescription}<br>Координаты: ${coords.join(', ')}`,
       },
       {
         // Стилизация временной метки
         iconLayout: 'default#image',
-        iconImageHref: './mapitem.png', // URL вашей иконки
+        iconImageHref: '/mapitem.png', // URL вашей иконки
         iconImageSize: [30, 30],
         iconImageOffset: [-15, -30],
         // или используем стандартный стиль Яндекс.Карт
         // preset: 'islands#greenIcon', // Пример стандартного стиля
       }
     );
-  
+
     // Добавляем временную метку на карту
     mapInstance.current?.geoObjects.add(tempPlacemarkRef.current);
   };
@@ -87,19 +87,19 @@ const YandexMap: React.FC<YandexMapProps> = ({
 
       const searchControl = new ymaps.control.SearchControl({
         options: {
-          provider: "yandex#search",
+          provider: 'yandex#search',
         },
       });
 
       mapInstance.current.controls.add(searchControl); // Обработка выбора результата поиска
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      searchControl.events.add("resultselect", (e: any) => {
+      searchControl.events.add('resultselect', (e: any) => {
         const results = searchControl.getResultsArray();
 
-        const selectedResult = results[e.get("index")]; // @ts-expect-error: Тип функции не совпадает с ожидаемым
+        const selectedResult = results[e.get('index')]; // @ts-expect-error: Тип функции не совпадает с ожидаемым
         const coords = selectedResult.geometry.getCoordinates(); // @ts-expect-error: Тип функции не совпадает с ожидаемым
-        const name = selectedResult.properties.get("name"); // Получаем название организации
+        const name = selectedResult.properties.get('name'); // Получаем название организации
 
         setSelectedCoords(coords); // Сохраняем выбранные координаты
 
@@ -109,10 +109,10 @@ const YandexMap: React.FC<YandexMapProps> = ({
       }); // Обработка клика по карте
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      mapInstance.current.events.add("click", (e: any) => {
-        const coords = e.get("coords") as [number, number];
+      mapInstance.current.events.add('click', (e: any) => {
+        const coords = e.get('coords') as [number, number];
         setSelectedCoords(coords); // Сохраняем выбранные координаты
-        setPointName(""); // Очищаем название, так как это не организация
+        setPointName(''); // Очищаем название, так как это не организация
 
         addTempPlacemark(coords); // Добавляем временную метку
       }); // Добавляем коллекцию постоянных меток на карту
@@ -134,14 +134,13 @@ const YandexMap: React.FC<YandexMapProps> = ({
         {
           hintContent: `${point.name}`,
           balloonContent: `Название: ${point.name}<br>Описание: ${
-            point.description || "Нет описания"
-          }<br>Координаты: ${point.coords.join(", ")}`,
+            point.description || 'Нет описания'
+          }<br>Координаты: ${point.coords.join(', ')}`,
         },
         {
           // Стилизация метки
-          iconLayout: "default#image", // Используем стандартный layout для изображений
-          iconImageHref:
-            "./mapitem.png", // URL вашей иконки
+          iconLayout: 'default#image', // Используем стандартный layout для изображений
+          iconImageHref: '/mapitem.png', // URL вашей иконки
           iconImageSize: [30, 30], // Размер иконки
           iconImageOffset: [-15, -30], // Смещение иконки
           // или используем стандартный стиль Яндекс.Карт
@@ -166,18 +165,21 @@ const YandexMap: React.FC<YandexMapProps> = ({
           createCoordinateThunk({
             latitude: selectedCoords[0],
             longitude: selectedCoords[1],
-            coordinateTitle: pointName,
-            coordinateBody: pointDescription,
+            coordinateTitle: pointName
+              .trim()
+              .toLowerCase()
+              .replace(/\b\w/g, (char) => char.toUpperCase()),
+            coordinateBody: pointDescription.toLocaleLowerCase(),
             coordinateNumber: points.length + 1, // Номер точки
             pathId: pathId, // Используем pathId
           })
         );
 
-        setPointName("");
-        setpointDescription("");
+        setPointName('');
+        setpointDescription('');
         setSelectedCoords(null);
       } else {
-        console.error("pathId не определен");
+        console.error('pathId не определен');
       }
     }
   };
@@ -221,6 +223,7 @@ const YandexMap: React.FC<YandexMapProps> = ({
                 type="button"
                 className={`${styles.button} ${styles.buttonSuccess}`}
                 onClick={handleAddToRoute}
+                disabled={!pointDescription || !pointName}
               >
                 Добавить в маршрут:
                 {selectedCoords[0].toFixed(4)},{selectedCoords[1].toFixed(4)}
