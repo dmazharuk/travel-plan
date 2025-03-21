@@ -35,7 +35,7 @@ export function WelcomePage(): JSX.Element {
   // история с календарем
 
   const handleConfirmDates = () => {
-  // console.log("выбрали даты", {startDate, endDate});
+ 
     if (user) {
       navigate(CLIENT_ROUTES.CREATE_ROAD_PAGE, {
         state: {
@@ -76,7 +76,7 @@ export function WelcomePage(): JSX.Element {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }} // Задержка зависит от индекса
+              transition={{ duration: 0.2, delay: 0.1, ease: 'easeOut' }} // Задержка зависит от индекса
               onClick={() => navigate(CLIENT_ROUTES.PUBLIC_ROADS_PAGE)}
               style={{ cursor: 'pointer' }}
               whileHover={{ scale: 1.03 }}
@@ -97,7 +97,7 @@ export function WelcomePage(): JSX.Element {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.8, delay: 1 * 0.2, ease: 'easeOut' }} // Задержка зависит от индекса
+              transition={{ duration: 0.2, delay:  0.1, ease: 'easeOut' }} // Задержка зависит от индекса
               style={{ cursor: 'pointer' }}
               onClick={() =>
                 user
@@ -119,7 +119,7 @@ export function WelcomePage(): JSX.Element {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 1.5, delay: 2 * 0.2, ease: 'easeOut' }} // Задержка зависит от индекса
+              transition={{ duration: 1.5, delay: 0.1, ease: 'easeOut' }} // Задержка зависит от индекса
               style={{ cursor: 'pointer' }}
               onClick={() => setIsCalendarOpen(true)}
               whileHover={{ scale: 1.03 }}
@@ -146,7 +146,7 @@ export function WelcomePage(): JSX.Element {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 1.5, delay: 2 * 0.6, ease: 'easeOut' }}
+              transition={{ duration: 1.5, delay:  0.1, ease: 'easeOut' }}
               onClick={() =>
                 user
                   ? navigate(CLIENT_ROUTES.CABINET_PAGE)
