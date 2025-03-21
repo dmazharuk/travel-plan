@@ -59,7 +59,7 @@ const YandexMap: React.FC<YandexMapProps> = ({
       {
         // Стилизация временной метки
         iconLayout: 'default#image',
-        iconImageHref: 'https://cdn-icons-png.flaticon.com/512/684/684908.png', // URL вашей иконки
+        iconImageHref: './mapitem.png', // URL вашей иконки
         iconImageSize: [30, 30],
         iconImageOffset: [-15, -30],
         // или используем стандартный стиль Яндекс.Карт
@@ -141,7 +141,7 @@ const YandexMap: React.FC<YandexMapProps> = ({
           // Стилизация метки
           iconLayout: "default#image", // Используем стандартный layout для изображений
           iconImageHref:
-            "https://cdn-icons-png.flaticon.com/512/684/684908.png", // URL вашей иконки
+            "./mapitem.png", // URL вашей иконки
           iconImageSize: [30, 30], // Размер иконки
           iconImageOffset: [-15, -30], // Смещение иконки
           // или используем стандартный стиль Яндекс.Карт
