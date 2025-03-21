@@ -394,10 +394,10 @@ export function SignInModal({ closeModal }: SignInModalProps) {
               <div className={styles.passwordContainer}>
                 <input
                   type={showPassword ? 'text' : 'password'}
-                  name="password"
+                  name="newPassword"
                   placeholder="Введите пароль"
                   onChange={onChangeHandler}
-                  value={inputs.password}
+                  value={inputs.newPassword}
                   id={newPasswordInputId}
                   className={styles.modalInput}
                 />

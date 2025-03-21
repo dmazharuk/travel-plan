@@ -1,4 +1,4 @@
-import React, { useId, useState } from 'react';
+import { useState } from 'react';
 import YandexMap from '../YandexMap/YandexMap';
 import styles from './RouteManager.module.css';
 import { useAppSelector } from '@/shared/hooks/reduxHooks';
@@ -9,9 +9,6 @@ interface RouteManagerProps {
 }
 
 const RouteManager: React.FC<RouteManagerProps> = ({ pathId }) => {
-  const pointId = useId();
-  console.log(pointId);
-
   const [points, setPoints] = useState<
     {
       coords: [number, number];
@@ -53,7 +50,7 @@ const RouteManager: React.FC<RouteManagerProps> = ({ pathId }) => {
           <div className={styles.coordinatesContainer}>
             <h3 className={styles.coordinatesTitle}>Координаты маршрута</h3>
             <ul className={styles.coordinatesList}>
-              {coordinates.length !== 0 ?
+              {coordinates.length !== 0 ? (
                 coordinates.map(
                   (coord) =>
                     coord.pathId === pathId && (
@@ -61,7 +58,10 @@ const RouteManager: React.FC<RouteManagerProps> = ({ pathId }) => {
                         <MapCoord coord={coord} />
                       </li>
                     )
-                ):<div>Вы пока не добивали точки</div>}
+                )
+              ) : (
+                <div>Вы пока не добивали точки</div>
+              )}
             </ul>
           </div>
         </div>

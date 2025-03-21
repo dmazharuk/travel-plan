@@ -41,6 +41,7 @@ export function CreateRoadForm() {
   const { id } = useParams();
   const isEditMode = Boolean(id);
   const [formData, setFormData] = useState<IRoadRowData>(initialFormData);
+  const [aiThink, setAiThink] = useState(false);
 
   //история с датами из welcomePage
   const location = useLocation();
@@ -139,7 +140,6 @@ export function CreateRoadForm() {
       setIsMapVisible((prev) => !prev); // Меняем состояние по клику на кнопку
     } else {
       const isPathCreated = await createNewPath(); //создание path
-      // console.log(isPathCreated?.id);
 
       if (isPathCreated!) {
         setIsMapVisible((prev) => !prev); // Меняем состояние по клику на кнопку
@@ -153,7 +153,6 @@ export function CreateRoadForm() {
   // Обработчик отправки формы
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // console.log('=====>', formData);
 
     try {
       if (isEditMode) {
@@ -168,7 +167,6 @@ export function CreateRoadForm() {
         //получение roadId и обновление path
         const roadId = createdRoad.data.id; // Получаем roadId
         setRadIdState(roadId); // Сохраняем roadId в состоянии
-        // console.log(roadIdState);
 
         if (pathId) {
           try {
@@ -178,7 +176,6 @@ export function CreateRoadForm() {
                 updatedPath: { roadId }, // Обновляем только roadId
               })
             ).unwrap();
-            // console.log("Path updated with roadId:", roadId);
           } catch (error) {
             console.error('Ошибка при обновлении path:', error);
           }
@@ -201,6 +198,7 @@ export function CreateRoadForm() {
   // Обработчик для получения рекомендаций
   const handleGetRecommendation = async () => {
     try {
+      setAiThink(true);
       const recomendation = await axiosInstance.post(
         '/gigachat/recommendations',
         { city: formData.city }
@@ -221,19 +219,19 @@ export function CreateRoadForm() {
           status: 'mistake',
         })
       );
+    } finally {
+      setAiThink(false);
     }
   };
 
   // Обработчик для получения рекомендаций по вещам
   const handleRecomImportantThings = async () => {
-    console.log(formData.city, 'formData.city');
-
     try {
+      setAiThink(true);
       const recomendation = await axiosInstance.post(
         '/gigachat/recommendations',
         { city: formData.city, type: 'items' }
       );
-      console.log(recomendation.data, '<========recomendation');
       setFormData((prevState) => ({
         ...prevState,
         visitDates: recomendation.data.data,
@@ -246,6 +244,8 @@ export function CreateRoadForm() {
           status: 'mistake',
         })
       );
+    } finally {
+      setAiThink(false);
     }
   };
 
@@ -423,7 +423,7 @@ export function CreateRoadForm() {
         <div className={styles.formGroup}>
           <button
             type="button"
-            disabled={!formData.city}
+            disabled={!formData.city || aiThink}
             onClick={handleGetRecommendation}
             className={styles.aiButton}
             title={!formData.city ? 'Сначала введите город' : ''}
@@ -503,7 +503,7 @@ export function CreateRoadForm() {
         <div className={styles.formGroup}>
           <button
             type="button"
-            disabled={!formData.city}
+            disabled={!formData.city || aiThink}
             onClick={handleRecomImportantThings}
             className={styles.aiButton}
             title={!formData.city ? 'Сначала введите город' : ''}

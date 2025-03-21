@@ -40,6 +40,10 @@ const MapViewer: React.FC<MapManagerProps> = ({ roadId }) => {
       setInitialCenter(formattedPoints[0].coords);
       setIsLoading(false); // Данные загружены
     }
+
+    return () => {
+      setPoints([]);
+    };
   }, [coordinates]);
 
   const handleAddToRoute = (coords: [number, number], name: string) => {
@@ -65,6 +69,11 @@ const MapViewer: React.FC<MapManagerProps> = ({ roadId }) => {
   useEffect(() => {
     if (path?.id) {
       dispatch(getCoordinatesByPathIdThunk(path.id))
+        .unwrap()
+        .then(() => setIsLoading(false)) // Данные загружены
+        .catch(() => setIsLoading(false)); // Обработка ошибки
+    } else {
+      dispatch(getCoordinatesByPathIdThunk(0))
         .unwrap()
         .then(() => setIsLoading(false)) // Данные загружены
         .catch(() => setIsLoading(false)); // Обработка ошибки
