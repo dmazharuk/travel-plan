@@ -3,7 +3,9 @@ import { useAppDispatch, useAppSelector } from "@/shared/hooks/reduxHooks";
 import { getPathByRoadIdThunk } from "@/app/entities/path/api";
 import { getCoordinatesByPathIdThunk } from "@/app/entities/coordinate/api";
 import MapViewerYandexMap from "../MapViewerYandexMap/MapViewerYandexMap";
-import styles from "./MapViewer.module.css"; // Подключаем стили
+import { MapCoord } from "../MapCoord/MapCoord";
+import { MapCoordNotAuthor } from "../MapCoord/MapCoordNotAuthor";
+import styles from "./MapViewer.module.css";
 
 interface MapManagerProps {
   roadId: number | null | undefined;
@@ -12,11 +14,16 @@ interface MapManagerProps {
 const MapViewer: React.FC<MapManagerProps> = ({ roadId }) => {
   const dispatch = useAppDispatch();
   const path = useAppSelector((state) => state.path.path); // Получаем один path
+  const { user } = useAppSelector((state) => state.user);
+
   const coordinates = useAppSelector((state) => state.coordinate.coordinates);
   const [isLoading, setIsLoading] = useState(true); // Состояние загрузки данных
-
-  const [points, setPoints] = useState<{ coords: [number, number]; name: string; number: number }[]>([]);
-  const [initialCenter, setInitialCenter] = useState<[number, number]>([55.76, 37.64]); // По умолчанию Москва
+  const [points, setPoints] = useState<
+    { coords: [number, number]; name: string; number: number }[]
+  >([]);
+  const [initialCenter, setInitialCenter] = useState<[number, number]>([
+    55.76, 37.64,
+  ]); // По умолчанию Москва
 
   // Преобразуем координаты в формат для YandexMap
   useEffect(() => {
@@ -42,7 +49,6 @@ const MapViewer: React.FC<MapManagerProps> = ({ roadId }) => {
       number: points.length + 1,
     };
     setPoints((prev) => [...prev, newPoint]);
-    // alert(`Точка "${name}" добавлена`);
   };
 
   // Получаем Path по roadId
@@ -71,34 +77,53 @@ const MapViewer: React.FC<MapManagerProps> = ({ roadId }) => {
 
   return (
     <div className={styles.container}>
-      <h3 className={styles.title}>Карта путешествия 📌</h3>
       <div className={styles.formGrid}>
+        {/* {path?.userId === user?.id && coordinates.length !== 0 && coordinates.map((coord) => (
+                  path?.roadId === roadId && */}
         <div className={styles.formGroup}>
           <MapViewerYandexMap
             key={initialCenter.join(",")} // Принудительно пересоздаем карту при изменении initialCenter
             points={points}
             onAddToRoute={handleAddToRoute}
-            path ={path}
+            path={path}
             pathId={path?.id}
             initialCenter={initialCenter}
           />
         </div>
-        {coordinates.length > 0 ? (
-          <div className={styles.formGroup}>
-            <h3 className={styles.formLabel}>Координаты маршрута:</h3>
-            <ul>
-              {coordinates.map((coord) => (
-                <li key={coord.id}>
-                  <div className={styles.mapReview}>
-                    <div>{coord.coordinateTitle}, {coord.coordinateBody}</div>
-                    <div>{coord.latitude}, {coord.longitude}</div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
+
+        {/* {path?.userId === user?.id && ( <div>лол<div/>  )}; */}
+        {coordinates.length < 0 ? (
+          <p className={styles.formNoCoords}>
+            Организатор пока не добавил карту
+          </p>
         ) : (
-          <p className={styles.formLabel}>Координаты не найдены.</p>
+          <div className={styles.formGroup}>
+            <div className={styles.coordinatesContainer}>
+              <h3 className={styles.coordinatesTitle}>Координаты маршрута</h3>
+              <ul className={styles.coordinatesList}>
+                {path?.userId === user?.id &&
+                  coordinates.length !== 0 &&
+                  coordinates.map(
+                    (coord) =>
+                      path?.roadId === roadId && (
+                        <li key={coord.id} className={styles.coordinateItem}>
+                          <MapCoord coord={coord} />
+                        </li>
+                      )
+                  )}
+                {path?.userId !== user?.id &&
+                  coordinates.length !== 0 &&
+                  coordinates.map(
+                    (coord) =>
+                      path?.roadId === roadId && (
+                        <li key={coord.id} className={styles.coordinateItem}>
+                          <MapCoordNotAuthor coord={coord} />
+                        </li>
+                      )
+                  )}
+              </ul>
+            </div>
+          </div>
         )}
       </div>
     </div>
@@ -106,6 +131,8 @@ const MapViewer: React.FC<MapManagerProps> = ({ roadId }) => {
 };
 
 export default MapViewer;
+
+
 
 
 

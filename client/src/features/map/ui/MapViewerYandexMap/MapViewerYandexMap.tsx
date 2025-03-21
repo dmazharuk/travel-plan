@@ -33,12 +33,21 @@ const MapViewerYandexMap: React.FC<MapViewerYandexMapProps> = ({ points, onAddTo
     }
 
     // Создаем новую временную метку
-    tempPlacemarkRef.current = new ymaps.Placemark(coords, {
-      hintContent: pointName || "Новая точка",
-      balloonContent: `Название: ${
-        pointName || "Новая точка"
-      }<br>Описание: ${pointDescription}<br>Координаты: ${coords.join(", ")}`,
-    });
+    // Создаем новую временную метку с стилизацией
+tempPlacemarkRef.current = new ymaps.Placemark(coords, {
+  hintContent: `${pointName}` || "Новая точка",
+  balloonContent: `Название: ${
+    pointName || "Новая точка"
+  }<br>Описание: ${pointDescription}<br>Координаты: ${coords.join(", ")}`,
+}, {
+  iconLayout: 'default#image',
+  iconImageHref: './mapitem.png', // URL вашей иконки
+  iconImageSize: [30, 30],
+  iconImageOffset: [-15, -30],
+  // или
+  // preset: 'islands#redIcon', 
+  // Красная иконка
+});
 
     // Добавляем временную метку на карту
     mapInstance.current?.geoObjects.add(tempPlacemarkRef.current);
@@ -148,16 +157,27 @@ const MapViewerYandexMap: React.FC<MapViewerYandexMapProps> = ({ points, onAddTo
     // Очищаем старые метки
     placemarksRef.current.removeAll();
 
-    // Добавляем новые метки
-    points.forEach((point) => {
-      const placemark = new ymaps.Placemark(point.coords, {
-        hintContent: `${point.name}`, 
-        balloonContent: `Номер: ${point.number} <br> Название: ${point.name}<br>Описание: ${
-          point.description || "Нет описания"
-        }`,
-      });
-      placemarksRef.current.add(placemark);
-    });
+   // Добавляем новые метки с стилизацией
+points.forEach((point) => {
+  const placemark = new ymaps.Placemark(point.coords, {
+    hintContent: `${point.name}`, 
+    balloonContent: `Название: ${point.name}<br>Описание: ${
+      point.description || "Нет описания"
+    }<br>Координаты: ${point.coords.join(", ")}`,
+  }, {
+    // Стилизация метки
+    iconLayout: 'default#image', // Используем стандартный layout для изображений
+    iconImageHref: './mapitem.png', // URL вашей иконки
+    iconImageSize: [30, 30], // Размер иконки
+    iconImageOffset: [-15, -30], // Смещение иконки
+    // Дополнительные опции
+    // preset: 'islands#redIcon', 
+    // Используем стандартный стиль Яндекс.Карт
+    // или
+    // preset: 'islands#blueCircleDotIcon', // Другой стандартный стиль
+  });
+  placemarksRef.current.add(placemark);
+});
   }, [points]);
 
   // Обработка добавления точки в маршрут
@@ -249,7 +269,5 @@ export default MapViewerYandexMap;
 
 
 
-
-
-
-
+// 
+// 

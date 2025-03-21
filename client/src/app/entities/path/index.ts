@@ -3,6 +3,7 @@ export {
   createPathThunk,
   deletePathThunk,
   updatePathThunk,
+  getPathByRoadIdThunk,
 } from './api';
 
 export type { IRawPathData, IPath, ArrayPathsType } from "./model";

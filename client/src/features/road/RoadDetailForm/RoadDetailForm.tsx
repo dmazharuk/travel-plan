@@ -354,7 +354,11 @@ export function RoadDetailForm() {
       </div>
 
       {/* про карту, начало */}
-      <div>{road.id && <MapViewer roadId={road.id} />}</div>
+      <div>
+      <h3 className={styles.title}>Карта путешествия 📌</h3>
+        {road.id && <MapViewer roadId={road.id} />}
+      </div>
+
       {/* про карту, конец */}
 
       <CompanionWidget />
