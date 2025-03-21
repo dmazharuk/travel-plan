@@ -99,6 +99,8 @@ const pathSlice = createSlice({
         state.loading = false;
         state.error = action.payload!.error ?? "Unknown error";
       });
+
+      
   },
 });
 

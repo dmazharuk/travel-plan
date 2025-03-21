@@ -91,6 +91,7 @@ const MapViewer: React.FC<MapManagerProps> = ({ roadId }) => {
           />
         </div>
 
+        {/* {path?.userId === user?.id && ( <div>лол<div/>  )}; */}
         {coordinates.length < 0 ? (
           <p className={styles.formNoCoords}>
             Организатор пока не добавил карту
