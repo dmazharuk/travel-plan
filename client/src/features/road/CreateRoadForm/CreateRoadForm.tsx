@@ -140,7 +140,6 @@ export function CreateRoadForm() {
       setIsMapVisible((prev) => !prev); // Меняем состояние по клику на кнопку
     } else {
       const isPathCreated = await createNewPath(); //создание path
-      // console.log(isPathCreated?.id);
 
       if (isPathCreated!) {
         setIsMapVisible((prev) => !prev); // Меняем состояние по клику на кнопку
@@ -154,7 +153,6 @@ export function CreateRoadForm() {
   // Обработчик отправки формы
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // console.log('=====>', formData);
 
     try {
       if (isEditMode) {
@@ -169,7 +167,6 @@ export function CreateRoadForm() {
         //получение roadId и обновление path
         const roadId = createdRoad.data.id; // Получаем roadId
         setRadIdState(roadId); // Сохраняем roadId в состоянии
-        // console.log(roadIdState);
 
         if (pathId) {
           try {
@@ -179,7 +176,6 @@ export function CreateRoadForm() {
                 updatedPath: { roadId }, // Обновляем только roadId
               })
             ).unwrap();
-            // console.log("Path updated with roadId:", roadId);
           } catch (error) {
             console.error('Ошибка при обновлении path:', error);
           }
@@ -236,7 +232,6 @@ export function CreateRoadForm() {
         '/gigachat/recommendations',
         { city: formData.city, type: 'items' }
       );
-      console.log(recomendation.data, '<========recomendation');
       setFormData((prevState) => ({
         ...prevState,
         visitDates: recomendation.data.data,

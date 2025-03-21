@@ -1,6 +1,6 @@
-const CoordinateService = require("../services/Coordinate.service");
-const formatResponse = require("../utils/formatResponse");
-const { Coordinate } = require("../db/models");
+const CoordinateService = require('../services/Coordinate.service');
+const formatResponse = require('../utils/formatResponse');
+const { Coordinate } = require('../db/models');
 
 class CoordinateController {
   //в1 макс
@@ -56,7 +56,7 @@ class CoordinateController {
 
       // Проверяем, что pathId задан (либо из запроса, либо из res.locals)
       if (!finalPathId) {
-        return res.status(400).json(formatResponse(400, "Task ID is required"));
+        return res.status(400).json(formatResponse(400, 'Task ID is required'));
       }
 
       // Создаем новый путь
@@ -72,27 +72,27 @@ class CoordinateController {
       if (!newCoordinate) {
         return res
           .status(400)
-          .json(formatResponse(400, "Failed to create new coordinate"));
+          .json(formatResponse(400, 'Failed to create new coordinate'));
       }
 
       // Возвращаем успешный ответ
-      res.status(201).json(formatResponse(201, "Success", newCoordinate));
+      res.status(201).json(formatResponse(201, 'Success', newCoordinate));
     } catch ({ message }) {
       res
         .status(500)
-        .json(formatResponse(500, "Internal server error", null, message));
+        .json(formatResponse(500, 'Internal server error', null, message));
     }
   }
 
   static async getAllCoordinates(req, res) {
     try {
       const allCoordinates = await CoordinateService.getAll();
-      res.status(200).json(formatResponse(200, "Success", allCoordinates));
+      res.status(200).json(formatResponse(200, 'Success', allCoordinates));
     } catch (error) {
       res
         .status(500)
         .json(
-          formatResponse(500, "Internal server error", null, error.message)
+          formatResponse(500, 'Internal server error', null, error.message)
         );
     }
   }
@@ -106,52 +106,45 @@ class CoordinateController {
       if (!coordinate) {
         return res
           .status(404)
-          .json(formatResponse(404, "Coordinate not found"));
+          .json(formatResponse(404, 'Coordinate not found'));
       }
 
-      res.status(200).json(formatResponse(200, "Success", coordinate));
+      res.status(200).json(formatResponse(200, 'Success', coordinate));
     } catch ({ message }) {
       res
         .status(500)
-        .json(formatResponse(500, "Internal server error", null, message));
+        .json(formatResponse(500, 'Internal server error', null, message));
     }
   }
 
   //получение по айди path
   static async getCoordinatesByPathId(req, res) {
-    // const { id } = req.params;
-
     try {
       const { pathId } = req.params;
-      // console.log('........................',pathId);
 
       if (!pathId) {
-        return res.status(400).json({ message: "pathId is required" });
+        return res.status(400).json({ message: 'pathId is required' });
       }
 
       const coordinates = await Coordinate.findAll({
         where: { pathId },
       });
 
-      // console.log('........................',coordinates);
-
       if (!coordinates || coordinates.length === 0) {
         return console.log('>>>>>>>>>>>>>>>>>>>>>>>>>no coords wuth this');
-        
       }
 
-      res.status(200).json(formatResponse(200, "Success", coordinates));
+      res.status(200).json(formatResponse(200, 'Success', coordinates));
     } catch ({ message }) {
       res
         .status(500)
-        .json(formatResponse(500, "Internal server error", null, message));
+        .json(formatResponse(500, 'Internal server error', null, message));
     }
   }
 
   static async updateCoordinate(req, res) {
     const { id } = req.params;
     const {
-      
       coordinateTitle,
       coordinateBody,
       // coordinateNumber,
@@ -171,7 +164,7 @@ class CoordinateController {
       if (!updatedCoordinate) {
         return res
           .status(404)
-          .json(formatResponse(404, "Coordinate not found"));
+          .json(formatResponse(404, 'Coordinate not found'));
       }
 
       res
@@ -179,39 +172,42 @@ class CoordinateController {
         .json(
           formatResponse(
             200,
-            "Coordinate updated successfully",
+            'Coordinate updated successfully',
             updatedCoordinate
           )
         );
     } catch ({ message }) {
       res
         .status(500)
-        .json(formatResponse(500, "Internal server error", null, message));
+        .json(formatResponse(500, 'Internal server error', null, message));
     }
   }
 
   static async deleteCoordinate(req, res) {
     const { id } = req.params;
-    // console.log(id);
 
     try {
       const deletedCoordinate = await CoordinateService.delete(id);
 
-      // console.log(deletedCoordinate);
-
       if (!deletedCoordinate) {
         return res
           .status(404)
-          .json(formatResponse(404, "Coordinate not found"));
+          .json(formatResponse(404, 'Coordinate not found'));
       }
 
       res
         .status(200)
-        .json(formatResponse(200, "Coordinate deleted successfully", deletedCoordinate));
+        .json(
+          formatResponse(
+            200,
+            'Coordinate deleted successfully',
+            deletedCoordinate
+          )
+        );
     } catch ({ message }) {
       res
         .status(500)
-        .json(formatResponse(500, "Internal server error", null, message));
+        .json(formatResponse(500, 'Internal server error', null, message));
     }
   }
 }

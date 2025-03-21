@@ -1,7 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { IRoad, RouteArrayType } from '../model';
-import { createRoad, deleteRoad, getAllRoads, getRoadById, updateRoad } from '../api';
+import {
+  createRoad,
+  deleteRoad,
+  getAllRoads,
+  getRoadById,
+  updateRoad,
+} from '../api';
 import {
   addCompanionToRoad,
   getCompanionsForRoad,
@@ -68,7 +74,7 @@ const roadSlice = createSlice({
         state.error = null;
         if (state.roads) {
           state.roads = state.roads.map((road) =>
-            road.id === action.payload.data.id ? action.payload.data : road,
+            road.id === action.payload.data.id ? action.payload.data : road
           );
         }
       })
@@ -84,7 +90,9 @@ const roadSlice = createSlice({
         state.isLoading = false;
         state.error = null;
         if (state.roads) {
-          state.roads = state.roads.filter((road) => road.id !== action.meta.arg.id);
+          state.roads = state.roads.filter(
+            (road) => road.id !== action.meta.arg.id
+          );
         }
       })
       .addCase(deleteRoad.rejected, (state, action) => {
@@ -112,27 +120,22 @@ const roadSlice = createSlice({
         state.error = action.payload?.error ?? 'Unknown error';
       })
 
-
-      
       // добавл компаньонов
       .addCase(getCompanionsForRoad.fulfilled, (state, action) => {
         if (state.road) {
-          console.log(action.payload.data, ",,,,getCompanionsForRoad");         
-          
-          state.road.companions = action.payload.data.map((companion) => companion.User) || [];
+          state.road.companions =
+            action.payload.data.map((companion) => companion.User) || [];
         }
       })
       .addCase(addCompanionToRoad.fulfilled, (state, action) => {
         if (state.road && action.payload.data) {
-          // console.log(action.payload.data, ",,,,");
-          
           state.road.companions.push(action.payload.data);
         }
       })
       .addCase(removeCompanionFromRoad.fulfilled, (state, action) => {
         if (state.road && action.payload.data) {
           state.road.companions = state.road.companions.filter(
-            (c) => c.id !== action.payload.data?.id,
+            (c) => c.id !== action.payload.data?.id
           );
         }
       });
