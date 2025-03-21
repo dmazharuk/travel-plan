@@ -350,6 +350,7 @@ export function RoadDetailForm() {
 
       {/* про карту, начало */}
       <div>
+      <h3 className={styles.title}>Карта путешествия 📌</h3>
         {road.id && <MapViewer roadId={road.id} />}
       </div>
       {/* про карту, конец */}

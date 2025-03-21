@@ -86,6 +86,10 @@
     height: 300px;
   }
 
+  .inputGroup {
+    width: 100%;
+  }
+
   .buttonWrapper {
     width: 100%; /* Кнопка занимает всю ширину на мобильных */
   }

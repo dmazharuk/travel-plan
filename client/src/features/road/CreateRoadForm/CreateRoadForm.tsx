@@ -544,9 +544,6 @@ export function CreateRoadForm() {
         {/* КАРТА */}
         <div className={styles.main}>
           <h3 className={styles.title}>Карта путешествия 📌</h3>
-          {/* {isMapVisible ? "Скрыть карту" 
-          :
-           "Добавим карту?" } */}
           <button type="button" onClick={handleToggleMap}>
             {isMapVisible ? 'Скрыть карту' : 'Добавим карту?'}
           </button>
