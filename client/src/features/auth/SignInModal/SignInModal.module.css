@@ -76,6 +76,8 @@
   position: absolute;
   top: 50%;
   right: 10px;
+  display: flex;
+  align-items: center;
   padding: 4px;
   font-size: 1rem;
   color: #000;
