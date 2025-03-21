@@ -4,3 +4,9 @@
   margin: 0;
   font-family: 'Open Sans', sans-serif;
 }
+
+/* Добавляем отступ для основного контента */
+body:not(.mainPage) {
+  padding-top: 80px;
+}
+

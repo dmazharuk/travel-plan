@@ -92,7 +92,7 @@ class AuthController {
         }
       );
 
-      const confirmationLink = `http://localhost:5173/confirm-email/${emailConfirmationToken}`;
+      const confirmationLink = `${process.env.CLIENT_URL}/confirm-email/${emailConfirmationToken}`;
       await sendEmail({
         to: email,
         subject: 'Подтверждение email',
@@ -361,7 +361,7 @@ class AuthController {
         const passwordToken = generateTokensPassword({
           user: plainUser,
         }).passwordToken;
-        const resetLink = `http://localhost:5173/?token=${passwordToken}`;
+        const resetLink = `${process.env.CLIENT_URL}/?token=${passwordToken}`;
 
         await sendEmail({
           to: email,

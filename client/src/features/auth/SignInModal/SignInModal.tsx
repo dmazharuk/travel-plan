@@ -33,6 +33,8 @@ export function SignInModal({ closeModal }: SignInModalProps) {
     useState<typeof INITIAL_INPUTS_DATA>(INITIAL_INPUTS_DATA);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showRepeatPassword, setShowRepeatPassword] = useState(false);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -209,7 +211,6 @@ export function SignInModal({ closeModal }: SignInModalProps) {
   };
 
   const handleCloseModal = () => {
-    // Очищаем токен при закрытии модалки
     if (resetToken) {
       searchParams.delete('token');
       setSearchParams(searchParams);
@@ -247,26 +248,66 @@ export function SignInModal({ closeModal }: SignInModalProps) {
               />
 
               <label htmlFor={passwordInputId}>Пароль:</label>
-              <input
-                type="password"
-                name="password"
-                placeholder="Введите пароль"
-                onChange={onChangeHandler}
-                value={inputs.password}
-                id={passwordInputId}
-                className={styles.modalInput}
-              />
+              <div className={styles.passwordContainer}>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  placeholder="Введите пароль"
+                  onChange={onChangeHandler}
+                  value={inputs.password}
+                  id={passwordInputId}
+                  className={styles.modalInput}
+                />
+                <button
+                  type="button"
+                  className={styles.eyeButton}
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  aria-label={showPassword ? "Скрыть пароль" : "Показать пароль"}
+                >
+                 {showPassword ? (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666666" strokeWidth="2">
+        <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
+        <path d="M1 1l22 22"/>
+      </svg>
+    ) : (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666666" strokeWidth="2">
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+    )}
+                </button>
+              </div>
 
               <label htmlFor={repeatPasswordInputId}>Повторите пароль:</label>
-              <input
-                type="password"
-                name="repeatPassword"
-                placeholder="Повторите пароль"
-                onChange={onChangeHandler}
-                value={inputs.repeatPassword}
-                id={repeatPasswordInputId}
-                className={styles.modalInput}
-              />
+              <div className={styles.passwordContainer}>
+                <input
+                  type={showRepeatPassword ? 'text' : 'password'}
+                  name="repeatPassword"
+                  placeholder="Повторите пароль"
+                  onChange={onChangeHandler}
+                  value={inputs.repeatPassword}
+                  id={repeatPasswordInputId}
+                  className={styles.modalInput}
+                />
+                <button
+                  type="button"
+                  className={styles.eyeButton}
+                  onClick={() => setShowRepeatPassword((prev) => !prev)}
+                  aria-label={showRepeatPassword ? "Скрыть пароль" : "Показать пароль"}
+                >
+                 {showRepeatPassword ? (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666666" strokeWidth="2">
+        <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
+        <path d="M1 1l22 22"/>
+      </svg>
+    ) : (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666666" strokeWidth="2">
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+    )}
+                </button>
+              </div>
 
               <button
                 className={styles.modalButton}
@@ -318,26 +359,64 @@ export function SignInModal({ closeModal }: SignInModalProps) {
             <h2>Сброс пароля</h2>
             <form className={styles.modalForm} onSubmit={handlePasswordReset}>
               <label htmlFor={newPasswordInputId}>Новый пароль:</label>
-              <input
-                type="password"
-                name="newPassword"
-                placeholder="Введите новый пароль"
-                onChange={onChangeHandler}
-                value={inputs.newPassword}
-                id={newPasswordInputId}
-                className={styles.modalInput}
-              />
+              <div className={styles.passwordContainer}>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  placeholder="Введите пароль"
+                  onChange={onChangeHandler}
+                  value={inputs.password}
+                  id={newPasswordInputId}
+                  className={styles.modalInput}
+                />
+                <button
+                  type="button"
+                  className={styles.eyeButton}
+                  onClick={() => setShowPassword((prev) => !prev)}
+                >
+                  {showPassword ? (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666666" strokeWidth="2">
+        <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
+        <path d="M1 1l22 22"/>
+      </svg>
+    ) : (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666666" strokeWidth="2">
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+    )}
+                </button>
+              </div>
 
               <label htmlFor={repeatPasswordInputId}>Повторите пароль:</label>
-              <input
-                type="password"
-                name="repeatPassword"
-                placeholder="Повторите новый пароль"
-                onChange={onChangeHandler}
-                value={inputs.repeatPassword}
-                id={repeatPasswordInputId}
-                className={styles.modalInput}
-              />
+              <div className={styles.passwordContainer}>
+                <input
+                  type={showRepeatPassword ? 'text' : 'password'}
+                  name="repeatPassword"
+                  placeholder="Повторите пароль"
+                  onChange={onChangeHandler}
+                  value={inputs.repeatPassword}
+                  id={repeatPasswordInputId}
+                  className={styles.modalInput}
+                />
+                <button
+                  type="button"
+                  className={styles.eyeButton}
+                  onClick={() => setShowRepeatPassword((prev) => !prev)}
+                >
+                 {showRepeatPassword ? (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666666" strokeWidth="2">
+        <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
+        <path d="M1 1l22 22"/>
+      </svg>
+    ) : (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666666" strokeWidth="2">
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+    )}
+                </button>
+              </div>
 
               <button
                 className={styles.modalButton}
@@ -371,15 +450,35 @@ export function SignInModal({ closeModal }: SignInModalProps) {
               />
 
               <label htmlFor={passwordInputId}>Пароль:</label>
-              <input
-                type="password"
-                name="password"
-                placeholder="Введите пароль"
-                onChange={onChangeHandler}
-                value={inputs.password}
-                id={passwordInputId}
-                className={styles.modalInput}
-              />
+              <div className={styles.passwordContainer}>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  placeholder="Введите пароль"
+                  onChange={onChangeHandler}
+                  value={inputs.password}
+                  id={passwordInputId}
+                  className={styles.modalInput}
+                />
+                <button
+                  type="button"
+                  className={styles.eyeButton}
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  aria-label={showPassword ? "Скрыть пароль" : "Показать пароль"}
+                >
+                 {showPassword ? (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666666" strokeWidth="2">
+        <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
+        <path d="M1 1l22 22"/>
+      </svg>
+    ) : (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666666" strokeWidth="2">
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+    )}
+                </button>
+              </div>
 
               <button
                 className={styles.modalButton}
