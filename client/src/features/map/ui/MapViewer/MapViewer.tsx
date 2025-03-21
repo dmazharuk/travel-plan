@@ -72,6 +72,11 @@ const MapViewer: React.FC<MapManagerProps> = ({ roadId }) => {
         .unwrap()
         .then(() => setIsLoading(false)) // Данные загружены
         .catch(() => setIsLoading(false)); // Обработка ошибки
+    } else {
+      dispatch(getCoordinatesByPathIdThunk(0))
+        .unwrap()
+        .then(() => setIsLoading(false)) // Данные загружены
+        .catch(() => setIsLoading(false)); // Обработка ошибки
     }
   }, [path, dispatch]);
 
